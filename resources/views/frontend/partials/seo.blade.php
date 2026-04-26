@@ -1,11 +1,11 @@
 @php
-    use App\Models\SeoMeta;
+    use App\Models\SeoMeta as SeoMetaModel;
 
     // Get current path for SEO lookup
     $currentPath = request()->path() === '/' ? '/' : request()->path();
 
     // Try to find SEO meta for current path
-    $seoMeta = SeoMeta::getForPath($currentPath);
+    $seoMeta = SeoMetaModel::getForPath($currentPath);
 
     // Fallback to global settings if no page-specific SEO
     $seoTitle = $seoMeta?->meta_title ?? optional($setting)->title ?? config('app.name', 'LIA - Leadership Institute Australia');
@@ -29,11 +29,11 @@
     OpenGraph::setType('website');
     OpenGraph::addImage($seoImage);
 
-    TwitterCard::setTitle($seoTitle);
-    TwitterCard::setDescription($seoDescription);
-    TwitterCard::setSite(optional($setting)->twitter ?? '@LeadershipAus');
-    TwitterCard::setUrl($seoUrl);
-    TwitterCard::setImage($seoImage);
+    Twitter::setTitle($seoTitle);
+    Twitter::setDescription($seoDescription);
+    Twitter::setSite(optional($setting)->twitter ?? '@LeadershipAus');
+    Twitter::setUrl($seoUrl);
+    Twitter::setImage($seoImage);
 
     JsonLd::setTitle($seoTitle);
     JsonLd::setDescription($seoDescription);
@@ -50,7 +50,7 @@
 
 {!! SEOMeta::generate() !!}
 {!! OpenGraph::generate() !!}
-{!! TwitterCard::generate() !!}
+{!! Twitter::generate() !!}
 {!! JsonLd::generate() !!}
 @if($seoMeta?->schema_markup)
     {!! JsonLdMulti::generate() !!}
