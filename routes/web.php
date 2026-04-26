@@ -163,3 +163,6 @@ Route::group(['middleware' => 'auth'], function () {
         ]
     ]);
 });
+
+
+Route::get('/meta-page', [FrontendController::class, 'meta_page'])->name('meta-page');

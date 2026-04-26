@@ -150,4 +150,5 @@ class SeoMetaController extends Controller
             ]);
         }
     }
+    
 }
