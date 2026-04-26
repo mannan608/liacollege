@@ -1,0 +1,36 @@
+.logo-img {
+  height: 107px;
+  object-fit: contain;
+}
+.translate__lang.show{
+    background: transparent !important;
+}
+.header-menu {
+  display: flex; 
+  align-items: center; 
+  gap: 100px;
+}
+.rts-footer.v_2, .campus.v__2 {
+    background: #1a355c;
+}
+footer.rts-footer p, footer.rts-footer span, footer.rts-footer a, footer.rts-footer a:hover {
+    color: white;
+}
+@media only screen and (max-width: 767px) {
+  div#menu-btn {
+    width: 26px;
+  }
+  .logo-img {
+    height: 125px;
+  }
+  .header-menu {
+    display: none;
+  }
+  .header.v__3 .header__wrapper {
+    padding: 15px 0px;
+    grid-template-columns: 1fr auto !important;
+  }
+  .header.v__3 {
+    padding: 0;
+  }
+}
