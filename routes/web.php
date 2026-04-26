@@ -150,4 +150,16 @@ Route::group(['middleware' => 'auth'], function () {
             'update' => 'contact.update',
         ]
     ]);
+
+    Route::resource('seo-meta', \App\Http\Controllers\SeoMetaController::class, [
+        'names' => [
+            'index' => 'seo-meta.index',
+            'create' => 'seo-meta.create',
+            'store' => 'seo-meta.store',
+            'show' => 'seo-meta.show',
+            'edit' => 'seo-meta.edit',
+            'update' => 'seo-meta.update',
+            'destroy' => 'seo-meta.destroy',
+        ]
+    ]);
 });

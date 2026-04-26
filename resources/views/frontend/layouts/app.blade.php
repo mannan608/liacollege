@@ -15,11 +15,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{{ optional($setting)->description }}">
-  <meta name="keywords" content="{{ optional($setting)->keywords }}">
-  <meta name="author" content="{{ optional($setting)->title }}">
-  <meta name="robots" content="index, follow">
-  <title>{{ optional($setting)->title ?? "LIA - Leadership Institute Australia" }}</title>
+  @include('frontend.partials.seo')
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/images/logo/logo.png') }}">
     <!-- animate css -->
     <link rel="stylesheet" href="{{ asset('frontend/css/plugins/animate.min.css') }}">

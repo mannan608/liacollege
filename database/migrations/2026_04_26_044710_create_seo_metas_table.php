@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('seo_metas', function (Blueprint $table) {
+            $table->id();
+            $table->string('path', 500)->unique(); // e.g., 'about', 'services', '/'
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->text('meta_keywords')->nullable(); // Can store as comma-separated or JSON
+            $table->string('og_image')->nullable();
+            $table->string('canonical_url')->nullable();
+            $table->text('schema_markup')->nullable(); // JSON-LD schema
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('seo_metas');
+    }
+};
