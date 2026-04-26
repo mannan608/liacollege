@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SeoMeta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class SeoMetaController extends Controller
@@ -52,6 +53,7 @@ class SeoMetaController extends Controller
             ]);
 
             DB::commit();
+            $this->clearSeoCache();
 
             return redirect()->route('seo-meta.index')->with('success', 'SEO Meta created successfully!');
 
@@ -106,6 +108,7 @@ class SeoMetaController extends Controller
             $seoMeta->save();
 
             DB::commit();
+            $this->clearSeoCache();
 
             return redirect()->route('seo-meta.index')->with('success', 'SEO Meta updated successfully!');
 
@@ -127,12 +130,24 @@ class SeoMetaController extends Controller
             }
 
             $seoMeta->delete();
+            $this->clearSeoCache();
 
             return redirect()->route('seo-meta.index')->with('success', 'SEO Meta deleted successfully!');
 
         } catch (\Throwable $e) {
             \Log::error($e->getMessage());
             return back()->with('error', 'Failed to delete SEO Meta.');
+        }
+    }
+
+    private function clearSeoCache(): void
+    {
+        try {
+            Artisan::call('optimize:clear');
+        } catch (\Throwable $e) {
+            \Log::warning('Failed to clear SEO cache after SEO meta change.', [
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }
