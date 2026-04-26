@@ -28,6 +28,9 @@
                         <a href="{{ route('setting.index') }}" {{set_active(['setting.index'])}}><i class="fas fa-cog"></i> <span>Settings</span></a>
                     </li>
                     <li>
+                        <a href="{{ route('seo-meta.index') }}" {{set_active(['seo-meta.index'])}}><i class="fas fa-search"></i> <span>SEO Meta</span></a>
+                    </li>
+                    <li>
                         <a href="{{ route('logout') }}" {{set_active(['logout'])}}><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
                     </li>
                 @endif

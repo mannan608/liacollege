@@ -1,9 +1,18 @@
 @php
-    $seoTitle = optional($setting)->title ?? config('app.name', 'LIA - Leadership Institute Australia');
-    $seoDescription = optional($setting)->description ?? 'Leadership Institute Australia';
-    $seoKeywords = optional($setting)->keywords ? array_filter(array_map('trim', explode(',', optional($setting)->keywords))) : [];
-    $seoUrl = url()->current();
-    $seoImage = optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('frontend/images/logo/logo.png');
+    use App\Models\SeoMeta;
+
+    // Get current path for SEO lookup
+    $currentPath = request()->path() === '/' ? '/' : request()->path();
+
+    // Try to find SEO meta for current path
+    $seoMeta = SeoMeta::getForPath($currentPath);
+
+    // Fallback to global settings if no page-specific SEO
+    $seoTitle = $seoMeta?->meta_title ?? optional($setting)->title ?? config('app.name', 'LIA - Leadership Institute Australia');
+    $seoDescription = $seoMeta?->meta_description ?? optional($setting)->description ?? 'Leadership Institute Australia';
+    $seoKeywords = $seoMeta ? $seoMeta->getKeywordsArray() : (optional($setting)->keywords ? array_filter(array_map('trim', explode(',', optional($setting)->keywords))) : []);
+    $seoUrl = $seoMeta?->canonical_url ?? url()->current();
+    $seoImage = $seoMeta?->og_image ? asset('uploads/seo/' . $seoMeta->og_image) : (optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('frontend/images/logo/logo.png'));
 
     SEOMeta::setTitle($seoTitle);
     SEOMeta::setDescription($seoDescription);
@@ -31,9 +40,18 @@
     JsonLd::setType('WebPage');
     JsonLd::setUrl($seoUrl);
     JsonLd::addImage($seoImage);
+
+    // Add custom schema markup if provided
+    if ($seoMeta?->schema_markup) {
+        JsonLdMulti::newJsonLd();
+        JsonLdMulti::setJsonLd($seoMeta->schema_markup);
+    }
 @endphp
 
 {!! SEOMeta::generate() !!}
 {!! OpenGraph::generate() !!}
 {!! TwitterCard::generate() !!}
 {!! JsonLd::generate() !!}
+@if($seoMeta?->schema_markup)
+    {!! JsonLdMulti::generate() !!}
+@endif
