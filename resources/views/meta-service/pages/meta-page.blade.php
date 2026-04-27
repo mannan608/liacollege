@@ -1,4 +1,4 @@
-@extends('frontend.layouts.meta-page')
+@extends('meta-service.layout.meta-page')
 
 @php
 $trustPoints = [
@@ -120,7 +120,7 @@ $courses = [
 <section class="py-8 md:py-12 lg:py-16 bg-surface-container-low">
   <div class="max-w-3xl mx-auto px-6">
     <div id="metaPageQuiz" class="bg-surface-container-lowest rounded-xl p-8 md:p-12 ambient-shadow border border-outline-variant/15">
-      @include('frontend.partials.meta-page-quiz-step', ['quizView' => $quizView])
+      @include('meta-service.component.rpllead-form')
     </div>
   </div>
 </section>
@@ -133,7 +133,7 @@ $courses = [
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       @foreach ($courses as $course)
-      @include('frontend.partials.meta-page-course-card', ['course' => $course])
+      @include('meta-service.component.meta-page-course-card', ['course' => $course])
       @endforeach
     </div>
   </div>

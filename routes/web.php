@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeadRplController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
@@ -165,6 +166,6 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
-Route::get('/meta-page', [FrontendController::class, 'meta_page'])->name('meta-page');
-Route::get('/meta-page/quiz/{step}', [FrontendController::class, 'showMetaPageQuizStep'])->name('meta-page.quiz.step');
-Route::post('/meta-page/quiz', [FrontendController::class, 'storeMetaPageQuizAnswer'])->name('meta-page.quiz.store');
+Route::get('/meta-page', [LeadRplController::class, 'meta_page'])->name('meta-page');
+Route::get('/meta-page/quiz/{step}', [LeadRplController::class, 'showMetaPageQuizStep'])->name('meta-page.quiz.step');
+Route::post('/meta-page/quiz', [LeadRplController::class, 'storeMetaPageQuizAnswer'])->name('meta-page.quiz.store');
