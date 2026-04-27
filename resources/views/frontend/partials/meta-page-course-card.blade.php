@@ -11,14 +11,14 @@
     >
   </div>
   <div class="p-8 flex-grow">
-    <h4 class="font-headline font-bold text-xl text-primary mb-2">{{ $course['title'] }}</h4>
-    <p class="text-on-surface-variant text-sm mb-6 leading-relaxed line-clamp-2">{{ $course['description'] }}</p>
+    <h4 class="font-headline font-bold text-base md:text-lg lg:text-xl text-primary mb-2">{{ $course['title'] }}</h4>
+    <p class="text-on-surface-variant text-sm mb-4 leading-relaxed line-clamp-2">{{ $course['description'] }}</p>
     @if (!empty($course['url']))
-      <a class="block w-full py-3 bg-primary text-on-primary rounded-lg font-semibold text-center transition-all hover:bg-primary-container" href="{{ $course['url'] }}">
+      <a class="block w-full py-2 md:py-2.5 bg-primary text-on-primary rounded-lg font-semibold text-center transition-all hover:bg-primary-container" href="{{ $course['url'] }}">
         Apply Now
       </a>
     @else
-      <button onclick="applicationOpenModal()" class="w-full py-3 bg-primary text-on-primary rounded-lg font-semibold transition-all hover:bg-primary-container" type="button">
+      <button onclick="applicationOpenModal()" class="w-full py-2 md:py-2.5 text-sm bg-primary text-on-primary rounded-lg font-semibold transition-all hover:bg-primary-container" type="button">
         Apply Now
       </button>
     @endif

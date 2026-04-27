@@ -166,3 +166,5 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 Route::get('/meta-page', [FrontendController::class, 'meta_page'])->name('meta-page');
+Route::get('/meta-page/quiz/{step}', [FrontendController::class, 'showMetaPageQuizStep'])->name('meta-page.quiz.step');
+Route::post('/meta-page/quiz', [FrontendController::class, 'storeMetaPageQuizAnswer'])->name('meta-page.quiz.store');
