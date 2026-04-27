@@ -163,6 +163,13 @@ class FrontendController extends Controller
         $reviews = Review::latest()->take(10)->get();
         return view('frontend.project-management', compact('setting','reviews'));
     }
+
+     public function meta_page()
+    {
+       return view('frontend.meta-page');
+    }
+
+    
     public function application()
     {   
         $countries = [

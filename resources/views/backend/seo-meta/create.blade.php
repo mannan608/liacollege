@@ -16,7 +16,6 @@
 
         <form action="{{ route('seo-meta.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-
             <div class="row">
                 <div class="col-md-8">
                     <div class="card mb-4">
