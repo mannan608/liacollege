@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('seo_metas', function (Blueprint $table) {
             $table->id();
-            $table->string('path', 500)->unique(); // e.g., 'about', 'services', '/'
+            $table->string('path', 55)->unique(); // e.g., 'about', 'services', '/'
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable(); // Can store as comma-separated or JSON
