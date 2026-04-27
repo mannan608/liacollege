@@ -64,22 +64,47 @@
       Turn your experience into a nationally recognised qualification with RPL. Become a certified Support worker, Aged Care worker, Disability care worker, Leader, project manager.
     </p>
 
-    <div class="w-full aspect-video max-w-5xl rounded-xl overflow-hidden ambient-shadow mb-12 relative group bg-surface-container-highest">
-      <img
-        class="w-full h-full object-cover"
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6pYmuVkrEfwt7pgYvXd5NQ2c76-hd7l-avTCpOMhhGZSJg9TdSpq-ySaJ7NgeNvwxO9_8iLiHowIklm5T63KGDPh_GrXaoSqZuWPskFTLicSPKL85wPPV3YM8Rn5JE3XNSehlPIH_hFTizb-nblwcCiJbkI9xJP3jPnP7uyZ2kS7aoik3-n35I2u4OLPR0xSC_f3c7tUfS7ujq9YKcLLXZVMIzgHb6J3i6esqWBK8Ob7C3wLnLg-K2gPPuy9gd8udG2GqytdDDm0"
-        alt="Cinematic wide shot of diverse professional students collaborating in a high-end, modern academic library with soft natural lighting and elegant wooden finishes"
+    <div
+      id="introVideo"
+      class="w-full aspect-video max-w-5xl rounded-xl overflow-hidden ambient-shadow mb-12 relative group bg-surface-container-highest"
+      data-video-id="Cy8u0pLZEOU"
+    >
+      <iframe
+        id="youtubePlayer"
+        class="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300"
+        title="LIA Collage introduction video"
+        src=""
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+
+      <button
+        id="playOverlay"
+        type="button"
+        class="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-primary/20 transition-opacity duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-secondary/70"
+        aria-label="Play video"
       >
-      <div class="absolute inset-0 flex items-center justify-center bg-primary/20 transition-all group-hover:bg-primary/10">
-        <button class="w-20 h-20 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow transition-transform hover:scale-110 active:scale-95" type="button" aria-label="Play video">
-          <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-        </button>
-      </div>
+        <img
+          class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="https://img.youtube.com/vi/Cy8u0pLZEOU/hqdefault.jpg"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+        >
+        <span class="absolute inset-0 bg-primary/25 transition-colors group-hover:bg-primary/10"></span>
+        <span class="relative flex h-16 w-16 items-center justify-center rounded-full bg-[#ff0000] shadow-2xl transition-transform duration-200 group-hover:scale-110 group-active:scale-95 md:h-20 md:w-20">
+          <span class="material-symbols-outlined text-white text-4xl md:text-5xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+        </span>
+      </button>
     </div>
 
-    <button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-semibold text-lg ambient-shadow transition-all hover:scale-105 active:scale-100 mb-8" type="button">
-      Check Eligibility Now
-    </button>
+
+ <button
+    type="button"
+    onclick="openModal()"
+    class="bg-primary text-on-primary px-8 py-4 rounded-xl font-semibold text-lg shadow-lg transition-all hover:scale-105 active:scale-100 mb-8">
+    Check Eligibility Now
+</button>
 
     <div class="flex flex-wrap justify-center gap-6 md:gap-12">
       @foreach ($trustPoints as $point)
@@ -164,4 +189,154 @@
       </div>
     </div>
   </section>
+
+
+  <!-- Modal Overlay -->
+<div id="eligibilityModal"    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <!-- Modal Box -->
+    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
+
+        <!-- Header -->
+        <div class="bg-[#002147] text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold">Check Your Eligibility</h2>
+
+            <button onclick="closeModal()" class="text-white text-2xl leading-none hover:rotate-90 transition">
+                &times;
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 max-h-[85vh] overflow-y-auto">
+
+            <form action="#" method="POST" class="space-y-5">
+
+                <div class="grid md:grid-cols-2 gap-5">
+
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">Full Name</label>
+                        <input type="text"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Enter full name">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">Phone Number</label>
+                        <input type="text"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Enter phone number">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">Email Address</label>
+                        <input type="email"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Enter email">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">Industry</label>
+                        <select
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option>Select Industry</option>
+                            <option>Aged Care</option>
+                            <option>Disability Support</option>
+                            <option>Leadership</option>
+                            <option>Project Management</option>
+                            <option>Business Admin</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">Experience</label>
+                        <select
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option>Select Experience</option>
+                            <option>Less than 2 Years</option>
+                            <option>2 - 5 Years</option>
+                            <option>5 - 10 Years</option>
+                            <option>10+ Years</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">Country</label>
+                        <input type="text"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Enter country">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-medium text-gray-700">Message</label>
+                    <textarea rows="4"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                        placeholder="Write message"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full bg-[#002147] text-white py-3 rounded-xl font-semibold hover:bg-blue-900 transition">
+                        Submit Now
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
 @endsection
+
+<script>
+function openModal() {
+    document.getElementById('eligibilityModal').classList.remove('hidden');
+    document.getElementById('eligibilityModal').classList.add('flex');
+}
+
+function closeModal() {
+    document.getElementById('eligibilityModal').classList.add('hidden');
+    document.getElementById('eligibilityModal').classList.remove('flex');
+}
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const video = document.getElementById('introVideo');
+    const overlay = document.getElementById('playOverlay');
+    const iframe = document.getElementById('youtubePlayer');
+
+    if (!video || !overlay || !iframe) {
+      return;
+    }
+
+    overlay.addEventListener('click', function () {
+      const videoId = video.dataset.videoId;
+
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      iframe.classList.remove('opacity-0');
+      iframe.classList.add('opacity-100');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.setAttribute('tabindex', '-1');
+    });
+  });
+</script>
+
+<!-- Animation -->
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn .3s ease;
+}
+</style>
