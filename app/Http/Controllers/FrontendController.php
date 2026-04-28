@@ -830,4 +830,10 @@ class FrontendController extends Controller
             ], 500);
         }
     }
+
+     public function fast_track_qualifications()
+    {
+
+       return view('meta-service.pages.fast-track-qualifications');
+    }
 }

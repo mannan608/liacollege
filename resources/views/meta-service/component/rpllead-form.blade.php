@@ -1,4 +1,4 @@
-<form method="POST" action="" id="multiStepForm">
+<form method="POST" action="{{ route('check-eligibility.store') }}" id="rplForm">
     @csrf
 
     <div class="bg-white overflow-hidden">
@@ -207,34 +207,46 @@
 
                 <div class="space-y-4 md:space-y-5">
 
-                    <input type="text"
-                        name="name"
-                        placeholder="Full Name"
-                        class="w-full border rounded-xl p-3 text-sm md:text-base">
+                    <div class="space-y-1">
+                        <input type="text"
+                            name="name"
+                            placeholder="Full Name"
+                            class="w-full border rounded-xl p-3 text-sm md:text-base">
+                        @error('name')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                    <input type="text"
-                        name="phone"
-                        placeholder="Mobile Number"
-                        class="w-full border rounded-xl p-3 text-sm md:text-base">
+                    <div class="space-y-1">
+                        <input type="text"
+                            name="phone"
+                            placeholder="Mobile Number"
+                            class="w-full border rounded-xl p-3 text-sm md:text-base">
 
-                    @error('phone')
-                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                    @enderror
+                        @error('phone')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     <input type="email"
                         name="email"
                         placeholder="Email Address"
                         class="w-full border rounded-xl p-3 text-sm md:text-base">
 
-                    <select name="course" class="w-full border rounded-xl p-3 text-sm md:text-base">
-                        <option value="">Select Course</option>
-                        <option>CHC33021 Certificate III in Individual Support</option>
-                        <option>CHC43015 Certificate IV in Ageing Support</option>
-                        <option>CHC52021 Diploma of Community Services</option>
-                        <option>CHC52025 Diploma of Community Services</option>
-                        <option>BSB50420 Diploma of Leadership and Management</option>
-                        <option>BSB50820 Diploma of Project Management</option>
-                    </select>
+                    <div class="space-y-1">
+                        <select name="course" class="w-full border rounded-xl p-3 text-sm md:text-base">
+                            <option value="">Select Course</option>
+                            <option>CHC33021 Certificate III in Individual Support</option>
+                            <option>CHC43015 Certificate IV in Ageing Support</option>
+                            <option>CHC52021 Diploma of Community Services</option>
+                            <option>CHC52025 Diploma of Community Services</option>
+                            <option>BSB50420 Diploma of Leadership and Management</option>
+                            <option>BSB50820 Diploma of Project Management</option>
+                        </select>
+                        @error('course')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                 </div>
 
@@ -243,15 +255,13 @@
             {{-- Buttons --}}
             <div class="flex justify-between mt-6 md:mt-8">
 
-                <button type="button"
-                    onclick="prevStep()"
+                <button type="button"                    
                     id="prevBtn"
                     class="hidden bg-slate-200 px-4 md:px-6 py-3 rounded-xl font-semibold text-sm md:text-base">
                     Back
                 </button>
 
                 <button type="button"
-                    onclick="nextStep()"
                     id="nextBtn"
                     class="ml-auto bg-[#002147] hover:bg-[#002147] text-white px-6 md:px-8 py-3 rounded-xl font-semibold text-sm md:text-base">
                     Next
@@ -273,133 +283,241 @@
 
 
 <div id="successModal"
-     class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
+    class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 overflow-auto">
 
-    <div class="bg-white rounded-3xl p-8 max-w-xl text-center">
-
-        <div class="text-5xl mb-4">✅</div>
-
-        <h2 class="text-3xl font-bold mb-4">
-            Thank You for Your Submission!
-        </h2>
-
-        <p class="mb-6 text-gray-600">
-            We have successfully received your RPL eligibility check.
-            Our team will contact you within 24 hours.
-        </p>
-
-        <a href="https://wa.me/61468092989"
-           target="_blank"
-           class="bg-green-500 text-white px-6 py-3 rounded-xl">
-            WhatsApp Now
-        </a>
-
-        <div class="mt-4">
-            <button onclick="closeModal()"
-                class="text-gray-500">
-                Close
-            </button>
+    <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-xl text-center shadow-xl">
+        <div class="space-y-6 text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-secondary/15 text-secondary">
+                <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div>
+                <h3 class="font-headline text-lg sm:text-xl font-bold text-primary">Thank You for Your Submission!</h3>
+                <p class="mt-3 text-sm sm:text-base text-on-surface-variant">We have successfully received your RPL eligibility check. Our team will contact you shortly.</p>
+            </div>
         </div>
 
+        <div class="mt-8 sm:mt-10">
+            <a href="https://wa.me/61468092989"
+                target="_blank"
+                class="inline-flex w-full sm:w-auto justify-center bg-green-500 text-white px-5 py-3 rounded-xl text-sm sm:text-base">
+                WhatsApp Now
+            </a>
+        </div>
     </div>
-
 </div>
 
 
 <script>
-    let currentStep = 0;
-    const steps = document.querySelectorAll('.step');
+    document.addEventListener('DOMContentLoaded', () => {
 
-    function showStep(index) {
-        steps.forEach((step, i) => {
-            step.classList.toggle('hidden', i !== index);
+        /*
+        |--------------------------------------------------------------------------
+        | Elements
+        |--------------------------------------------------------------------------
+        */
+        const form = document.getElementById('rplForm');
+        const steps = document.querySelectorAll('.step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressBar = document.getElementById('progressBar');
+        const stepText = document.getElementById('stepText');
+        const modal = document.getElementById('successModal');
+
+        if (!form || !steps.length) return;
+
+        let currentStep = 0;
+        const totalSteps = steps.length;
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP UI
+        |--------------------------------------------------------------------------
+        */
+        function showStep(index) {
+            steps.forEach((step, i) => {
+                step.classList.toggle('hidden', i !== index);
+            });
+
+            prevBtn?.classList.toggle('hidden', index === 0);
+            nextBtn?.classList.toggle('hidden', index === totalSteps - 1);
+            submitBtn?.classList.toggle('hidden', index !== totalSteps - 1);
+
+            stepText.textContent = `Step ${index + 1} of ${totalSteps}`;
+            progressBar.style.width = `${((index + 1) / totalSteps) * 100}%`;
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function resetMultiStepForm() {
+            currentStep = 0;
+            form.reset();
+            clearErrors();
+            showStep(0);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | MODAL
+        |--------------------------------------------------------------------------
+        */
+        function openModal() {
+            modal?.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal?.classList.add('hidden');
+        }
+
+        modal?.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
         });
 
-        document.getElementById('prevBtn').classList.toggle('hidden', index === 0);
-        document.getElementById('nextBtn').classList.toggle('hidden', index === steps.length - 1);
-        document.getElementById('submitBtn').classList.toggle('hidden', index !== steps.length - 1);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
 
-        document.getElementById('stepText').innerText = `Step ${index + 1} of ${steps.length}`;
+        /*
+        |--------------------------------------------------------------------------
+        | FIELD ERROR SYSTEM
+        |--------------------------------------------------------------------------
+        */
 
-        let progress = ((index + 1) / steps.length) * 100;
-        document.getElementById('progressBar').style.width = progress + '%';
-    }
+        function clearErrors() {
+            document.querySelectorAll('.field-error').forEach(el => el.remove());
 
-    function nextStep() {
-        if (currentStep < steps.length - 1) {
-            currentStep++;
-            showStep(currentStep);
+            form.querySelectorAll('.border-red-500').forEach(el => {
+                el.classList.remove('border-red-500', 'ring-0', 'ring-red-500');
+            });
         }
-    }
 
-    function prevStep() {
-        if (currentStep > 0) {
-            currentStep--;
-            showStep(currentStep);
+        function showFieldError(fieldName, message) {
+            let field = form.querySelector(`[name="${fieldName}"]`);
+
+            // array field support documents[] / sector[]
+            if (!field) {
+                field = form.querySelector(`[name="${fieldName}[]"]`);
+            }
+
+            if (!field) return;
+
+            field.classList.add('border-red-500', 'ring-0', 'ring-red-500');
+
+            const error = document.createElement('p');
+            error.className = 'field-error text-red-500 text-sm ';
+            error.textContent = message;
+
+            field.insertAdjacentElement('afterend', error);
+
+            // jump to step if hidden
+            const parentStep = field.closest('.step');
+
+            if (parentStep) {
+                const stepIndex = [...steps].indexOf(parentStep);
+
+                if (stepIndex !== -1) {
+                    currentStep = stepIndex;
+                    showStep(currentStep);
+                }
+            }
+
+            field.focus();
         }
-    }
 
-    showStep(currentStep);
-</script>
+        /*
+        |--------------------------------------------------------------------------
+        | EVENTS
+        |--------------------------------------------------------------------------
+        */
+        prevBtn?.addEventListener('click', prevStep);
+        nextBtn?.addEventListener('click', nextStep);
 
-<script>
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX SUBMIT
+        |--------------------------------------------------------------------------
+        */
+        form.addEventListener('submit', async function(e) {
 
-document.getElementById('rplForm').addEventListener('submit', async function(e){
+            e.preventDefault();
 
-    e.preventDefault();
+            clearErrors();
 
-    let form = this;
-    let button = document.getElementById('submitBtn');
-    let errors = document.getElementById('errors');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Submitting...';
 
-    errors.innerHTML = '';
-    button.innerText = 'Submitting...';
-    button.disabled = true;
+            try {
 
-    let formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        'Accept': 'application/json'
+                    },
+                    body: new FormData(form)
+                });
 
-    let response = await fetch("{{ route('check-eligibility.store') }}", {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-            "Accept": "application/json"
-        },
-        body: formData
+                const result = await response.json();
+
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Submit Application';
+
+                /*
+                |--------------------------------------------------------------------------
+                | VALIDATION ERROR
+                |--------------------------------------------------------------------------
+                */
+                if (response.status === 422) {
+
+                    const firstErrorField = Object.keys(result.errors)[0];
+
+                    Object.entries(result.errors).forEach(([field, messages]) => {
+                        showFieldError(field, messages[0]);
+                    });
+
+                    return;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | SUCCESS
+                |--------------------------------------------------------------------------
+                */
+                if (result.status) {
+                    resetMultiStepForm();
+                    openModal();
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Submit Application';
+            }
+
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | INIT
+        |--------------------------------------------------------------------------
+        */
+        showStep(0);
+
+        window.closeModal = closeModal;
+
     });
-
-    let result = await response.json();
-
-    button.innerText = 'Submit';
-    button.disabled = false;
-
-    if(response.status === 422){
-
-        let html = '';
-
-        Object.values(result.errors).forEach(error => {
-            html += `<p>${error[0]}</p>`;
-        });
-
-        errors.innerHTML = html;
-        return;
-    }
-
-    if(result.status){
-
-        form.reset();
-
-        document
-            .getElementById('successModal')
-            .classList.remove('hidden');
-    }
-
-});
-
-function closeModal()
-{
-    document
-        .getElementById('successModal')
-        .classList.add('hidden');
-}
-
 </script>

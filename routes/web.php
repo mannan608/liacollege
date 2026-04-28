@@ -164,10 +164,31 @@ Route::group(['middleware' => 'auth'], function () {
             'destroy' => 'seo-meta.destroy',
         ]
     ]);
+    Route::resource('rpl-lead', \App\Http\Controllers\RplLeadController::class, [
+        'names' => [
+            'index' => 'rpl-lead.index',
+            'create' => 'rpl-lead.create',
+            'store' => 'rpl-lead.store',
+            'show' => 'rpl-lead.show',
+            'edit' => 'rpl-lead.edit',
+            'update' => 'rpl-lead.update',
+            'destroy' => 'rpl-lead.destroy',
+        ]
+    ]);
+ 
+     Route::resource('qualification-lead', \App\Http\Controllers\RplLeadController::class, [
+        'names' => [
+            'index' => 'qualification-lead.index',
+            'create' => 'qualification-lead.create',
+            'store' => 'qualification-lead.store',
+            'show' => 'qualification-lead.show',
+            'edit' => 'qualification-lead.edit',
+            'update' => 'qualification-lead.update',
+            'destroy' => 'qualification-lead.destroy',
+        ]
+        ]);
 });
 
 
-Route::get('/meta-page', [LeadRplController::class, 'meta_page'])->name('meta-page');
-Route::get('/meta-page/quiz/{step}', [LeadRplController::class, 'showMetaPageQuizStep'])->name('meta-page.quiz.step');
-Route::post('/meta-page/quiz', [LeadRplController::class, 'storeMetaPageQuizAnswer'])->name('meta-page.quiz.store');
+Route::get('/fast-track-qualifications', [FrontendController::class, 'fast_track_qualifications'])->name('fast-track-qualifications');
 Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');

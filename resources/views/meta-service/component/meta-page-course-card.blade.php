@@ -13,15 +13,14 @@
   <div class="p-8 flex-grow">
     <h4 class="font-headline font-bold text-base md:text-lg lg:text-xl text-primary mb-2">{{ $course['title'] }}</h4>
     <p class="text-on-surface-variant text-sm mb-4 leading-relaxed line-clamp-2">{{ $course['description'] }}</p>
-    @if (!empty($course['url']))
-      <a class="block w-full py-2 md:py-2.5 bg-primary text-on-primary rounded-lg font-semibold text-center transition-all hover:bg-primary-container" href="{{ $course['url'] }}">
-        Apply Now
-      </a>
-    @else
-      <button onclick="applicationOpenModal()" class="w-full py-2 md:py-2.5 text-sm bg-primary text-on-primary rounded-lg font-semibold transition-all hover:bg-primary-container" type="button">
+   <div class="flex gap-4">
+    <a href="#" class="w-1/2 text-center py-2 md:py-2.5 text-sm bg-white border text-black rounded-lg font-semibold transition-all hover:bg-primary-container hover:text-white" type="button">
+        Details
+</a>
+     <button onclick="applicationOpenModal()" class="w-1/2 py-2 md:py-2.5 text-sm bg-primary text-on-primary rounded-lg font-semibold transition-all hover:bg-primary-container" type="button">
         Apply Now
       </button>
-    @endif
+   </div>
   </div>
 </div>
 
@@ -65,47 +64,14 @@
                         <input type="email"
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
                             placeholder="Enter email">
-                    </div>
-
+                    </div>   
                     <div>
-                        <label class="block mb-2 font-medium text-gray-700">Industry</label>
-                        <select
-                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option>Select Industry</option>
-                            <option>Aged Care</option>
-                            <option>Disability Support</option>
-                            <option>Leadership</option>
-                            <option>Project Management</option>
-                            <option>Business Admin</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 font-medium text-gray-700">Experience</label>
-                        <select
-                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option>Select Experience</option>
-                            <option>Less than 2 Years</option>
-                            <option>2 - 5 Years</option>
-                            <option>5 - 10 Years</option>
-                            <option>10+ Years</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 font-medium text-gray-700">Country</label>
+                        <label class="block mb-2 font-medium text-gray-700">Available time</label>
                         <input type="text"
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
                             placeholder="Enter country">
                     </div>
 
-                </div>
-
-                <div>
-                    <label class="block mb-2 font-medium text-gray-700">Message</label>
-                    <textarea rows="4"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
-                        placeholder="Write message"></textarea>
                 </div>
 
                 <div class="pt-2">
