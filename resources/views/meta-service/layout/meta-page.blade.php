@@ -96,55 +96,69 @@
 </head>
 <body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
   <header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-sm px-6 py-4 flex justify-center items-center">
-    <div class="text-xl font-bold tracking-tighter text-[#002147] dark:text-slate-100 font-headline">
-      The Academic Authority
-    </div>
+    <a href="/">
+      <img src="{{ asset('assets/img/lialogo.webp') }}" alt="The Academic Authority Logo" class="h-12 md:h-16 lg:h-20">
+    </a>
   </header>
 
   <main class="pt-24">
     @yield('content')
   </main>
 
-  <footer class="bg-surface-container-low dark:bg-slate-900 w-full flex flex-col items-center text-center gap-6 p-12 space-y-8 border-none">
-    <div class="font-['Manrope'] font-bold text-lg text-[#002147] dark:text-slate-200">
-      The Academic Authority
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-7xl text-left">
-      <div class="space-y-4">
-        <h5 class="text-primary font-bold uppercase text-xs tracking-[0.2em]">Contact Information</h5>
-        <ul class="space-y-3 font-['Inter'] text-sm leading-relaxed text-on-surface-variant/70">
-          <li class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-primary text-lg">call</span>
-            1300 000 000
-          </li>
-          <li class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-primary text-lg">mail</span>
-            info@theacademicauthority.edu.au
-          </li>
-          <li class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-primary text-lg">location_on</span>
-            Melbourne, Victoria, Australia
-          </li>
-        </ul>
-      </div>
-      <div class="space-y-4 md:text-right">
-        <h5 class="text-primary font-bold uppercase text-xs tracking-[0.2em]">Accreditation</h5>
-        <p class="font-['Inter'] text-sm leading-relaxed text-on-surface-variant/70">
-          Registered Training Organisation (RTO)<br>
-          <strong>Provider No. 46049</strong><br>
-          ABN: 00 000 000 000
-        </p>
-      </div>
-    </div>
-    <div class="w-full max-w-7xl pt-8 border-t border-outline-variant/15 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="font-['Inter'] text-sm text-on-surface-variant/70">
+  <footer class="bg-surface-container-low dark:bg-slate-900 w-full flex flex-col items-center text-center gap-2 p-5 lg:p-12 space-y-4 lg:space-y-8 border-none">
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-7xl text-left">
+
+  <!-- Logo (Small Screen Top, Large Screen Middle) -->
+  <div class="order-1 md:order-2 flex justify-center items-center">
+    <a href="/">
+      <img src="{{ asset('assets/img/lialogo.webp') }}" 
+           alt="The Academic Authority Logo" 
+           class="h-12 md:h-16 lg:h-20">
+    </a>
+  </div>
+
+  <!-- Contact Info -->
+  <div class="order-2 md:order-1 space-y-4">
+    <h5 class="text-primary font-bold uppercase text-xs tracking-[0.2em] md:text-left text-center">
+      Contact Information
+    </h5>
+
+    <ul class="font-['Inter'] text-sm leading-relaxed text-on-surface-variant/70 flex flex-col justify-center md:justify-start items-center md:items-start">
+      <li class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-lg">call</span>
+        1300 000 000
+      </li>
+
+      <li class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-lg">mail</span>
+        info@theacademicauthority.edu.au
+      </li>
+
+      <li class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-lg">location_on</span>
+        Melbourne, Victoria, Australia
+      </li>
+    </ul>
+  </div>
+
+  <!-- Accreditation -->
+  <div class="order-3 space-y-4 md:text-right">
+    <h5 class="text-primary font-bold uppercase text-xs tracking-[0.2em] md:text-right text-center">
+      Accreditation
+    </h5>
+<ul class="text-sm text-on-surface-variant/70 space-y-1 flex flex-col justify-center md:justify-end items-center md:items-end">
+  <li> Registered Training Organisation (RTO)</li>
+  <li> <strong>Provider No. 46049</strong></li>
+  <li> ABN: 00 000 000 000</li>
+</ul>
+  </div>
+
+</div>
+    <div class="w-full max-w-7xl pt-8 border-t border-outline-variant/15 flex justify-center items-center gap-4">
+      <p class="font-['Inter'] text-xs md:text-sm text-on-surface-variant/70">
         &copy; 2024 Leadership Institute Australia. All rights reserved.
       </p>
-      <div class="flex gap-6 text-sm font-['Inter']">
-        <a class="text-on-surface-variant/70 hover:text-secondary transition-all" href="#">Privacy Policy</a>
-        <a class="text-on-surface-variant/70 hover:text-secondary transition-all" href="#">Terms of Service</a>
-        <a class="text-on-surface-variant/70 hover:text-secondary transition-all" href="#">Governance</a>
-      </div>
     </div>
   </footer>
 </body>

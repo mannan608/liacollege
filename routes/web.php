@@ -7,8 +7,10 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeadRplController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RplLeadController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Request;
@@ -162,7 +164,31 @@ Route::group(['middleware' => 'auth'], function () {
             'destroy' => 'seo-meta.destroy',
         ]
     ]);
+    Route::resource('rpl-lead', \App\Http\Controllers\RplLeadController::class, [
+        'names' => [
+            'index' => 'rpl-lead.index',
+            'create' => 'rpl-lead.create',
+            'store' => 'rpl-lead.store',
+            'show' => 'rpl-lead.show',
+            'edit' => 'rpl-lead.edit',
+            'update' => 'rpl-lead.update',
+            'destroy' => 'rpl-lead.destroy',
+        ]
+    ]);
+ 
+     Route::resource('qualification-lead', \App\Http\Controllers\QualificationsLeadController::class, [
+        'names' => [
+            'index' => 'qualification-lead.index',
+            'create' => 'qualification-lead.create',
+            'store' => 'qualification-lead.store',
+            'show' => 'qualification-lead.show',
+            'edit' => 'qualification-lead.edit',
+            'update' => 'qualification-lead.update',
+            'destroy' => 'qualification-lead.destroy',
+        ]
+        ]);
 });
 
 
-Route::get('/meta-page', [FrontendController::class, 'meta_page'])->name('meta-page');
+Route::get('/fast-track-qualifications', [FrontendController::class, 'fast_track_qualifications'])->name('fast-track-qualifications');
+Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');

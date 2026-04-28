@@ -1,0 +1,277 @@
+@php
+  $course = $course ?? $qualification;
+@endphp
+
+<div class="bg-white rounded-2xl overflow-hidden shadow-lg border flex flex-col group">
+    
+    <div class="h-56 overflow-hidden">
+        <img
+            src="{{ $course['image'] }}"
+            alt="{{ $course['alt'] ?? $course['title'] }}"
+            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+    </div>
+
+    <div class="p-6 flex flex-col justify-between flex-grow">
+
+        <div>
+            <h3 class="text-base md:text-xl font-bold text-[#002147] mb-2">
+                {{ $course['title'] }}
+            </h3>
+
+            <p class="text-gray-600 text-xs md:text-sm mb-5">
+                {{ $course['description'] }}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-5 ">
+            <a href="#"
+               class="w-full text-center text-sm border rounded-xl py-2 hover:bg-gray-100 transition">
+                Details
+            </a>
+
+            <button
+                type="button"
+                onclick="applicationOpenModal('{{ $course['title'] }}')"
+                class="w-full bg-[#002147] text-white rounded-xl py-2 text-sm hover:bg-blue-900 transition">
+                Apply Now
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="applicationModal"
+     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+
+    <div class="bg-white w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl animate-fadeIn">
+
+        {{-- Header --}}
+        <div class="bg-[#002147] text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold">Quick Application</h2>
+
+            <button type="button"
+                    onclick="applicationCloseModal()"
+                    class="text-3xl leading-none hover:rotate-90 transition">
+                &times;
+            </button>
+        </div>
+
+        {{-- Body --}}
+        <div class="p-6 max-h-[85vh] overflow-y-auto">
+
+            <div id="applyErrors" class="mb-4"></div>
+
+            <form id="applyForm"
+                  method="POST"
+                  action="{{ route('qualification-lead.store') }}">
+
+                @csrf
+
+                <input type="hidden" name="course" id="courseInput">
+
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block mb-2 font-medium">Full Name</label>
+
+                        <input type="text"
+                               name="name"
+                               class="w-full border rounded-xl px-4 py-3"
+                               placeholder="Enter full name">
+                                @error('name')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">Phone Number</label>
+
+                        <input type="text"
+                               name="phone"
+                               class="w-full border rounded-xl px-4 py-3"
+                               placeholder="Enter phone number">
+                                @error('phone')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">Email Address</label>
+
+                        <input type="email"
+                               name="email"
+                               class="w-full border rounded-xl px-4 py-3"
+                               placeholder="Enter email">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium">Preferred Date & Time</label>
+
+                        <input type="datetime-local"
+                               name="availability"
+                               class="w-full border rounded-xl px-4 py-3">
+                    </div>
+
+                </div>
+
+                <button type="submit"
+                        id="applySubmitBtn"
+                        class="w-full bg-[#002147] text-white py-3 rounded-xl font-semibold hover:bg-blue-900 transition mt-12">
+                    Submit Now
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div id="successModal"
+    class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 overflow-auto">
+
+    <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-xl text-center shadow-xl">
+        <div class="space-y-6 text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-secondary/15 text-secondary">
+                <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div>
+                <h3 class="font-headline text-lg sm:text-xl font-bold text-primary">Thank You for Your Submission!</h3>
+                <p class="mt-3 text-sm sm:text-base text-on-surface-variant">We have successfully received your qualifications application. Our team will contact you shortly.</p>
+            </div>
+        </div>
+
+        <div class="mt-8 sm:mt-10">
+            <a href="https://wa.me/61468092989"
+                target="_blank"
+                class="inline-flex w-full sm:w-auto justify-center bg-green-500 text-white px-5 py-3 rounded-xl text-sm sm:text-base">
+                WhatsApp Now
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<script>
+const modal = document.getElementById('applicationModal');
+const form  = document.getElementById('applyForm');
+const successModal = document.getElementById('successModal');
+
+/* -------------------------
+OPEN / CLOSE APPLICATION MODAL
+------------------------- */
+function applicationOpenModal(courseTitle)
+{
+    document.getElementById('courseInput').value = courseTitle;
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function applicationCloseModal()
+{
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+
+    form.reset();
+}
+
+/* close on outside click */
+modal.addEventListener('click', function(e){
+    if(e.target === modal){
+        applicationCloseModal();
+    }
+});
+
+/* esc close (application modal) */
+document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+        applicationCloseModal();
+        closeSuccessModal();
+    }
+});
+
+
+/* -------------------------
+AJAX SUBMIT
+------------------------- */
+form.addEventListener('submit', async function(e){
+
+    e.preventDefault();
+
+    let btn = document.getElementById('applySubmitBtn');
+
+    btn.disabled = true;
+    btn.innerText = 'Submitting...';
+
+    try{
+
+        const response = await fetch(form.action,{
+            method:'POST',
+            headers:{
+                'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                'Accept':'application/json'
+            },
+            body:new FormData(form)
+        });
+
+        const result = await response.json();
+
+        btn.disabled = false;
+        btn.innerText = 'Submit Now';
+
+        if(result.status){
+
+            applicationCloseModal();
+
+            successModal.classList.remove('hidden');
+            successModal.classList.add('flex');
+        }
+
+    }catch(error){
+
+        btn.disabled = false;
+        btn.innerText = 'Submit Now';
+
+        alert('Something went wrong.');
+    }
+
+});
+
+
+/* -------------------------
+SUCCESS MODAL
+------------------------- */
+function closeSuccessModal()
+{
+    successModal.classList.add('hidden');
+    successModal.classList.remove('flex');
+}
+
+/* close success modal on outside click */
+successModal.addEventListener('click', function(e){
+    if(e.target === successModal){
+        closeSuccessModal();
+    }
+});
+</script>
+
+
+
+
+<style>
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:scale(.92);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.animate-fadeIn{
+    animation:fadeIn .25s ease;
+}
+</style>

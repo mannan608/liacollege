@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Course;
+use App\Http\Requests\StoreQuizAnswerRequest;
+use App\Models\QuizAnswer;
 use App\Models\Review;
 use App\Models\Setting;
 use DB;
@@ -163,13 +165,6 @@ class FrontendController extends Controller
         $reviews = Review::latest()->take(10)->get();
         return view('frontend.project-management', compact('setting','reviews'));
     }
-
-     public function meta_page()
-    {
-       return view('frontend.meta-page');
-    }
-
-    
     public function application()
     {   
         $countries = [
@@ -834,5 +829,11 @@ class FrontendController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+     public function fast_track_qualifications()
+    {
+
+       return view('meta-service.pages.fast-track-qualifications');
     }
 }

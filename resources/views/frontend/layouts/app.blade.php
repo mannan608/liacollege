@@ -15,7 +15,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  @include('frontend.partials.seo')
+  @include('meta-service.component.seo')
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/images/logo/logo.png') }}">
     <!-- animate css -->
     <link rel="stylesheet" href="{{ asset('frontend/css/plugins/animate.min.css') }}">
