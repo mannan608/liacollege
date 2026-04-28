@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadRplController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RplLeadController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Request;
@@ -169,3 +170,4 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('/meta-page', [LeadRplController::class, 'meta_page'])->name('meta-page');
 Route::get('/meta-page/quiz/{step}', [LeadRplController::class, 'showMetaPageQuizStep'])->name('meta-page.quiz.step');
 Route::post('/meta-page/quiz', [LeadRplController::class, 'storeMetaPageQuizAnswer'])->name('meta-page.quiz.store');
+Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');
