@@ -12,9 +12,9 @@
                 </ul>
             </div>
         </div>
-        <div class="mb-4 d-flex justify-content-end">
+        <!-- <div class="mb-4 d-flex justify-content-end">
           <a href="" class="btn btn-primary btn-sm py-2 px-4"> Export CSV </a>
-        </div>
+        </div> -->
 
 
         <div class="row">

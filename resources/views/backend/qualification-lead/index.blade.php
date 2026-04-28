@@ -12,9 +12,9 @@
                 </ul>
             </div>
         </div>
-        <div class="mb-4 d-flex justify-content-end">
+        <!-- <div class="mb-4 d-flex justify-content-end">
           <a href="" class="btn btn-primary btn-sm py-2 px-4"> Export CSV </a>
-        </div>
+        </div> -->
 
 
         <div class="row">
@@ -30,29 +30,19 @@
                                         <th>Phone</th>
                                         <th>Mail</th>
                                         <th>Course</th>
-                                        <th>Age</th>
-                                        <th>Employment</th>
-                                        <th>Experience</th>
-                                        <th>Care Role</th>
-                                        <th>Sector</th>
-                                        <th>Documents</th>
+                                        <th>Availability</th>
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($leads as $lead)
+                                    @foreach ($qualificationleads as $lead)
                                     <tr>
                                         <td>{{ $lead->id }}</td>
                                         <td>{{ $lead->name }}</td>
                                         <td>{{ $lead->phone }}</td>
                                         <td>{{ $lead->email }}</td>
                                         <td>{{ $lead->course }}</td>
-                                        <td>{{ $lead->age }}</td>
-                                        <td>{{ $lead->employment_status }}</td>
-                                        <td>{{ $lead->experience_years }}</td>
-                                        <td>{{ $lead->care_role }}</td>
-                                        <td>{{ implode(', ', $lead->sector ?? []) }}</td>
-                                        <td>{{ implode(', ', $lead->documents ?? []) }}</td>
+                                        <td>{{ $lead->availability?->format('d M Y h:i A') }}</td>
 
                                         <td class="text-end">
                                             <div class="actions">

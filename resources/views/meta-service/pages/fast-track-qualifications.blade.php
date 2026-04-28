@@ -11,36 +11,42 @@ $trustPoints = [
 $courses = [
 [
 'title' => 'Ageing Support',
+'slug'=>'ageing-support',
 'description' => 'Turn your years of dedication in aged care into a professional certification today.',
 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuAgBAtsA2KsS81pCiM3LmSVSxlTSIuS8q28vLWfdjC0oFk-SYYfMOstLSakjb9FFeO_-CI7YRXipYK-EBcfxHBC9gijbBEybHdyv3bp3E1U_oTHypeFdu95iVyV7ARadoxdg-J8ATtoRCXZkiB4RJGKz3qUeHdZyNKYNNwukwzEloBm2TeACVfVQFuD6AnhoC2HBHqVE1Qcu-UIqsY_lv8WGqDJv2gH0lZlwaZQ8YFdbzbADA4I1GOkB4LsI2BRSbVTG6eq-TerEuM',
 'alt' => 'Close-up of a compassionate aged care worker holding the hand of an elderly person in a brightly lit residential facility',
 ],
 [
 'title' => 'Disability Support',
+'slug'=>'disability-support',
 'description' => 'Gain official recognition for your essential work supporting individuals in the disability sector.',
 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUM6wp18XiOi2rpTsdrPKKN0v_GQN5pD9RpZuqthpsloOv0V35_Pl35XiqXkdPA0LXfNHrWIZ4xPoAjakrUPBU4aKwKsvFJ811axQr0hsyDgEbDw-vrBjFNrQdaGxCeEIw81y3XpR045Pc1bKNwRhWwElxA5w0UNnJyVqfDmXyaKovrYgPi17X8FBgSNz4g5TlBGSByRdB4jBq6o8TmMg_iH5dUcOJpUbUgIDrRPMTUA8bu80W-LEjvSJr5c-dUvIgsBP9R0bfCDw',
 'alt' => 'Professional health worker smiling while assisting a person with a disability in a modern community center with vibrant colors',
 ],
 [
 'title' => 'Project Management',
+'slug'=>'project-management',
 'description' => 'Validate your leadership skills with a nationally recognised Diploma of Project Management.',
 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRQZ2RlIVHdgZHySfurmJQhyYrWdXobwrYmzYwSdGb7YNYrC1JjwZLN81HL-t0VVm1w1oPEB98ZbCOg6nvod_mBI3QYDOJPRiA9vicAjZcbE4wh2iI1vGyLUTaXA5QwJBoVSTHtZZcY1f0EbSR2SRiwU3s7o7xoWXyUZhH4oEsQ-YA1jRVYzSdNyze5Eql9Wd6DGzjBgzC92P3P5_HOxm_nFAvqWWVqeWSGNg5lLB9hDnHPPc4xQyFP9pfcPF9Ch9jZt-4YUYNow0',
 'alt' => 'A confident project manager pointing at a colorful chart during a high-stakes corporate meeting in a glass-walled office',
 ],
 [
 'title' => 'Leadership & Management',
+'slug'=>'leadership-management',
 'description' => 'Formalise your management experience and unlock high-level career opportunities.',
 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuA9qUBBzF_n6I9zNNG2u75C-lhx6ezZYxcvP7CyidTD1JtTYf0qM5KynRxG_RGluqGxEfFhjG5nUSa7HAsw4sAeBD5TevUvBKdDSD-VMHb41P_1Z0nrbBMW_QDbUIt7cyFI6SyC4BneZ2cyWyzUfMnrocXeoQgtvAGrhhajnyICmog6ItbM0XT1CQBcIzHEZbT_F-R5wyQbLvasauP-0xENAQbu73kUDhJUlR2MnSxGb-mJJ9bf4SvthcfTl7mfYuq4jELvMMJcDbY',
 'alt' => 'Two business leaders shaking hands in front of a sleek corporate skyscraper at dawn with cool blue tones',
 ],
 [
 'title' => 'Individual Support',
+'slug'=>'individual-support',
 'description' => 'Certification for community and home care workers looking to advance their professional standing.',
 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuBh8qcEk4XWAvUgXYZNIITslDFmOtA6V5A8iudyczCmqoB28kg_EPs27a84OyxQlmqELgGcQR_qRmQG8EIEB5KL7kq2p6vgWU7xz1NHRWt7SaLrDLA6EmeEP1Z5I9CUX7Mt7-CjTIyUsvWGjq8sESlCtHQxn6pub1fvq9EFyM5xIikgl3M3ZjF0OqAbz2gz8aurL2UEVbGJnNg3WMp2EHi6zbK2peTXUS_KnHUF9pXBr4nPpOBbqGUYNPfRxxbA5yRy4hvLx7YFKPw',
 'alt' => 'Close up of childcare educator reading a storybook to engaged toddlers in a sun-drenched, cheerful early learning classroom',
 ],
 [
 'title' => 'Business Administration',
+'slug'=>'business-administration',
 'description' => 'Certify your administrative and organizational expertise with direct RTO accreditation.',
 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDLu77KWPMFsc95sMbktEmo72HOUrSqW3upOBGWh80_KdIXpbKbp-SY1jjiNRKmB2r3PSPx3dzVBsWvyiZbhGoR1KH8-H9g3U723ASYzN0-6UXf_5H-yXC7TNbpRf6R4UBptGMUvTGDLappYMjAeAyh6Rt7RU1Vr_uD3-mKKSuFt4SYgAu1ijVi1lp7cd26R7kMgT0qmYOEtpp3nweMK3skkICbeG0BP8J-QmMG9yFgK29Ebryyiyc2OT7LHeDi6TzTPQ3w_CdhoOQ',
 'alt' => 'Group of diverse corporate professionals engaged in a brainstorming session with whiteboards and sticky notes in a loft office',

@@ -176,7 +176,7 @@ Route::group(['middleware' => 'auth'], function () {
         ]
     ]);
  
-     Route::resource('qualification-lead', \App\Http\Controllers\RplLeadController::class, [
+     Route::resource('qualification-lead', \App\Http\Controllers\QualificationsLeadController::class, [
         'names' => [
             'index' => 'qualification-lead.index',
             'create' => 'qualification-lead.create',
