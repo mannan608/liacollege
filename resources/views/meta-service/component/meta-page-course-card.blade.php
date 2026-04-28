@@ -24,7 +24,7 @@
         </div>
 
         <div class="grid grid-cols-2 gap-5 ">
-            <a href="#"
+            <a href="{{ url('/fast-track/'.$course['slug']) }}"
                class="w-full text-center text-sm border rounded-xl py-2 hover:bg-gray-100 transition">
                 Details
             </a>
