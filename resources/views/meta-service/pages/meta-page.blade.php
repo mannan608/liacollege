@@ -119,7 +119,7 @@ $courses = [
 
 <section class="py-8 md:py-12 lg:py-16 bg-surface-container-low">
   <div class="max-w-3xl mx-auto px-6">
-    <div id="metaPageQuiz" class="bg-surface-container-lowest rounded-xl p-8 md:p-12 ambient-shadow border border-outline-variant/15">
+    <div id="metaPageQuiz" class="bg-surface-container-lowest rounded-xl p-4 md:p-6 lg:p-8 ambient-shadow border border-outline-variant/15">
       @include('meta-service.component.rpllead-form')
     </div>
   </div>
