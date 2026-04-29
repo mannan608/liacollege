@@ -156,6 +156,7 @@
 const modal = document.getElementById('applicationModal');
 const form  = document.getElementById('applyForm');
 const successModal = document.getElementById('successModal');
+const applyErrors = document.getElementById('applyErrors');
 
 /* -------------------------
 OPEN / CLOSE APPLICATION MODAL
@@ -163,7 +164,10 @@ OPEN / CLOSE APPLICATION MODAL
 function applicationOpenModal(courseTitle)
 {
     document.getElementById('courseInput').value = courseTitle;
-
+    
+    // Clear any previous errors when opening modal
+    clearErrors();
+    
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }
@@ -172,25 +176,71 @@ function applicationCloseModal()
 {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
-
+    
     form.reset();
+    clearErrors(); // Clear errors when closing
 }
 
-/* close on outside click */
-modal.addEventListener('click', function(e){
-    if(e.target === modal){
-        applicationCloseModal();
-    }
-});
+/* Clear all error displays */
+function clearErrors() {
+    applyErrors.innerHTML = '';
+    
+    // Remove any inline error messages
+    document.querySelectorAll('.field-error').forEach(el => el.remove());
+    document.querySelectorAll('.error-input').forEach(el => {
+        el.classList.remove('error-input', 'border-red-500');
+    });
+}
 
-/* esc close (application modal) */
-document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape'){
-        applicationCloseModal();
-        closeSuccessModal();
+/* Display validation errors */
+function displayErrors(errors) {
+    // Clear previous errors first
+    clearErrors();
+    
+    // Display summary errors at the top
+    if (errors.name || errors.phone || errors.email) {
+        const errorSummary = document.createElement('div');
+        errorSummary.className = 'bg-red-50 border border-red-200 rounded-xl p-4 mb-4';
+        
+        if (errors.name) errorSummary.innerHTML += `<li>${errors.name[0]}</li>`;
+        if (errors.phone) errorSummary.innerHTML += `<li>${errors.phone[0]}</li>`;
+        if (errors.email) errorSummary.innerHTML += `<li>${errors.email[0]}</li>`;
+        
+        errorSummary.innerHTML += '</ul>';
+        applyErrors.appendChild(errorSummary);
     }
-});
+    
+    // Display inline errors for each field
+    if (errors.name) {
+        addInlineError('name', errors.name[0]);
+    }
+    
+    if (errors.phone) {
+        addInlineError('phone', errors.phone[0]);
+    }
+    
+    if (errors.email) {
+        addInlineError('email', errors.email[0]);
+    }
+}
 
+/* Add inline error message below a specific field */
+function addInlineError(fieldName, errorMessage) {
+    const field = document.querySelector(`[name="${fieldName}"]`);
+    if (field) {
+        // Add error class to input
+        field.classList.add('border-red-500', 'error-input');
+        
+        // Check if error message already exists
+        let existingError = field.parentElement.querySelector('.field-error');
+        if (!existingError) {
+            const errorDiv = document.createElement('p');
+            errorDiv.className = 'text-red-500 text-xs mt-2 field-error';
+            errorDiv.textContent = errorMessage;
+            field.parentElement.appendChild(errorDiv);
+        }
+    }
+}
 
 /* -------------------------
 AJAX SUBMIT
@@ -200,6 +250,9 @@ form.addEventListener('submit', async function(e){
     e.preventDefault();
 
     let btn = document.getElementById('applySubmitBtn');
+    
+    // Clear previous errors before new submission
+    clearErrors();
 
     btn.disabled = true;
     btn.innerText = 'Submitting...';
@@ -220,24 +273,49 @@ form.addEventListener('submit', async function(e){
         btn.disabled = false;
         btn.innerText = 'Submit Now';
 
-        if(result.status){
-
+        if (response.ok && result.status) {
+            // Success
             applicationCloseModal();
-
             successModal.classList.remove('hidden');
             successModal.classList.add('flex');
+            form.reset(); // Reset form after successful submission
+        } else if (response.status === 422 && result.errors) {
+            // Validation errors (unprocessable entity)
+            displayErrors(result.errors);
+            
+            // Scroll to show errors
+            applyErrors.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else if (result.message) {
+            // Other errors with message
+            applyErrors.innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                    <p class="text-red-600">${result.message}</p>
+                </div>
+            `;
         }
 
-    }catch(error){
-
+    } catch(error){
+        console.error('Error:', error);
         btn.disabled = false;
         btn.innerText = 'Submit Now';
-
-        alert('Something went wrong.');
+        
+        applyErrors.innerHTML = `
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                <p class="text-red-600">Something went wrong. Please try again.</p>
+            </div>
+        `;
     }
 
 });
 
+/* Remove error styling when user starts typing */
+form.querySelectorAll('input').forEach(input => {
+    input.addEventListener('input', function() {
+        this.classList.remove('border-red-500', 'error-input');
+        const errorMsg = this.parentElement.querySelector('.field-error');
+        if (errorMsg) errorMsg.remove();
+    });
+});
 
 /* -------------------------
 SUCCESS MODAL
