@@ -164,7 +164,11 @@ Route::group(['middleware' => 'auth'], function () {
             'destroy' => 'seo-meta.destroy',
         ]
     ]);
-    Route::resource('rpl-lead', \App\Http\Controllers\RplLeadController::class, [
+   
+});
+// fast-track-qualifications
+
+ Route::resource('rpl-lead', \App\Http\Controllers\RplLeadController::class, [
         'names' => [
             'index' => 'rpl-lead.index',
             'create' => 'rpl-lead.create',
@@ -187,8 +191,6 @@ Route::group(['middleware' => 'auth'], function () {
             'destroy' => 'qualification-lead.destroy',
         ]
         ]);
-});
-// fast-track-qualifications
 
 Route::get('/fast-track-qualifications', [FrontendController::class, 'fast_track_qualifications'])->name('fast-track-qualifications');
 
