@@ -836,4 +836,9 @@ class FrontendController extends Controller
 
        return view('meta-service.pages.fast-track-qualifications');
     }
+
+        public function show($slug)
+        {
+            return view('meta-service.pages.fast-track-course-details');
+        }
 }

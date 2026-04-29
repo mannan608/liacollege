@@ -188,7 +188,23 @@ Route::group(['middleware' => 'auth'], function () {
         ]
         ]);
 });
-
+// fast-track-qualifications
 
 Route::get('/fast-track-qualifications', [FrontendController::class, 'fast_track_qualifications'])->name('fast-track-qualifications');
+
+
+Route::get('/fast-track/{slug}', function ($slug) {
+
+    $view = 'meta-service.pages.fast-track.' . $slug;
+
+    if (!view()->exists($view)) {
+        abort(404);
+    }
+
+    return view($view);
+
+});
+
 Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');
+
+// fast-track-qualifications
