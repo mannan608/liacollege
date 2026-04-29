@@ -1,5 +1,9 @@
 @extends('meta-service.layout.meta-page')
 
+@php
+    $slug = $slug ?? request()->route('slug');
+@endphp
+
 @section('content')
 <div class="max-w-7xl mx-auto mt-0 md:mt-6 lg:mt-10 bg-white rounded-[14px] overflow-hidden">
 
@@ -97,64 +101,81 @@
                         BOOK A SLOT NOW
                     </h2>
 
-                    <p class="text-slate-500 text-base sm:text-lg mt-3 mb-8 leading-relaxed">
+                    <p class="text-slate-500 text-sm mt-3 mb-6 leading-relaxed">
                         Fast-track your Recognition of Prior Learning (RPL) assessment and get certified quicker.
                     </p>
 
-                    <form id="leadForm" class="space-y-5">
+                    <form id="leadForm" action="{{ route('single-course-store', $slug) }}" method="POST">
+                        @csrf
 
-                        <!-- Name -->
-                        <div>
-                            <label class="text-sm font-semibold text-slate-700 block mb-2">
-                                Full Name
-                            </label>
+                        <div class="space-y-3">
 
-                            <input
-                                type="text"
-                                id="fullName"
-                                placeholder="Enter your full name"
-                                class="w-full h-14 sm:h-16 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-600 focus:ring-4 focus:ring-sky-100 outline-none transition text-base sm:text-lg">
-                        </div>
+                            <!-- Name -->
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700 block mb-2">
+                                    Full Name
+                                </label>
 
-                        <!-- Mobile -->
-                        <div>
-                            <label class="text-sm font-semibold text-slate-700 block mb-2">
-                                Mobile Number
-                            </label>
+                                <input type="text" name="name" value="{{ old('name') }}"
+                                    class="w-full py-2.5 px-5 rounded-lg border border-slate-200 text-sm  focus:ring-0 "
+                                    placeholder="Enter your full name">
 
-                            <input
-                                type="text"
-                                id="mobile"
-                                placeholder="04XX XXX XXX"
-                                class="w-full h-14 sm:h-16 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-600 focus:ring-4 focus:ring-sky-100 outline-none transition text-base sm:text-lg">
-                        </div>
+                                <p class="text-red-500 text-xs mt-1 error" data-error="name"></p>
+                            </div>
 
-                        <!-- Email -->
-                        <div>
-                            <label class="text-sm font-semibold text-slate-700 block mb-2">
-                                Email Address
-                            </label>
+                            <!-- Mobile -->
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700 block mb-2">
+                                    Mobile Number
+                                </label>
 
-                            <input
-                                type="email"
-                                id="email"
-                                placeholder="you@example.com"
-                                class="w-full h-14 sm:h-16 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-600 focus:ring-4 focus:ring-sky-100 outline-none transition text-base sm:text-lg">
+                                <input type="text" name="phone" value="{{ old('phone') }}"
+                                    class="w-full py-2.5 px-5 rounded-lg border border-slate-200 text-sm focus:ring-0"
+                                    placeholder="04XX XXX XXX">
+
+                               <p class="text-red-500 text-xs mt-1 error" data-error="phone"></p>
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700 block mb-2">
+                                    Email Address
+                                </label>
+
+                                <input type="email" name="email" value="{{ old('email') }}"
+                                    class="w-full py-2.5 px-5 rounded-lg border border-slate-200 text-sm focus:ring-0"
+                                    placeholder="you@example.com">
+
+                                <p class="text-red-500 text-xs mt-1 error" data-error="email"></p>
+                            </div>
+
+                            <!-- Hidden Course -->
+                            <input type="hidden" name="course" value="{{ $slug }}">
+
+                            <!-- Date -->
+                            <div>
+                                <label class="block mb-2 font-medium text-sm">
+                                    Preferred Date & Time
+                                </label>
+
+                                <input type="datetime-local" name="availability"
+                                    value="{{ old('availability') }}"
+                                    class="w-full py-2.5 px-5 rounded-lg border border-slate-200 text-sm focus:ring-0">
+
+                               <p class="text-red-500 text-xs mt-1 error" data-error="availability"></p>
+                            </div>
                         </div>
 
                         <!-- Button -->
-                        <button
-                            type="submit"
-                            class="w-full h-14 sm:h-16 rounded-2xl bg-[#0c4a6e] hover:bg-[#0c4a6e] active:scale-[0.98] transition-all text-white font-black text-sm md:text-base shadow-lg">
+                        <button type="submit"
+                            class="w-full py-3 my-6 rounded-lg bg-[#0c4a6e] text-white text-xs md:text-sm"> 
                             APPLY NOW →
                         </button>
-
-                        <!-- Bottom Badge -->
-                        <div class="bg-orange-50 border border-orange-100 text-orange-700 text-center text-sm sm:text-base rounded-2xl py-4 px-4 font-semibold">
-                            ⚡ Fast Assessment • No Hidden Fees • Free Eligibility Check
-                        </div>
-
                     </form>
+                    <!-- Bottom Badge -->
+                    <div class="bg-orange-50 border border-orange-100 text-orange-700 text-center text-sm sm:text-base rounded-lg py-4 px-4 font-semibold">
+                        ⚡ Fast Assessment • No Hidden Fees • Free Eligibility Check
+                    </div>
 
                 </div>
 
@@ -180,7 +201,7 @@
                         <div class="flex items-start gap-3">
 
                             <!-- Number -->
-                            <div class="md:min-w-[48px] md:h-[48px] min-w-[32px] h-[32px] rounded-2xl bg-sky-900 text-white flex items-center justify-center font-black text-sm md:text-base shadow-md">
+                            <div class="md:min-w-[48px] md:h-[48px] min-w-[32px] h-[32px] rounded-lg bg-sky-900 text-white flex items-center justify-center font-black text-sm md:text-base shadow-md">
                                 {{ $index + 1 }}
                             </div>
 
@@ -333,43 +354,110 @@
 
 </div>
 
-{{-- TOAST --}}
-<div id="toastMsg"
-    class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full hidden z-50">
-</div>
+
 @endsection
+
+
+<!-- ✅ SUCCESS MODAL -->
+<div id="successModal"
+     class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-xl text-center shadow-xl">
+        <div class="space-y-6 text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-secondary/15 text-secondary">
+                <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div>
+                <h3 class="font-headline text-lg sm:text-xl font-bold text-primary">Thank You for Your Submission!</h3>
+                <p class="mt-3 text-sm sm:text-base text-on-surface-variant">We have successfully received your qualifications application. Our team will contact you shortly.</p>
+            </div>
+        </div>
+
+        <div class="mt-8 sm:mt-10">
+            <a href="https://wa.me/61468092989"
+                target="_blank"
+                class="inline-flex w-full sm:w-auto justify-center bg-green-500 text-white px-5 py-3 rounded-xl text-sm sm:text-base">
+                WhatsApp Now
+            </a>
+        </div>
+    </div>
+</div>
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
-        const form = document.getElementById('leadForm');
-        const toast = document.getElementById('toastMsg');
+    const form  = document.getElementById('leadForm');
+    const modal = document.getElementById('successModal');
+    const box   = document.getElementById('successModalBox');
+    const btn   = form.querySelector('button[type="submit"]');
 
-        function showToast(msg, error = false) {
-            toast.innerText = msg;
-            toast.classList.remove('hidden');
-            toast.classList.toggle('bg-red-600', error);
-            toast.classList.toggle('bg-slate-900', !error);
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3000);
-        }
+        let formData = new FormData(form);
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
+        // clear old errors
+        document.querySelectorAll('.error').forEach(el => el.innerText = '');
 
-            let name = document.getElementById('fullName').value.trim();
-            let mobile = document.getElementById('mobile').value.trim();
-            let email = document.getElementById('email').value.trim();
+        // disable button
+        btn.disabled = true;
+        btn.innerText = 'Submitting...';
 
-            if (!name || !mobile || !email) {
-                showToast('Please fill all fields.', true);
-                return;
+        try {
+            let response = await fetch(form.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json'
+                }
+            });
+
+            let data = await response.json();
+
+            // ✅ SUCCESS
+            if (response.ok) {
+                modal.classList.remove('hidden');
+                form.reset();
             }
 
-            showToast('✅ Application received! We will contact you shortly.');
-            form.reset();
-        });
+            // ❌ VALIDATION
+            if (response.status === 422) {
+                let errors = data.errors;
 
+                for (let field in errors) {
+                    let el = document.querySelector(`[data-error="${field}"]`);
+                    if (el) el.innerText = errors[field][0];
+                }
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+        // enable button again
+        btn.disabled = false;
+        btn.innerText = 'APPLY NOW →';
     });
+
+    // close modal outside click
+    modal.addEventListener('click', function (e) {
+        if (!box.contains(e.target)) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    // ESC close
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            modal.classList.add('hidden');
+        }
+    });
+
+});
+
+function closeModal() {
+    document.getElementById('successModal').classList.add('hidden');
+}
 </script>

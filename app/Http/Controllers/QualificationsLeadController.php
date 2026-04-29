@@ -60,6 +60,41 @@ class QualificationsLeadController extends Controller
         ]);
     }
 
+public function singleCourseCreate($slug)
+{
+    return view('meta-service.pages.fast-track.ageing-support', compact('slug'));
+}
+
+public function singleCourseStore(QualificationsLeadStoreRequest $request, $slug)
+{
+    $data = $request->validated();
+
+    // add course slug as course name
+    $data['course'] = $slug;
+
+    $lead = QualificationsLead::create($data);
+
+    $message = "
+        New Qualifications Lead Submitted
+
+        Name: {$lead->name}
+        Phone: {$lead->phone}
+        Email: {$lead->email}
+        Course: {$lead->course}
+        Availability: " . ($lead->availability?->format('d M Y h:i A') ?? 'N/A');
+
+    Mail::raw($message, function ($mail) {
+        $mail->to(env('ADMIN_EMAIL'))
+            ->subject('New Qualifications Lead');
+    });
+
+     return response()->json([
+        'success' => true,
+        'message' => 'Lead Submitted Successfully'
+    ]);
+}
+
+
     /**
      * Display the specified resource.
      */
