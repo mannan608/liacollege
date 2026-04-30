@@ -24,9 +24,5 @@ class RplLead extends Model
     protected $casts = [
         'sector' => 'array',
         'documents' => 'array',
-        'care_role' => 'boolean',
-        'communication' => 'boolean',
-        'evidence_ready' => 'boolean',
-        'fast_track' => 'boolean',
     ];
 }

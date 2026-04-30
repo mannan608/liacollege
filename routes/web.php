@@ -1,215 +1,256 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\FrontendController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LeadRplController;
-use App\Http\Controllers\QualificationsLeadController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\RplLeadController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Response;
+use App\Models\Course;
 
+// Controllers
+use App\Http\Controllers\{
+    Auth\LoginController,
+    Auth\RegisterController,
+    CategoryController,
+    ContactController,
+    CourseController,
+    FrontendController,
+    HomeController,
+    QualificationsLeadController,
+    SettingController,
+    ReviewController,
+    RplLeadController,
+    UserController
+};
+
+/*
+|--------------------------------------------------------------------------
+| Utility Route (DEV ONLY)
+|--------------------------------------------------------------------------
+*/
+
+// CHANGED: prevent production misuse
 Route::get("clear", function () {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('config:cache');
-    Artisan::call('route:clear');
-    Artisan::call('view:clear');
-    Artisan::call('optimize:clear');
+    abort_if(!app()->environment('local'), 403); // CHANGED
+
+    Artisan::call('optimize:clear'); // CHANGED (cleaner)
     return "Cache cleared";
 });
 
-if (! function_exists('set_active')) {
+/*
+|--------------------------------------------------------------------------
+| Helper (BETTER APPROACH)
+|--------------------------------------------------------------------------
+*/
+
+// CHANGED: simplified helper (recommended to move to helpers.php)
+if (!function_exists('set_active')) {
     function set_active($route)
     {
-        if (is_array($route)) {
-            return in_array(Request::path(), $route) ? 'active' : '';
-        }
-        return Request::path() === $route ? 'active' : '';
+        return request()->routeIs($route) ? 'active' : ''; // CHANGED
     }
 }
 
-Route::get('/course-list', [FrontendController::class, 'courseList'])->name('course.list');
-Route::get('/category/{id}', [FrontendController::class, 'singleCategory'])->name('single.category');
-Route::get('/course/{id}', [FrontendController::class, 'singleCourse'])->name('single.course');
+/*
+|--------------------------------------------------------------------------
+| Frontend Routes
+|--------------------------------------------------------------------------
+*/
 
-// ---------------------- Login / Register ----------------------
-Route::get('/login', [LoginController::class, 'login'])->name('login');
-Route::post('/login', [LoginController::class, 'authenticate']);
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::post('change/password', [LoginController::class, 'changePassword'])->name('change/password');
+// CHANGED: grouped controller
+Route::controller(FrontendController::class)->group(function () {
 
-Route::get('/register', [RegisterController::class, 'register'])->name('register');
-Route::post('/register', [RegisterController::class, 'storeUser'])->name('register.store');
+    Route::get('/', 'index')->name('home');
+    Route::get('/about', 'about')->name('about');
+    Route::get('/contact', 'contact')->name('contact');
+    Route::get('/faq', 'faq')->name('faq');
 
-// ---------------------- Frontend Routes ----------------------
-Route::get('/', [FrontendController::class, 'index'])->name('home');
-Route::get('/about', [FrontendController::class, 'about'])->name('about');
-Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
-Route::get('/faq', [FrontendController::class, 'faq'])->name('faq');
-Route::get('/policy-and-procedure', [FrontendController::class, 'policyAndProcedure'])->name('policyAndProcedure');
-Route::get('/complaints-and-appeals-policy', [FrontendController::class, 'complaintsAndAppealsPolicy'])->name('complaintsAndAppealsPolicy');
-Route::get('/learning-resources-policy', [FrontendController::class, 'learningResourcesPolicy'])->name('learningResourcesPolicy');
-Route::get('/reassessment-policy', [FrontendController::class, 'reassessmentPolicy'])->name('reassessmentPolicy');
-Route::get('/schedule-of-administrative-fees', [FrontendController::class, 'scheduleOfAdministrativeFees'])->name('scheduleOfAdministrativeFees');
-Route::get('/refund-cancellation-policy', [FrontendController::class, 'refundCancellationPolicy'])->name('refundCancellationPolicy');
-Route::get('/course-details', [FrontendController::class, 'courseDetails'])->name('course.details');
-Route::get('/enrolment', [FrontendController::class, 'enrolment'])->name('enrolment');
-Route::get('/enrolment', [FrontendController::class, 'enrolment'])->name('enrolment');
-Route::get('/work-placement', [FrontendController::class, 'workPlacement'])->name('workPlacement');
-Route::get('/application', [FrontendController::class, 'application'])->name('application');
-Route::get('individual-support', [FrontendController::class, 'individualSupport'])->name('individualSupport');
-Route::get('ageing-support', [FrontendController::class, 'ageingSupport'])->name('ageingSupport');
-Route::get('disability-support', [FrontendController::class, 'disabilitySupport'])->name('disabilitySupport');
-Route::get('community-service', [FrontendController::class, 'communityService'])->name('communityService');
-Route::get('community-services', [FrontendController::class, 'communityServices'])->name('communityServices');
-Route::get('cardiopulmonary-resuscitation', [FrontendController::class, 'cardiopulmonaryResuscitation'])->name('cardiopulmonaryResuscitation');
-Route::get('first-aid-cpr', [FrontendController::class, 'firstAidCpr'])->name('firstAidCpr');
-Route::get('leadership-management', [FrontendController::class, 'leadershipManagement'])->name('leadershipManagement');
-Route::get('project-management', [FrontendController::class, 'projectManagement'])->name('projectManagement');
-Route::post('/application', [FrontendController::class, 'store'])->name('application.store');
+    // Policies
+    Route::get('/policy-and-procedure', 'policyAndProcedure')->name('policyAndProcedure');
+    Route::get('/complaints-and-appeals-policy', 'complaintsAndAppealsPolicy')->name('complaintsAndAppealsPolicy');
+    Route::get('/learning-resources-policy', 'learningResourcesPolicy')->name('learningResourcesPolicy');
+    Route::get('/reassessment-policy', 'reassessmentPolicy')->name('reassessmentPolicy');
+    Route::get('/schedule-of-administrative-fees', 'scheduleOfAdministrativeFees')->name('scheduleOfAdministrativeFees');
+    Route::get('/refund-cancellation-policy', 'refundCancellationPolicy')->name('refundCancellationPolicy');
 
+    // Courses
+    Route::get('/course-list', 'courseList')->name('course.list');
+    Route::get('/course/{id}', 'singleCourse')->name('single.course');
+    Route::get('/category/{id}', 'singleCategory')->name('single.category');
 
-// ---------------------- User / Student / Teacher ----------------------
-Route::match(['get', 'post'], 'user/password-reset', [UserController::class, 'password_reset'])->name('password.reset');
-// ---------------------- Auth Routes ----------------------
-Route::group(['middleware' => 'auth'], function () {
+    Route::get('/course-details', 'courseDetails')->name('course.details');
+
+    // Enrollment
+    Route::get('/enrolment', 'enrolment')->name('enrolment'); // CHANGED (duplicate removed)
+
+    Route::get('/work-placement', 'workPlacement')->name('workPlacement');
+
+    // Application
+    Route::get('/application', 'application')->name('application');
+    Route::post('/application', 'store')->name('application.store');
+
+    // Categories
+    Route::get('individual-support', 'individualSupport')->name('individualSupport');
+    Route::get('ageing-support', 'ageingSupport')->name('ageingSupport');
+    Route::get('disability-support', 'disabilitySupport')->name('disabilitySupport');
+    Route::get('community-service', 'communityService')->name('communityService');
+    Route::get('community-services', 'communityServices')->name('communityServices');
+
+    Route::get('cardiopulmonary-resuscitation', 'cardiopulmonaryResuscitation')->name('cardiopulmonaryResuscitation');
+    Route::get('first-aid-cpr', 'firstAidCpr')->name('firstAidCpr');
+    Route::get('leadership-management', 'leadershipManagement')->name('leadershipManagement');
+    Route::get('project-management', 'projectManagement')->name('projectManagement');
+
+    // Fast Track
+    Route::get('/fast-track-qualifications', 'fast_track_qualifications')->name('fast-track-qualifications');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
+
+// CHANGED: grouped login
+Route::controller(LoginController::class)->group(function () {
+    Route::get('/login', 'login')->name('login');
+    Route::post('/login', 'authenticate');
+    Route::get('/logout', 'logout')->name('logout');
+    Route::post('change/password', 'changePassword')->name('change/password');
+});
+
+// CHANGED: grouped register
+Route::controller(RegisterController::class)->group(function () {
+    Route::get('/register', 'register')->name('register');
+    Route::post('/register', 'storeUser')->name('register.store');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Other Public Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::match(['get', 'post'], 'user/password-reset', [UserController::class, 'password_reset'])
+    ->name('password.reset');
+
+// CHANGED: safer slug handling
+Route::get('/fast-track/{slug}', function ($slug) {
+    $view = "meta-service.pages.fast-track.$slug";
+
+    abort_unless(view()->exists($view), 404); // CHANGED
+
+    return view($view);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Form Submissions
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');
+Route::post('/qualification-lead', [QualificationsLeadController::class, 'store'])->name('qualification-lead.store');
+Route::post('/fast-track/{slug}', [QualificationsLeadController::class, 'singleCourseStore'])->name('single-course-store');
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
     Route::get('profile', [HomeController::class, 'profile'])->name('profile');
     Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-    Route::resource('users', UserController::class, [
-        'names' => [
-            'index' => 'user.index',
-            'create' => 'user.create',
-            'store' => 'user.store',
-            'show' => 'user.show',
-            'edit' => 'user.edit',
-            'update' => 'user.update',
-        ]
-    ]);
-    
-    Route::resource('reviews', ReviewController::class, [
-        'names' => [
-            'index' => 'review.index',
-            'create' => 'review.create',
-            'store' => 'review.store',
-            'show' => 'review.show',
-            'edit' => 'review.edit',
-            'update' => 'review.update',
-            'destroy' => 'review.destroy',
-        ]
-    ]);
-    
-    Route::resource('courses', CourseController::class, [
-        'names' => [
-            'index' => 'course.index',
-            'create' => 'course.create',
-            'store' => 'course.store',
-            'show' => 'course.show',
-            'edit' => 'course.edit',
-            'update' => 'course.update',
-            'destroy' => 'course.destroy',
-        ]
-    ]);
-    
-    Route::resource('categories', CategoryController::class, [
-        'names' => [
-            'index' => 'category.index',
-            'create' => 'category.create',
-            'store' => 'category.store',
-            'show' => 'category.show',
-            'edit' => 'category.edit',
-            'update' => 'category.update',
-            'destroy' => 'category.destroy',
-        ]
-    ]);
-    
-    Route::resource('settings', SettingController::class, [
-        'names' => [
-            'index' => 'setting.index',
-            'create' => 'setting.create',
-            'store' => 'setting.store',
-            'show' => 'setting.show',
-            'edit' => 'setting.edit',
-            'update' => 'setting.update',
-        ]
-    ]);
-
-    Route::resource('contacts', ContactController::class, [
-        'names' => [
-            'index' => 'contact.index',
-            'create' => 'contact.create',
-            'store' => 'contact.store',
-            'show' => 'contact.show',
-            'edit' => 'contact.edit',
-            'update' => 'contact.update',
-        ]
-    ]);
-
-    Route::resource('seo-meta', \App\Http\Controllers\SeoMetaController::class, [
-        'names' => [
-            'index' => 'seo-meta.index',
-            'create' => 'seo-meta.create',
-            'store' => 'seo-meta.store',
-            'show' => 'seo-meta.show',
-            'edit' => 'seo-meta.edit',
-            'update' => 'seo-meta.update',
-            'destroy' => 'seo-meta.destroy',
-        ]
-    ]);
-   
+    // CHANGED: cleaner but KEEPING your custom names
+    Route::resource('users', UserController::class)->names('user');
+    Route::resource('reviews', ReviewController::class)->names('review');
+    Route::resource('courses', CourseController::class)->names('course');
+    Route::resource('categories', CategoryController::class)->names('category');
+    Route::resource('settings', SettingController::class)->names('setting');
+    Route::resource('contacts', ContactController::class)->names('contact');
+    Route::resource('seo-meta', \App\Http\Controllers\SeoMetaController::class)->names('seo-meta');
+    Route::resource('rpl-lead', RplLeadController::class)->names('rpl-lead');
+    Route::resource('qualification-lead', QualificationsLeadController::class)->names('qualification-lead');
 });
-// fast-track-qualifications
-
- Route::resource('rpl-lead', \App\Http\Controllers\RplLeadController::class, [
-        'names' => [
-            'index' => 'rpl-lead.index',
-            'create' => 'rpl-lead.create',
-            'store' => 'rpl-lead.store',
-            'show' => 'rpl-lead.show',
-            'edit' => 'rpl-lead.edit',
-            'update' => 'rpl-lead.update',
-            'destroy' => 'rpl-lead.destroy',
-        ]
-    ]);
- 
-     Route::resource('qualification-lead', \App\Http\Controllers\QualificationsLeadController::class, [
-        'names' => [
-            'index' => 'qualification-lead.index',
-            'create' => 'qualification-lead.create',
-            'store' => 'qualification-lead.store',
-            'show' => 'qualification-lead.show',
-            'edit' => 'qualification-lead.edit',
-            'update' => 'qualification-lead.update',
-            'destroy' => 'qualification-lead.destroy',
-        ]
-        ]);
-
-Route::get('/fast-track-qualifications', [FrontendController::class, 'fast_track_qualifications'])->name('fast-track-qualifications');
-
-Route::post('/fast-track/{slug}', [QualificationsLeadController::class, 'singleCourseStore'])->name('single-course-store');
 
 
-Route::get('/fast-track/{slug}', function ($slug) {
+// site map 
 
-    $view = 'meta-service.pages.fast-track.' . $slug;
 
-    if (!view()->exists($view)) {
-        abort(404);
+Route::get('/sitemap.xml', function () {
+
+    $urls = [];
+
+    /*
+    |--------------------------------------------------------------------------
+    | STATIC ROUTES
+    |--------------------------------------------------------------------------
+    */
+
+    $staticRoutes = [
+        '/',
+        '/about',
+        '/contact',
+        '/faq',
+        '/course-list',
+        '/enrolment',
+        '/application',
+    ];
+
+    foreach ($staticRoutes as $route) {
+        $urls[] = [
+            'loc' => url($route),
+            'lastmod' => now()->toAtomString(),
+            'changefreq' => 'weekly',
+            'priority' => $route === '/' ? '1.0' : '0.8',
+        ];
     }
 
-    return view($view);
+    /*
+    |--------------------------------------------------------------------------
+    | DYNAMIC COURSES
+    |--------------------------------------------------------------------------
+    */
 
+    if (class_exists(Course::class)) {
+        $courses = Course::select('id', 'updated_at')->get();
+
+        foreach ($courses as $course) {
+            $urls[] = [
+                'loc' => url('/course/' . $course->id),
+                'lastmod' => optional($course->updated_at)->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ];
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | GENERATE XML
+    |--------------------------------------------------------------------------
+    */
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+    foreach ($urls as $url) {
+        $xml .= '<url>';
+        $xml .= '<loc>' . $url['loc'] . '</loc>';
+
+        if (!empty($url['lastmod'])) {
+            $xml .= '<lastmod>' . $url['lastmod'] . '</lastmod>';
+        }
+
+        $xml .= '<changefreq>' . $url['changefreq'] . '</changefreq>';
+        $xml .= '<priority>' . $url['priority'] . '</priority>';
+        $xml .= '</url>';
+    }
+
+    $xml .= '</urlset>';
+
+    return Response::make($xml, 200, [
+        'Content-Type' => 'application/xml',
+    ]);
 });
-
-Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');
-
-// fast-track-qualifications

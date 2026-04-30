@@ -22,12 +22,17 @@ class RplLeadStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required','string','max:255'],
-            'phone' => ['required','unique:rpl_leads,phone'],
-            'email' => ['nullable','email'],
-            'course' => ['required'],
-        ];
+       return [
+        'name' => ['required','string','max:255'],
+        'phone' => ['required','unique:rpl_leads,phone'],
+        'email' => ['nullable','email'],
+        'course' => ['required'],
+
+        'care_role' => ['nullable','in:yes,no'],
+        'communication' => ['nullable','in:yes,no'],
+        'evidence_ready' => ['nullable','in:yes,no'],
+        'fast_track' => ['nullable','in:yes,no'],
+    ];
     }
     public function messages()
     {
