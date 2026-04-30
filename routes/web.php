@@ -8,6 +8,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadRplController;
+use App\Http\Controllers\QualificationsLeadController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RplLeadController;
@@ -193,6 +194,8 @@ Route::group(['middleware' => 'auth'], function () {
         ]);
 
 Route::get('/fast-track-qualifications', [FrontendController::class, 'fast_track_qualifications'])->name('fast-track-qualifications');
+
+Route::post('/fast-track/{slug}', [QualificationsLeadController::class, 'singleCourseStore'])->name('single-course-store');
 
 
 Route::get('/fast-track/{slug}', function ($slug) {
