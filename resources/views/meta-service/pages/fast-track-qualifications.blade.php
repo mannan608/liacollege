@@ -55,75 +55,190 @@ $courses = [
 @endphp
 
 @section('content')
-<section class="max-w-7xl mx-auto px-5 py-3 md:py-12 flex flex-col items-center text-center">
-  <h1 class="font-display font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight text-primary mb-3 max-w-4xl">
-    Get Qualified Directly from an RTO &ndash; Starting from $1000
-  </h1>
-  <p class="font-body text-sm md:text-md lg:text-lg text-on-surface-variant max-w-2xl mb-6 leading-relaxed">
-    Turn your experience into a nationally recognised qualification with RPL. Become a certified Support worker, Aged Care worker, Disability care worker, Leader, project manager.
-  </p>
+<section class=" py-6 md:py-8 lg:py-12 flex flex-col items-center text-center">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="font-display font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight text-primary mb-3 max-w-4xl">
+      Get Qualified Directly from an RTO &ndash; Starting from $1000
+    </h1>
+    <p class="font-body text-sm md:text-md lg:text-lg text-on-surface-variant max-w-2xl mb-6 leading-relaxed">
+      Turn your experience into a nationally recognised qualification with RPL. Become a certified Support worker, Aged Care worker, Disability care worker, Leader, project manager.
+    </p>
 
-  <div class="flex flex-wrap justify-center gap-2 md:gap-6 mb-8 md:mb-12">
-    @foreach ($trustPoints as $point)
-    <div class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-secondary font-bold">check_circle</span>
-      <span class="font-label uppercase tracking-wider text-xs font-semibold text-on-surface-variant">{{ $point }}</span>
+    <div class="flex flex-wrap justify-center gap-2 md:gap-6 mb-8 md:mb-12">
+      @foreach ($trustPoints as $point)
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary font-bold">check_circle</span>
+        <span class="font-label uppercase tracking-wider text-xs font-semibold text-on-surface-variant">{{ $point }}</span>
+      </div>
+      @endforeach
     </div>
-    @endforeach
-  </div>
 
-  <div
-    id="introVideo"
-    class="w-full aspect-video max-w-5xl rounded-xl overflow-hidden ambient-shadow mb-6 md:mb-12 relative group bg-surface-container-highest"
-    data-video-id="Cy8u0pLZEOU">
-    <iframe
-      id="youtubePlayer"
-      class="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300"
-      title="LIA Collage introduction video"
-      src=""
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen></iframe>
+    <div
+      id="introVideo"
+      class="w-full aspect-video max-w-5xl rounded-xl overflow-hidden ambient-shadow mb-6 md:mb-12 relative group bg-surface-container-highest"
+      data-video-id="Cy8u0pLZEOU">
+      <iframe
+        id="youtubePlayer"
+        class="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300"
+        title="LIA Collage introduction video"
+        src=""
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
 
+      <button
+        id="playOverlay"
+        type="button"
+        class="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-primary/20 transition-opacity duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-secondary/70"
+        aria-label="Play video">
+        <img
+          class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="https://img.youtube.com/vi/Cy8u0pLZEOU/hqdefault.jpg"
+          alt=""
+          aria-hidden="true"
+          loading="lazy">
+        <span class="absolute inset-0 bg-primary/25 transition-colors group-hover:bg-primary/10"></span>
+        <span class="relative flex h-16 w-16 items-center justify-center rounded-full bg-[#ff0000] shadow-2xl transition-transform duration-200 group-hover:scale-110 group-active:scale-95 md:h-20 md:w-20">
+          <span class="material-symbols-outlined text-white text-4xl md:text-5xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+        </span>
+      </button>
+    </div>
     <button
-      id="playOverlay"
       type="button"
-      class="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-primary/20 transition-opacity duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-secondary/70"
-      aria-label="Play video">
-      <img
-        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        src="https://img.youtube.com/vi/Cy8u0pLZEOU/hqdefault.jpg"
-        alt=""
-        aria-hidden="true"
-        loading="lazy">
-      <span class="absolute inset-0 bg-primary/25 transition-colors group-hover:bg-primary/10"></span>
-      <span class="relative flex h-16 w-16 items-center justify-center rounded-full bg-[#ff0000] shadow-2xl transition-transform duration-200 group-hover:scale-110 group-active:scale-95 md:h-20 md:w-20">
-        <span class="material-symbols-outlined text-white text-4xl md:text-5xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-      </span>
+      onclick="document.getElementById('metaPageQuiz').scrollIntoView({ behavior: 'smooth', block: 'center' })"
+      class="bg-primary text-on-primary md:px-8 md:py-4 px-4 py-2 rounded-xl font-semibold text-xs md:text-lg shadow-lg transition-all hover:scale-105 active:scale-100 mb-4">
+      Check Eligibility Now
     </button>
   </div>
-    <button
-    type="button"
-    onclick="document.getElementById('metaPageQuiz').scrollIntoView({ behavior: 'smooth', block: 'center' })"
-    class="bg-primary text-on-primary md:px-8 md:py-4 px-4 py-2 rounded-xl font-semibold text-xs md:text-lg shadow-lg transition-all hover:scale-105 active:scale-100 mb-8">
-    Check Eligibility Now
-  </button>
-
-
 </section>
 
-<section class="bg-primary-container py-8 md:py-12 lg:py-16">
-  <div class="max-w-7xl mx-auto px-6 text-center">
-    <h2 class="font-display  text-base md:text-lg lg:text-xl text-on-primary leading-text max-w-5xl mx-auto">
-      We are a direct Registered Training Organisation (RTO) offering genuine, nationally recognised qualifications&mdash;ensuring a safe and reliable alternative to non-compliant providers.
-    </h2>
-    <div class="mt-8 inline-flex items-center px-4 py-2 bg-secondary-fixed/10 border border-secondary-fixed/20 rounded-full">
-      <span class="w-3 h-3 bg-secondary-fixed rounded-full mr-3 animate-pulse"></span>
-      <span class="text-secondary-fixed text-xs md:text-sm font-semibold tracking-wide uppercase">RTO Code 46049 Verified</span>
+<section class="bg-primary-container py-6 md:py-8 lg:py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+
+      <!-- Text Section -->
+      <div class="text-center lg:text-left max-w-3xl">
+        <h2 class="font-display text-sm sm:text-base md:text-lg lg:text-xl text-on-primary leading-relaxed">
+          We are a direct Registered Training Organisation (RTO) offering genuine, nationally recognised qualifications—ensuring a safe and reliable alternative to non-compliant providers.
+        </h2>
+
+        <div class="mt-6 inline-flex items-center px-4 py-2 bg-secondary-fixed/10 border border-secondary-fixed/20 rounded-full">
+          <span class="w-3 h-3 bg-secondary-fixed rounded-full mr-3 animate-pulse"></span>
+          <span class="text-secondary-fixed text-xs sm:text-sm font-semibold tracking-wide uppercase">
+            RTO Code 46049 Verified
+          </span>
+        </div>
+      </div>
+
+      <!-- Brand Logos -->
+      <div class="flex flex-wrap items-center justify-center lg:justify-end gap-4">
+        <img
+          src="{{ asset('frontend/images/brand/11.png') }}"
+          alt="RTO 46049 Logo"
+          class="w-24 sm:w-28 md:w-32 lg:w-36 h-auto object-contain">
+        <img
+          src="{{ asset('frontend/images/brand/2.png') }}"
+          alt="RTO 46049 Logo"
+          class="w-24 sm:w-28 md:w-32 lg:w-36 h-auto object-contain">
+      </div>
+
     </div>
   </div>
 </section>
 
-<section class="py-8 md:py-12 lg:py-16 bg-surface-container-low">
+<section class="bg-gray-50 py-6 md:py-8 lg:py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Heading -->
+    <div class="text-center max-w-3xl mx-auto mb-4 sm:mb-6 lg:mb-8">
+      <h2 class="font-bold text-gray-900 
+                 text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight">
+        Your Journey to Success
+      </h2>
+      <p class="mt-3 text-gray-500 
+                text-sm sm:text-base md:text-lg leading-relaxed">
+        Simple 4-step guide to getting your national qualification
+      </p>
+    </div>
+
+    <!-- Steps Grid -->
+    <div class="grid gap-5 sm:gap-6 md:gap-8 
+                grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+
+      <!-- Card -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 lg:p-7 shadow-sm border flex flex-col h-full">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center 
+                    rounded-lg bg-gray-900 text-white 
+                    text-xs sm:text-sm font-semibold mb-4">
+          01
+        </div>
+        <h3 class="font-semibold text-gray-900 
+                   text-base sm:text-lg mb-2">
+          Free Eligibility Check
+        </h3>
+        <p class="text-gray-500 
+                  text-sm sm:text-base leading-relaxed flex-grow">
+          Speak with our expert consultants to see if your experience matches the qualification requirements.
+        </p>
+      </div>
+
+      <!-- Card -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 lg:p-7 shadow-sm border flex flex-col h-full">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center 
+                    rounded-lg bg-gray-900 text-white 
+                    text-xs sm:text-sm font-semibold mb-4">
+          02
+        </div>
+        <h3 class="font-semibold text-gray-900 
+                   text-base sm:text-lg mb-2">
+          Evidence Collection
+        </h3>
+        <p class="text-gray-500 
+                  text-sm sm:text-base leading-relaxed flex-grow">
+          Collect documents, photos, and videos of your work. Our assessors will guide you exactly what you need.
+        </p>
+      </div>
+
+      <!-- Card -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 lg:p-7 shadow-sm border flex flex-col h-full">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center 
+                    rounded-lg bg-gray-900 text-white 
+                    text-xs sm:text-sm font-semibold mb-4">
+          03
+        </div>
+        <h3 class="font-semibold text-gray-900 
+                   text-base sm:text-lg mb-2">
+          Assessment
+        </h3>
+        <p class="text-gray-500 
+                  text-sm sm:text-base leading-relaxed flex-grow">
+          An industry assessor reviews your evidence. If there are any gaps, we’ll provide short top-up training.
+        </p>
+      </div>
+
+      <!-- Highlight Card -->
+      <div class="bg-green-700 text-white rounded-2xl 
+                  p-5 sm:p-6 lg:p-7 shadow-lg 
+                  flex flex-col h-full">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center 
+                    rounded-lg bg-white text-green-700 
+                    text-xs sm:text-sm font-semibold mb-4">
+          04
+        </div>
+        <h3 class="font-semibold 
+                   text-base sm:text-lg mb-2">
+          Get Certified
+        </h3>
+        <p class="text-green-100 
+                  text-sm sm:text-base leading-relaxed flex-grow">
+          Once assessed as competent, you receive your nationally recognised Certificate III in Individual Support.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="py-6 md:py-8 lg:py-12 bg-surface-container-low">
   <div class="max-w-3xl mx-auto px-0 md:px-6">
     <div id="metaPageQuiz" class="bg-surface-container-lowest md:rounded-xl p-4 md:p-6 lg:p-8 ambient-shadow border border-outline-variant/15">
       @include('meta-service.component.rpllead-form')
@@ -131,8 +246,8 @@ $courses = [
   </div>
 </section>
 
-<section class="py-8 md:py-12 lg:py-16 bg-surface">
-  <div class="max-w-7xl mx-auto px-5">
+<section class="py-6 md:py-8 lg:py-12 bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center md:mb-12 mb-6">
       <h2 class="font-display font-bold text-lg md:text-xl lg:text-2xl text-primary mb-4">Choose Your Career Path</h2>
       <p class="text-on-surface-variant max-w-xl mx-auto text-sm md:text-base lg:text-lg">Get nationally recognised qualifications through Recognition of Prior Learning.</p>
@@ -145,11 +260,119 @@ $courses = [
   </div>
 </section>
 
-<section class="py-8 md:py-12 lg:py-16 bg-surface">
-  <div class="max-w-7xl mx-auto px-5">
+<section class="bg-gray-50 py-10 sm:py-12 lg:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-   </div>
+    <!-- Heading -->
+    <div class="text-center md:mb-8 mb-4">
+      <h2 class="font-display font-bold text-lg md:text-xl lg:text-2xl text-primary mb-3">Our Student Stories</h2>
+      <p class="text-on-surface-variant max-w-xl mx-auto text-sm md:text-base lg:text-lg">Hear from our students about their journey and success stories.</p>
+    </div>
+
+    <!-- Reviews Data -->
+    @php
+    $reviews = [
+    [
+    'name' => 'Carly Bishop',
+    'designation' => 'Individual Support',
+    'image' => 'author-1.png',
+    'rating' => 4,
+    'text' => "I highly recommend them, I was hired before finishing my placement and love working in this industry..."
+    ],
+    [
+    'name' => 'Roslyn Brakes',
+    'designation' => 'Aged Care',
+    'image' => 'author-2.png',
+    'rating' => 4,
+    'text' => "I completed my certificate IV in ageing support and have no complaints..."
+    ],
+    [
+    'name' => 'Jess Heffernan',
+    'designation' => 'Community Service',
+    'image' => 'author-3.png',
+    'rating' => 4,
+    'text' => "Had a great experience with them. great place to study..."
+    ],
+    [
+    'name' => 'Md Abdul Mannan',
+    'designation' => 'Community Service',
+    'image' => 'author-3.png',
+    'rating' => 4,
+    'text' => "Had a great experience with them. great place to study..."
+    ],
+    ];
+    @endphp
+
+    <!-- Slider -->
+     <div class="">
+    <div class="swiper mySwiper flex gap-4 relative">
+      <div class="swiper-wrapper">
+
+        @foreach($reviews as $review)
+        <div class="swiper-slide h-auto">
+
+          <div class="bg-white rounded-2xl border shadow-sm 
+                      p-5 sm:p-6 lg:p-7 
+                      flex flex-col h-full">
+
+            <!-- Stars -->
+            <div class="flex items-center gap-1 mb-4">
+              @for($i = 1; $i <= 5; $i++)
+                @if($i <=$review['rating'])
+                <i class="fa-solid fa-star text-yellow-400 text-sm sm:text-base"></i>
+                @else
+                <i class="fa-regular fa-star text-yellow-400 text-sm sm:text-base"></i>
+                @endif
+                @endfor
+            </div>
+
+            <!-- Text -->
+            <p class="text-gray-600 text-sm sm:text-base leading-relaxed mb-6 flex-grow line-clamp-3">
+              {{ $review['text'] }}
+            </p>
+
+            <!-- Author -->
+            <div class="flex items-center justify-between mt-auto">
+
+              <div class="flex items-center gap-3">
+                <img
+                  src="{{ asset('frontend/images/testimonial/' . $review['image']) }}"
+                  alt="{{ $review['name'] }}"
+                  class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover">
+
+                <div>
+                  <h5 class="font-semibold text-gray-900 
+                             text-sm sm:text-base">
+                    {{ $review['name'] }}
+                  </h5>
+                  <span class="text-gray-500 text-xs sm:text-sm">
+                    {{ $review['designation'] }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Quote Icon -->
+              <img
+                src="{{ asset('frontend/images/testimonial/quote.svg') }}"
+                alt="quote"
+                class="w-6 sm:w-8 opacity-40">
+            </div>
+
+          </div>
+
+        </div>
+        @endforeach
+
+      </div>
+
+      <!-- Pagination -->
+      <div class="swiper-pagination "></div>
+    </div>
+</div>
+  </div>
 </section>
+
+
 
 @endsection
 
