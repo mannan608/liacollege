@@ -34,8 +34,15 @@ class RplLeadController extends Controller
     public function store(RplLeadStoreRequest $request)
     {
 
+        $data = $request->validated();
 
-        $lead = RplLead::create($request->all());
+            // Force default values if missing
+            $data['care_role'] = $request->care_role ?? 'no';
+            $data['communication'] = $request->communication ?? 'no';
+            $data['evidence_ready'] = $request->evidence_ready ?? 'no';
+            $data['fast_track'] = $request->fast_track ?? 'no';
+
+            $lead = RplLead::create($data);
 
         $message = "
             New RPL Lead Submitted

@@ -58,8 +58,8 @@
 
                         <select name="care_role" class="w-full border rounded-xl p-3 text-sm md:text-base">
                             <option value="">Select</option>
-                            <option>Yes</option>
-                            <option>No</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
                         </select>
                     </div>
 
@@ -124,8 +124,8 @@
 
                         <select name="communication" class="w-full border rounded-xl p-3 text-sm md:text-base">
                             <option value="">Select</option>
-                            <option>Yes</option>
-                            <option>No</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
                         </select>
                     </div>
 
@@ -177,8 +177,8 @@
 
                         <select name="evidence_ready" class="w-full border rounded-xl p-3 text-sm md:text-base">
                             <option value="">Select</option>
-                            <option>Yes</option>
-                            <option>No</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
                         </select>
                     </div>
 
@@ -189,8 +189,8 @@
 
                         <select name="fast_track" class="w-full border rounded-xl p-3 text-sm md:text-base">
                             <option value="">Select</option>
-                            <option>Yes</option>
-                            <option>No</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
                         </select>
                     </div>
 

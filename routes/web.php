@@ -165,11 +165,8 @@ Route::group(['middleware' => 'auth'], function () {
             'destroy' => 'seo-meta.destroy',
         ]
     ]);
-   
-});
-// fast-track-qualifications
 
- Route::resource('rpl-lead', \App\Http\Controllers\RplLeadController::class, [
+     Route::resource('rpl-lead', \App\Http\Controllers\RplLeadController::class, [
         'names' => [
             'index' => 'rpl-lead.index',
             'create' => 'rpl-lead.create',
@@ -192,11 +189,13 @@ Route::group(['middleware' => 'auth'], function () {
             'destroy' => 'qualification-lead.destroy',
         ]
         ]);
+   
+});
+// fast-track-qualifications
+
+
 
 Route::get('/fast-track-qualifications', [FrontendController::class, 'fast_track_qualifications'])->name('fast-track-qualifications');
-
-Route::post('/fast-track/{slug}', [QualificationsLeadController::class, 'singleCourseStore'])->name('single-course-store');
-
 
 Route::get('/fast-track/{slug}', function ($slug) {
 
@@ -211,5 +210,8 @@ Route::get('/fast-track/{slug}', function ($slug) {
 });
 
 Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');
+Route::post('/qualification-lead', [QualificationsLeadController::class, 'store'])->name('qualification-lead.store');
+Route::post('/fast-track/{slug}', [QualificationsLeadController::class, 'singleCourseStore'])->name('single-course-store');
+
 
 // fast-track-qualifications

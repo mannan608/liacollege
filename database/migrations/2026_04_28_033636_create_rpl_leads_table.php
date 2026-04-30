@@ -16,15 +16,18 @@ return new class extends Migration
 
             $table->string('age')->nullable();
             $table->string('employment_status')->nullable();
-            $table->boolean('care_role')->default(false);
+
+            $table->enum('care_role', ['yes', 'no'])->default('no');
 
             $table->json('sector')->nullable();
             $table->string('experience_years')->nullable();
-            $table->boolean('communication')->default(false);
+
+            $table->enum('communication', ['yes', 'no'])->default('no');
 
             $table->json('documents')->nullable();
-            $table->boolean('evidence_ready')->default(false);
-            $table->boolean('fast_track')->default(false);
+
+            $table->enum('evidence_ready', ['yes', 'no'])->default('no');
+            $table->enum('fast_track', ['yes', 'no'])->default('no');
 
             $table->string('name');
             $table->string('phone')->unique();
