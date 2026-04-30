@@ -1,5 +1,8 @@
 User-agent: *
+Allow: /
+
 Disallow: /admin
 Disallow: /login
+Disallow: /dashboard
 
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://liacollege.edu.au/sitemap.xml
