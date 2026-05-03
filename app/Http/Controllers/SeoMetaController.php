@@ -5,68 +5,92 @@ namespace App\Http\Controllers;
 use App\Models\SeoMeta;
 use App\Services\PageSpeedService;
 use App\Services\SeoAnalyzer;
+use App\Services\SeoAnalyzerService;
 use App\Services\SeoScoreService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 class SeoMetaController extends Controller
-{
-   public function index(PageSpeedService $pageSpeed, SeoAnalyzer $analyzer, SeoScoreService $scoreService)
-{
-    $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed, $analyzer, $scoreService) {
+{   
+    public function __construct(private SeoAnalyzerService $seo) {}
+//    public function index(
+//     PageSpeedService $pageSpeed,
+//     SeoAnalyzer $analyzer,
+//     SeoScoreService $scoreService
+// ) {
+//     $url = 'http://localhost:8000/about'; // your page
 
-        $url = $seoMeta->canonical_url ?: url($seoMeta->path);
+//     $response = Http::timeout(30)->get($url);
 
-    //   GOOGLE PAGE SPEED
-        $seoMeta->google_scores = $pageSpeed->analyze($url);
+//     $html = $response->successful() ? $response->body() : '';
 
-    // SEO ANALYSIS
-        $html = @file_get_contents($url);
+//     // 🧠 SEO Analysis
+//     $analysis = $analyzer->analyze($html, $url, 'about');
 
-        $analysis = $html
-            ? $analyzer->analyze($html, $seoMeta->meta_keywords)
-            : [];
+//     // 🧮 Score
+//     $seoScore = $scoreService->calculate($analysis);
 
-        $seoMeta->seo_result = $analysis;
+//     // 💡 Recommendations
+//     $recommendations = $scoreService->recommendations($analysis);
 
-    //    SEO SCORE
-        $seoMeta->seo_score = !empty($analysis)
-            ? $scoreService->calculate($analysis)
-            : 0;
+//     // ⚡ Google PageSpeed
+//     $google = $pageSpeed->analyze($url);
 
-        return $seoMeta;
-    });
+//     return view('backend.seo-meta.index', compact(
+//         'analysis',
+//         'seoScore',
+//         'recommendations',
+//         'google',
+//         'url'
+//     ));
+// }
+//    public function index(PageSpeedService $pageSpeed, SeoAnalyzer $analyzer, SeoScoreService $scoreService)
+//     {
+//         $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed, $analyzer, $scoreService) {
 
-    return view('backend.seo-meta.index', compact('seoMetas'));
-}
+//             dd($seoMeta);
 
-    // public function index(Request $request, SeoAnalyzer $analyzer, SeoScoreService $scoreService)
-    // {
-    //     $data = $request->validate([
-    //         'content' => ['required'],
-    //         'keyword' => ['nullable', 'string'],
-    //     ]);
+//         //   GOOGLE PAGE SPEED
+//         // $url = $seoMeta->canonical_url ?: url($seoMeta->path);
+//         // $seoMeta->google_scores = $pageSpeed->analyze($url);
 
-    //     $analysis = $analyzer->analyze($data['content'], $data['keyword']);
-    //     $score = $scoreService->calculate($analysis);
+//         // SEO ANALYSIS
+//             $html = @file_get_contents($url);
 
-   
+//             $analysis = $html
+//                 ? $analyzer->analyze($html, $seoMeta->meta_keywords)
+//                 : [];
 
-    //     return view('backend.seo-meta.index', [
-    //         'score' => $score,
-    //         'analysis' => $analysis,
-    //     ]);
-    // }
+//             $seoMeta->seo_result = $analysis;
 
+//         //    SEO SCORE
+//             $seoMeta->seo_score = !empty($analysis)
+//                 ? $scoreService->calculate($analysis)
+//                 : 0;
 
-    //  public function index()
-    // {
-    //     $seoMetas = SeoMeta::all();
+//             return $seoMeta;
+//         });
+//         // dd($seoMetas);
+//         return view('backend.seo-meta.index', compact('seoMetas'));
+//     }
 
-    //     return view('backend.seo-meta.index', compact('seoMetas'));
-    // }
+    
+
+    public function index()
+    {
+        $seoMetas = SeoMeta::get()->map(function ($seoMeta) {
+            $url     = url($seoMeta->path) ?? '';
+            $seoMeta->url = $url;
+            $keyword = $seoMeta->meta_keywords ?? '';
+            $seoMeta->seo_result = $this->seo->analyze($url, $keyword);
+            return $seoMeta;
+        });
+
+        return $seoMetas; // or return view(...)
+    }
 
     public function create()
     {

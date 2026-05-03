@@ -50,6 +50,8 @@
                                                     No Image
                                                 @endif
                                             </td>
+                                            <td> - </td>
+                                            <td> - </td>
                                             <td class="text-end">
                                                 <div class="actions">
                                                     <a href="{{ route('seo-meta.edit', $seoMeta->id) }}" class="btn btn-sm bg-primary-light mr-2">
