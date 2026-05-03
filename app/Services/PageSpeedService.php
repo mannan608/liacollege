@@ -8,19 +8,28 @@ class PageSpeedService
 {
     public function pageAnalyze(string $url): array
     {
-        $response = Http::timeout(1500)->get(
-            'https://www.googleapis.com/pagespeedonline/v5/runPagespeed',
-            [
-                 'key'      => env('GOOGLE_PAGESPEED_API_KEY'),
-                'url' => $url,
-                'category' => ['seo', 'performance'],
-            ]
-        );
+        try {
+            $response = Http::timeout(25)->get(
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed',
+                [
+                    'key' => env('GOOGLE_PAGESPEED_API_KEY'),
+                    'url' => $url,
+                    'category' => ['seo', 'performance'],
+                ]
+            );
+        } catch (\Throwable $e) {
+            return [
+                'performance' => 0,
+                'seo' => 0,
+                'error' => 'Unable to load Google score right now.',
+            ];
+        }
 
         if (!$response->successful()) {
             return [
                 'performance' => 0,
                 'seo' => 0,
+                'error' => 'Google score request failed.',
             ];
         }
 

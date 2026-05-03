@@ -99,8 +99,10 @@
                                         </td>
 
                                         {{-- GOOGLE SCORES --}}
-                                        <td>
-                                            -
+                                        <td class="google-score-cell" data-score-url="{{ route('seo-meta.google-score', $seoMeta->id) }}">
+                                            <div class="text-muted small google-score-loading">
+                                                <i class="fas fa-spinner fa-spin me-1"></i> Loading Google score...
+                                            </div>
                                         </td>
 
                                         <td class="text-end">
@@ -131,4 +133,85 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cells = Array.from(document.querySelectorAll('.google-score-cell'));
+        const maxConcurrentRequests = 2;
+
+        const renderScores = (cell, scores) => {
+            cell.innerHTML = `
+                <div class="d-flex flex-column" style="font-size: 13px; line-height: 18px;">
+                    <span>Performance: <strong>${scores.performance ?? 0}</strong></span>
+                    <span>SEO: <strong>${scores.seo ?? 0}</strong></span>
+                </div>
+            `;
+        };
+
+        const renderError = (cell) => {
+            cell.innerHTML = `
+                <div class="text-danger small">
+                    Google score unavailable
+                    <button type="button" class="btn btn-link btn-sm p-0 ms-1 google-score-retry">Retry</button>
+                </div>
+            `;
+        };
+
+        const loadScore = async (cell) => {
+            try {
+                const response = await fetch(cell.dataset.scoreUrl, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Google score request failed.');
+                }
+
+                const data = await response.json();
+
+                if (data.scores?.error) {
+                    renderError(cell);
+                    return;
+                }
+
+                renderScores(cell, data.scores || {});
+            } catch (error) {
+                renderError(cell);
+            }
+        };
+
+        const runQueue = async () => {
+            const queue = [...cells];
+            const workers = Array.from({ length: maxConcurrentRequests }, async () => {
+                while (queue.length) {
+                    const cell = queue.shift();
+                    await loadScore(cell);
+                }
+            });
+
+            await Promise.all(workers);
+        };
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.classList.contains('google-score-retry')) {
+                return;
+            }
+
+            const cell = event.target.closest('.google-score-cell');
+            cell.innerHTML = `
+                <div class="text-muted small google-score-loading">
+                    <i class="fas fa-spinner fa-spin me-1"></i> Loading Google score...
+                </div>
+            `;
+            loadScore(cell);
+        });
+
+        runQueue();
+    });
+</script>
 @endsection

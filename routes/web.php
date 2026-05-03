@@ -170,6 +170,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class)->names('category');
     Route::resource('settings', SettingController::class)->names('setting');
     Route::resource('contacts', ContactController::class)->names('contact');
+    Route::get('seo-meta/{seoMeta}/google-score', [SeoMetaController::class, 'googleScore'])
+        ->name('seo-meta.google-score');
     Route::resource('seo-meta', \App\Http\Controllers\SeoMetaController::class)->names('seo-meta');
     Route::resource('rpl-lead', RplLeadController::class)->names('rpl-lead');
     Route::resource('qualification-lead', QualificationsLeadController::class)->names('qualification-lead');
