@@ -7,6 +7,7 @@ use App\Services\PageSpeedService;
 use App\Services\SeoAnalyzerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -24,10 +25,32 @@ class SeoMetaController extends Controller
             $seoMeta->url = $url;
             $keyword = $seoMeta->meta_keywords ?? '';
             $seoMeta->seo_result = $this->seo->analyze($url, $keyword);
+
             return $seoMeta;
         });       
 
         return view('backend.seo-meta.index', compact('seoMetas'));
+    }
+
+    public function googleScore(SeoMeta $seoMeta, PageSpeedService $pageSpeed)
+    {
+        $url = url($seoMeta->path) ?? url('/');
+        $cacheKey = 'seo_meta_pagespeed_' . $seoMeta->id;
+
+        if (Cache::has($cacheKey)) {
+            $scores = Cache::get($cacheKey);
+        } else {
+            $scores = $pageSpeed->pageAnalyze($url);
+
+            if (empty($scores['error'])) {
+                Cache::put($cacheKey, $scores, now()->addHour());
+            }
+        }
+
+        return response()->json([
+            'url' => $url,
+            'scores' => $scores,
+        ]);
     }
 
     public function create()
