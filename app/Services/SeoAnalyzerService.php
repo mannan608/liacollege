@@ -63,12 +63,17 @@ class SeoAnalyzerService
             ->get($this->url);
 
         $this->html = $response->successful() ? $response->body() : '';
+        if(!empty($this->html)) {
+            $this->html = mb_convert_encoding($this->html, 'HTML-ENTITIES', 'UTF-8');
+        } else {
+            $this->html = '<html><head><title></title></head><body></body></html>';
+        }
     }
 
     // ── DOM ─────────────────────────────────────────────────────────────────
 
     private function buildDom(): void
-    {
+    {   
         $this->dom = new DOMDocument();
         libxml_use_internal_errors(true);
         $this->dom->loadHTML(mb_convert_encoding($this->html, 'HTML-ENTITIES', 'UTF-8'));
