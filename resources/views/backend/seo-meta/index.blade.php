@@ -1,4 +1,6 @@
 @extends('backend.layouts.master')
+
+
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
@@ -28,11 +30,14 @@
                                             <th>Meta Title</th>
                                             <th>Meta Description</th>
                                             <th>OG Image</th>
+                                            <th>Google Scores</th>
+                                            <th>SEO Results</th>
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($seoMetas as $seoMeta)
+                                        
                                         <tr>
                                             <td>{{ $seoMeta->id }}</td>
                                             <td>{{ $seoMeta->path }}</td>

@@ -3,21 +3,97 @@
 namespace App\Http\Controllers;
 
 use App\Models\SeoMeta;
+use App\Services\PageSpeedService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class SeoMetaController extends Controller
 {
-    public function index()
+    public function index(PageSpeedService $pageSpeed)
     {
-        $seoMetas = SeoMeta::all();
+        $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed) {
+
+            $url = $seoMeta->canonical_url ?: url($seoMeta->path);
+
+            $seoMeta->page_speed = $pageSpeed->analyze($url);
+
+            return $seoMeta;
+        });
+
+        dd($seoMetas->toArray());
+
         return view('backend.seo-meta.index', compact('seoMetas'));
     }
 
     public function create()
     {
-        return view('backend.seo-meta.create');
+        $excludedPrefixes = [
+            'admin',
+            'login',
+            'register',
+            'password',
+            'api',
+            '_',
+            'sitemap',
+            'up',
+            'clear',
+            'logout',
+            'route-list',
+            'password.reset',
+            'Storage.local',
+        ];
+
+        $excludedNames = [
+            'password.reset',
+            'Storage.local',
+        ];
+
+        $data = collect(Route::getRoutes())
+            ->filter(function ($route) use ($excludedPrefixes, $excludedNames) {
+
+                $uri = $route->uri();
+                $name = $route->getName();
+
+                // Only GET routes
+                if (!in_array('GET', $route->methods())) {
+                    return false;
+                }
+
+                // Skip routes without name
+                if (empty($name)) {
+                    return false;
+                }
+
+                // Skip auth protected routes
+                if (in_array('auth', $route->middleware())) {
+                    return false;
+                }
+
+                // Skip excluded route names
+                if (in_array($name, $excludedNames)) {
+                    return false;
+                }
+
+                // Skip excluded URI prefixes
+                foreach ($excludedPrefixes as $prefix) {
+                    if (str_starts_with($uri, $prefix)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
+            ->map(function ($route) {
+                return [
+                    'uri'  => $route->uri() === '/' ? '/' : '/' . $route->uri(),
+                    'name' => $route->getName(),
+                ];
+            })
+            ->values();
+
+        return view('backend.seo-meta.create', compact('data'));
     }
 
     public function store(Request $request)
@@ -56,7 +132,6 @@ class SeoMetaController extends Controller
             $this->clearSeoCache();
 
             return redirect()->route('seo-meta.index')->with('success', 'SEO Meta created successfully!');
-
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error($e->getMessage());
@@ -111,7 +186,6 @@ class SeoMetaController extends Controller
             $this->clearSeoCache();
 
             return redirect()->route('seo-meta.index')->with('success', 'SEO Meta updated successfully!');
-
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error($e->getMessage());
@@ -133,7 +207,6 @@ class SeoMetaController extends Controller
             $this->clearSeoCache();
 
             return redirect()->route('seo-meta.index')->with('success', 'SEO Meta deleted successfully!');
-
         } catch (\Throwable $e) {
             \Log::error($e->getMessage());
             return back()->with('error', 'Failed to delete SEO Meta.');
@@ -150,5 +223,25 @@ class SeoMetaController extends Controller
             ]);
         }
     }
-    
+
+
+    // public function route_seo(Request $request, PageSpeedService $pageSpeed)
+    // {
+    //     $data = $request->validate([
+    //         'route_name' => ['required', 'string'],
+    //         'params'     => ['nullable', 'array'],
+    //     ]);
+
+    //     // Convert route name → URL
+    //     $url = route($data['route_name'], $data['params'] ?? []);
+
+    //     // Call PageSpeed
+    //     $scores = $pageSpeed->analyze($url);
+
+    //     return response()->json([
+    //         'route_name' => $data['route_name'],
+    //         'url'        => $url,
+    //         'scores'     => $scores,
+    //     ]);
+    // }
 }
