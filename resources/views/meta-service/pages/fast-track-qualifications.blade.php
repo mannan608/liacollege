@@ -60,9 +60,11 @@ $courses = [
     <h1 class="font-display font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight text-primary mb-3 max-w-4xl">
       Get Qualified Directly from an RTO &ndash; Starting from $1000
     </h1>
-    <p class="font-body text-sm md:text-md lg:text-lg text-on-surface-variant max-w-2xl mb-6 leading-relaxed">
+<div class="w-full flex items-center justify-center">
+      <p class="font-body text-sm md:text-md lg:text-lg text-on-surface-variant max-w-2xl mb-6 leading-relaxed">
       Turn your experience into a nationally recognised qualification with RPL. Become a certified Support worker, Aged Care worker, Disability care worker, Leader, project manager.
     </p>
+</div>
 
     <div class="flex flex-wrap justify-center gap-2 md:gap-6 mb-8 md:mb-12">
       @foreach ($trustPoints as $point)

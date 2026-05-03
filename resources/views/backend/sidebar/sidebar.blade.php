@@ -28,7 +28,7 @@
                         <a href="{{ route('setting.index') }}" {{set_active(['setting.index'])}}><i class="fas fa-cog"></i> <span>Settings</span></a>
                     </li>
                     <li>
-                        <a href="{{ route('seo-meta.index') }}" {{set_active(['seo-meta.index'])}}><i class="fas fa-search"></i> <span>SEO Meta</span></a>
+                        <a href="{{ route('seo-meta.index') }}" {{set_active(['seo-meta.index'])}}><i class="fas fa-search"></i> <span>SEO</span></a>
                     </li>
                       <li>
                         <a href="{{ route('rpl-lead.index') }}" {{set_active(['rpl-lead.index'])}}><i class="fas fa-search"></i> <span>Eligibility Check Leads</span></a>

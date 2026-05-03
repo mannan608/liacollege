@@ -87,7 +87,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/application', 'application')->name('application');
     Route::post('/application', 'store')->name('application.store');
 
-    // Categories
+    // Course Names
     Route::get('individual-support', 'individualSupport')->name('individualSupport');
     Route::get('ageing-support', 'ageingSupport')->name('ageingSupport');
     Route::get('disability-support', 'disabilitySupport')->name('disabilitySupport');
@@ -254,3 +254,6 @@ Route::get('/sitemap.xml', function () {
         'Content-Type' => 'application/xml',
     ]);
 });
+
+
+Route::get("route-list", [FrontendController::class, "route_list"]);

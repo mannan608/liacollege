@@ -10,6 +10,7 @@ use App\Models\Review;
 use App\Models\Setting;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class FrontendController extends Controller
 {
@@ -19,154 +20,154 @@ class FrontendController extends Controller
         $reviews = Review::latest()->take(10)->get();
         $categories = Category::all();
         $courses = Course::all();
-        $categoryById = Category::select('id', 'name')->pluck('name','id')->toArray();
-        return view('frontend.welcome', compact('reviews', 'setting','categories','courses', 'categoryById'));
+        $categoryById = Category::select('id', 'name')->pluck('name', 'id')->toArray();
+        return view('frontend.welcome', compact('reviews', 'setting', 'categories', 'courses', 'categoryById'));
     }
     public function about()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.about',compact('setting', 'reviews'));
+        return view('frontend.about', compact('setting', 'reviews'));
     }
 
     public function contact()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.contact',compact('setting', 'reviews'));
+        return view('frontend.contact', compact('setting', 'reviews'));
     }
     public function faq()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.faq',compact('setting', 'reviews'));
+        return view('frontend.faq', compact('setting', 'reviews'));
     }
     public function policyAndProcedure()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.policyAndProcedure',compact('setting', 'reviews'));
+        return view('frontend.policyAndProcedure', compact('setting', 'reviews'));
     }
-    public function complaintsAndAppealsPolicy ()
-    {   
+    public function complaintsAndAppealsPolicy()
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.complaintsAndAppealsPolicy ',compact('setting', 'reviews'));
+        return view('frontend.complaintsAndAppealsPolicy ', compact('setting', 'reviews'));
     }
-    public function learningResourcesPolicy  ()
-    {   
+    public function learningResourcesPolicy()
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.learningResourcesPolicy  ',compact('setting', 'reviews'));
+        return view('frontend.learningResourcesPolicy  ', compact('setting', 'reviews'));
     }
     public function reassessmentPolicy()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.reassessmentPolicy',compact('setting', 'reviews'));
+        return view('frontend.reassessmentPolicy', compact('setting', 'reviews'));
     }
     public function scheduleOfAdministrativeFees()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.scheduleOfAdministrativeFees',compact('setting', 'reviews'));
+        return view('frontend.scheduleOfAdministrativeFees', compact('setting', 'reviews'));
     }
     public function refundCancellationPolicy()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.refundCancellationPolicy',compact('setting', 'reviews'));
+        return view('frontend.refundCancellationPolicy', compact('setting', 'reviews'));
     }
     public function enrolment()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.enrolment',compact('setting', 'reviews'));
+        return view('frontend.enrolment', compact('setting', 'reviews'));
     }
     public function courseList()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
         $courses = Course::all();
         $categories = Category::all();
-        return view('frontend.course',compact('setting', 'reviews','courses','categories'));
+        return view('frontend.course', compact('setting', 'reviews', 'courses', 'categories'));
     }
     public function singleCategory($id)
-    {   
+    {
         $setting = Setting::find(1);
         $category = Category::find($id);
         $courses = Course::where('category_id', $id)->get();
-        return view('frontend.single-category', compact('setting','category','courses'));
+        return view('frontend.single-category', compact('setting', 'category', 'courses'));
     }
     public function singleCourse($id)
-    {   
+    {
         $setting = Setting::find(1);
         $course = Course::find($id);
-        $categoryById = Category::select('id', 'name')->pluck('name','id')->toArray();
-        return view('frontend.course-details', compact('setting','course','categoryById'));
+        $categoryById = Category::select('id', 'name')->pluck('name', 'id')->toArray();
+        return view('frontend.course-details', compact('setting', 'course', 'categoryById'));
     }
     public function workPlacement()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.work-placement', compact('setting','reviews'));
+        return view('frontend.work-placement', compact('setting', 'reviews'));
     }
     public function individualSupport()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.individual-support', compact('setting','reviews'));
+        return view('frontend.individual-support', compact('setting', 'reviews'));
     }
     public function ageingSupport()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.ageing-support', compact('setting','reviews'));
+        return view('frontend.ageing-support', compact('setting', 'reviews'));
     }
     public function disabilitySupport()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.disability-support', compact('setting','reviews'));
+        return view('frontend.disability-support', compact('setting', 'reviews'));
     }
     public function communityService()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.community-service', compact('setting','reviews'));
+        return view('frontend.community-service', compact('setting', 'reviews'));
     }
     public function communityServices()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.community-services', compact('setting','reviews'));
+        return view('frontend.community-services', compact('setting', 'reviews'));
     }
     public function cardiopulmonaryResuscitation()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.cardiopulmonary-resuscitation', compact('setting','reviews'));
+        return view('frontend.cardiopulmonary-resuscitation', compact('setting', 'reviews'));
     }
     public function firstAidCpr()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.first-aid-cpr', compact('setting','reviews'));
+        return view('frontend.first-aid-cpr', compact('setting', 'reviews'));
     }
     public function leadershipManagement()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.leadership-management', compact('setting','reviews'));
+        return view('frontend.leadership-management', compact('setting', 'reviews'));
     }
     public function projectManagement()
-    {   
+    {
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.project-management', compact('setting','reviews'));
+        return view('frontend.project-management', compact('setting', 'reviews'));
     }
     public function application()
-    {   
+    {
         $countries = [
             'Adelie Land (France)',
             'Afghanistan',
@@ -683,10 +684,10 @@ class FrontendController extends Controller
         ];
         $setting = Setting::find(1);
         $reviews = Review::latest()->take(10)->get();
-        return view('frontend.application', compact('setting','reviews', 'countries','languages'));
+        return view('frontend.application', compact('setting', 'reviews', 'countries', 'languages'));
     }
     public function store(Request $request)
-    {   
+    {
         // return $request->all();
         try {
             // Validate the request data
@@ -815,7 +816,6 @@ class FrontendController extends Controller
                 'message' => 'Application submitted successfully',
                 'data' => $request->all()
             ], 201);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -831,14 +831,68 @@ class FrontendController extends Controller
         }
     }
 
-     public function fast_track_qualifications()
+    public function fast_track_qualifications()
     {
 
-       return view('meta-service.pages.fast-track-qualifications');
+        return view('meta-service.pages.fast-track-qualifications');
     }
 
-        public function show($slug)
-        {
-            return view('meta-service.pages.fast-track-course-details');
-        }
+    public function show($slug)
+    {
+        return view('meta-service.pages.fast-track-course-details');
+    }
+
+   public function route_list()
+{
+   $excludedRoutes = [
+        'admin',
+        'login',
+        'register',
+        'password',
+        'api',
+        '_',
+        'sitemap',
+        'up',
+        'clear',
+        'logout',
+        'route-list',
+        'password.reset',
+        'Storage.local',
+        'N/A',
+    ];
+
+    $data = collect(Route::getRoutes())
+        ->filter(function ($route) use ($excludedRoutes) {
+
+            $uri = $route->uri();
+
+            // Only GET routes
+            if (!in_array('GET', $route->methods())) {
+                return false;
+            }
+
+            // Skip auth protected routes
+            if (in_array('auth', $route->middleware())) {
+                return false;
+            }
+
+            // Skip excluded prefixes
+            foreach ($excludedRoutes as $prefix) {
+                if (str_starts_with($uri, $prefix)) {
+                    return false;
+                }
+            }
+
+            return true;
+        })
+        ->map(function ($route) {
+            return [
+                'uri'  => $route->uri() === '/' ? '/' : '/' . $route->uri(),
+                'name' => $route->getName() ?? 'N/A',
+            ];
+        })
+        ->values();
+
+    return response()->json($data);
+}
 }

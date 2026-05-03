@@ -25,68 +25,68 @@
                         <div class="card-body">
                             <div class="form-group mb-3">
                                 <label>Path <span class="text-danger">*</span></label>
-                                <input type="text" name="path"
-                                       class="form-control{{ $errors->has('path') ? ' is-invalid' : '' }}"
-                                       value="{{ old('path') }}"
-                                       placeholder="e.g., about, services, /">
-                                @if($errors->has('path'))
-                                    <span class="invalid-feedback"><strong>{{ $errors->first('path') }}</strong></span>
-                                @endif
-                                <small class="form-text text-muted">The page path (e.g., 'about', 'services', '/')</small>
+                                <select class="form-select" aria-label="Select Page" name="path">
+                                    <option selected>Select Page</option>
+                                    @foreach($data as $route)
+                                    <option value="{{ $route['uri'] }}">
+                                        {{ $route['name'] }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label>Meta Title</label>
                                 <input type="text" name="meta_title"
-                                       class="form-control{{ $errors->has('meta_title') ? ' is-invalid' : '' }}"
-                                       value="{{ old('meta_title') }}"
-                                       placeholder="Enter meta title">
+                                    class="form-control{{ $errors->has('meta_title') ? ' is-invalid' : '' }}"
+                                    value="{{ old('meta_title') }}"
+                                    placeholder="Enter meta title">
                                 @if($errors->has('meta_title'))
-                                    <span class="invalid-feedback"><strong>{{ $errors->first('meta_title') }}</strong></span>
+                                <span class="invalid-feedback"><strong>{{ $errors->first('meta_title') }}</strong></span>
                                 @endif
                             </div>
 
                             <div class="form-group mb-3">
                                 <label>Meta Description</label>
                                 <textarea name="meta_description"
-                                        class="form-control{{ $errors->has('meta_description') ? ' is-invalid' : '' }}"
-                                        rows="4"
-                                        placeholder="Enter meta description">{{ old('meta_description') }}</textarea>
+                                    class="form-control{{ $errors->has('meta_description') ? ' is-invalid' : '' }}"
+                                    rows="4"
+                                    placeholder="Enter meta description">{{ old('meta_description') }}</textarea>
                                 @if($errors->has('meta_description'))
-                                    <span class="invalid-feedback"><strong>{{ $errors->first('meta_description') }}</strong></span>
+                                <span class="invalid-feedback"><strong>{{ $errors->first('meta_description') }}</strong></span>
                                 @endif
                             </div>
 
                             <div class="form-group mb-3">
                                 <label>Meta Keywords</label>
                                 <textarea name="meta_keywords"
-                                        class="form-control{{ $errors->has('meta_keywords') ? ' is-invalid' : '' }}"
-                                        rows="3"
-                                        placeholder="Enter keywords separated by commas">{{ old('meta_keywords') }}</textarea>
+                                    class="form-control{{ $errors->has('meta_keywords') ? ' is-invalid' : '' }}"
+                                    rows="3"
+                                    placeholder="Enter keywords separated by commas">{{ old('meta_keywords') }}</textarea>
                                 @if($errors->has('meta_keywords'))
-                                    <span class="invalid-feedback"><strong>{{ $errors->first('meta_keywords') }}</strong></span>
+                                <span class="invalid-feedback"><strong>{{ $errors->first('meta_keywords') }}</strong></span>
                                 @endif
                             </div>
 
                             <div class="form-group mb-3">
                                 <label>Canonical URL</label>
                                 <input type="url" name="canonical_url"
-                                       class="form-control{{ $errors->has('canonical_url') ? ' is-invalid' : '' }}"
-                                       value="{{ old('canonical_url') }}"
-                                       placeholder="https://example.com/page">
+                                    class="form-control{{ $errors->has('canonical_url') ? ' is-invalid' : '' }}"
+                                    value="{{ old('canonical_url') }}"
+                                    placeholder="https://example.com/page">
                                 @if($errors->has('canonical_url'))
-                                    <span class="invalid-feedback"><strong>{{ $errors->first('canonical_url') }}</strong></span>
+                                <span class="invalid-feedback"><strong>{{ $errors->first('canonical_url') }}</strong></span>
                                 @endif
                             </div>
 
                             <div class="form-group mb-3">
                                 <label>Schema Markup (JSON-LD)</label>
                                 <textarea name="schema_markup"
-                                        class="form-control{{ $errors->has('schema_markup') ? ' is-invalid' : '' }}"
-                                        rows="6"
-                                        placeholder='{"@@context": "https://schema.org", "@@type": "WebPage", ...}'>{{ old('schema_markup') }}</textarea>
+                                    class="form-control{{ $errors->has('schema_markup') ? ' is-invalid' : '' }}"
+                                    rows="6"
+                                    placeholder='{"@@context": "https://schema.org", "@@type": "WebPage", ...}'>{{ old('schema_markup') }}</textarea>
                                 @if($errors->has('schema_markup'))
-                                    <span class="invalid-feedback"><strong>{{ $errors->first('schema_markup') }}</strong></span>
+                                <span class="invalid-feedback"><strong>{{ $errors->first('schema_markup') }}</strong></span>
                                 @endif
                             </div>
                         </div>
@@ -102,10 +102,10 @@
                             <div class="form-group mb-3">
                                 <label>OG Image</label>
                                 <input type="file" name="og_image"
-                                       class="form-control{{ $errors->has('og_image') ? ' is-invalid' : '' }}"
-                                       accept="image/*">
+                                    class="form-control{{ $errors->has('og_image') ? ' is-invalid' : '' }}"
+                                    accept="image/*">
                                 @if($errors->has('og_image'))
-                                    <span class="invalid-feedback"><strong>{{ $errors->first('og_image') }}</strong></span>
+                                <span class="invalid-feedback"><strong>{{ $errors->first('og_image') }}</strong></span>
                                 @endif
                                 <small class="form-text text-muted">Recommended: 1200x630px, max 5MB</small>
                             </div>
