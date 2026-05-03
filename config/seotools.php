@@ -10,9 +10,9 @@ return [
          * The default configurations to be used by the meta generator.
          */
         'defaults'       => [
-            'title'        => "Leadership Institute Australia", // set false to total remove
+            'title'        => "", // set false to total remove
             'titleBefore'  => false, // Put defaults.title before page title, like 'Leadership Institute Australia! - Dashboard'
-            'description'  => 'Leadership Institute Australia', // set false to total remove
+            'description'  => '', // set false to total remove
             'separator'    => ' - ',
             'keywords'     => [],
             'canonical'    => false, // Set to null or 'full' to use Url::full(), set to 'current' to use Url::current(), set false to total remove

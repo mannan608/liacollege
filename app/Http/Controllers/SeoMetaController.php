@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SeoMeta;
 use App\Services\PageSpeedService;
-use App\Services\SeoAnalyzer;
 use App\Services\SeoAnalyzerService;
-use App\Services\SeoScoreService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -16,66 +14,6 @@ use Illuminate\Support\Facades\Route;
 class SeoMetaController extends Controller
 {   
     public function __construct(private SeoAnalyzerService $seo) {}
-//    public function index(
-//     PageSpeedService $pageSpeed,
-//     SeoAnalyzer $analyzer,
-//     SeoScoreService $scoreService
-// ) {
-//     $url = 'http://localhost:8000/about'; // your page
-
-//     $response = Http::timeout(30)->get($url);
-
-//     $html = $response->successful() ? $response->body() : '';
-
-//     // 🧠 SEO Analysis
-//     $analysis = $analyzer->analyze($html, $url, 'about');
-
-//     // 🧮 Score
-//     $seoScore = $scoreService->calculate($analysis);
-
-//     // 💡 Recommendations
-//     $recommendations = $scoreService->recommendations($analysis);
-
-//     // ⚡ Google PageSpeed
-//     $google = $pageSpeed->analyze($url);
-
-//     return view('backend.seo-meta.index', compact(
-//         'analysis',
-//         'seoScore',
-//         'recommendations',
-//         'google',
-//         'url'
-//     ));
-// }
-//    public function index(PageSpeedService $pageSpeed, SeoAnalyzer $analyzer, SeoScoreService $scoreService)
-//     {
-//         $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed, $analyzer, $scoreService) {
-
-//             dd($seoMeta);
-
-//         //   GOOGLE PAGE SPEED
-//         // $url = $seoMeta->canonical_url ?: url($seoMeta->path);
-//         // $seoMeta->google_scores = $pageSpeed->analyze($url);
-
-//         // SEO ANALYSIS
-//             $html = @file_get_contents($url);
-
-//             $analysis = $html
-//                 ? $analyzer->analyze($html, $seoMeta->meta_keywords)
-//                 : [];
-
-//             $seoMeta->seo_result = $analysis;
-
-//         //    SEO SCORE
-//             $seoMeta->seo_score = !empty($analysis)
-//                 ? $scoreService->calculate($analysis)
-//                 : 0;
-
-//             return $seoMeta;
-//         });
-//         // dd($seoMetas);
-//         return view('backend.seo-meta.index', compact('seoMetas'));
-//     }
 
     
 
@@ -87,9 +25,9 @@ class SeoMetaController extends Controller
             $keyword = $seoMeta->meta_keywords ?? '';
             $seoMeta->seo_result = $this->seo->analyze($url, $keyword);
             return $seoMeta;
-        });
+        });       
 
-        return $seoMetas; // or return view(...)
+        return view('backend.seo-meta.index', compact('seoMetas'));
     }
 
     public function create()

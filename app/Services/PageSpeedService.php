@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class PageSpeedService
 {
-    public function analyze(string $url): array
+    public function pageAnalyze(string $url): array
     {
         $response = Http::timeout(1500)->get(
             'https://www.googleapis.com/pagespeedonline/v5/runPagespeed',
