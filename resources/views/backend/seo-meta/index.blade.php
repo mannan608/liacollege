@@ -40,7 +40,7 @@
 
                                     <tr>
                                         <td>{{ $seoMeta->id }}</td>
-                                        <td> {{ $seoMeta->path === '/' ? 'Home' : Str::title(str_replace('-', ' ', $seoMeta->path)) }}</td>
+                                        <td> {{trim($seoMeta->path, '/') === '' ? 'Home' : Str::title(str_replace('-', ' ', trim($seoMeta->path, '/'))) }}</td>
                                         <td>{{ Str::limit($seoMeta->meta_title, 50) }}</td>
                                         <td>{{ Str::limit($seoMeta->meta_description, 50) }}</td>
 
@@ -108,7 +108,7 @@
                                         <td class="text-end">
                                             <div class="actions">
                                                 <a href="{{ route('seo-meta.edit', $seoMeta->id) }}" class="btn btn-sm bg-primary-light mr-2">
-                                                    <i class="far fa-edit me-2"></i> Edit
+                                                    <i class="far fa-edit me-2"></i>
                                                 </a>
 
                                                 <form action="{{ route('seo-meta.destroy', $seoMeta->id) }}" method="POST" style="display: inline;">
@@ -116,7 +116,7 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm bg-danger-light"
                                                         onclick="return confirm('Are you sure you want to delete this SEO meta?')">
-                                                        <i class="far fa-trash-alt me-2"></i> Delete
+                                                        <i class="far fa-trash-alt me-2"></i> 
                                                     </button>
                                                 </form>
                                             </div>

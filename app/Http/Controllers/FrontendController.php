@@ -842,57 +842,62 @@ class FrontendController extends Controller
         return view('meta-service.pages.fast-track-course-details');
     }
 
-   public function route_list()
-{
-   $excludedRoutes = [
-        'admin',
-        'login',
-        'register',
-        'password',
-        'api',
-        '_',
-        'sitemap',
-        'up',
-        'clear',
-        'logout',
-        'route-list',
-        'password.reset',
-        'Storage.local',
-        'N/A',
-    ];
+    public function route_list()
+    {
+        $excludedRoutes = [
+            'admin',
+            'login',
+            'register',
+            'password',
+            'api',
+            '_',
+            'sitemap',
+            'up',
+            'clear',
+            'logout',
+            'route-list',
+            'password.reset',
+            'Storage.local',
+            'N/A',
+            'user/password-reset',
+            'application',
+            'course-details',
+            'course-list',
+            'course.list',
+        ];
 
-    $data = collect(Route::getRoutes())
-        ->filter(function ($route) use ($excludedRoutes) {
+        $data = collect(Route::getRoutes())
+            ->filter(function ($route) use ($excludedRoutes) {
 
-            $uri = $route->uri();
+                $uri = $route->uri();
 
-            // Only GET routes
-            if (!in_array('GET', $route->methods())) {
-                return false;
-            }
-
-            // Skip auth protected routes
-            if (in_array('auth', $route->middleware())) {
-                return false;
-            }
-
-            // Skip excluded prefixes
-            foreach ($excludedRoutes as $prefix) {
-                if (str_starts_with($uri, $prefix)) {
+                // Only GET routes
+                if (!in_array('GET', $route->methods())) {
                     return false;
                 }
-            }
 
-            return true;
-        })
-        ->map(function ($route) {
-            return [
-                'uri'  => $route->uri() === '/' ? '/' : '/' . $route->uri(),
-                'name' => $route->getName() ?? 'N/A',
-            ];
-        })
-        ->values();
+                // Skip auth protected routes
+                if (in_array('auth', $route->middleware())) {
+                    return false;
+                }
 
-    return response()->json($data);
-}
+                // Skip excluded prefixes
+                foreach ($excludedRoutes as $prefix) {
+                    if (str_starts_with($uri, $prefix)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
+            ->map(function ($route) {
+                return [
+                    'uri'  => $route->uri() === '/' ? '/' : '/' . $route->uri(),
+                    'name' => $route->getName() ?? 'N/A',
+                ];
+            })
+            ->values();
+
+        return response()->json($data);
+    }
 }

@@ -88,7 +88,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/application', 'application')->name('application');
     Route::post('/application', 'store')->name('application.store');
 
-    // Course Names
+    // single Course pages
     Route::get('individual-support', 'individualSupport')->name('individualSupport');
     Route::get('ageing-support', 'ageingSupport')->name('ageingSupport');
     Route::get('disability-support', 'disabilitySupport')->name('disabilitySupport');
@@ -102,6 +102,7 @@ Route::controller(FrontendController::class)->group(function () {
 
     // Fast Track
     Route::get('/fast-track-qualifications', 'fast_track_qualifications')->name('fast-track-qualifications');
+    
 });
 
 /*
@@ -141,6 +142,8 @@ Route::get('/fast-track/{slug}', function ($slug) {
 
     return view($view);
 });
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -260,4 +263,7 @@ Route::get('/sitemap.xml', function () {
 
 
 Route::get("route-list", [FrontendController::class, "route_list"]);
-Route::get('/seo/analyze', [SeoMetaController::class, 'analyze']);
+
+
+// fast track single pages (legacy - KEEPING for now but consider removing if not needed)
+
