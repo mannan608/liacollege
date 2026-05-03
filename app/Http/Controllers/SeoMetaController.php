@@ -24,6 +24,8 @@ class SeoMetaController extends Controller
             $seoMeta->url = $url;
             $keyword = $seoMeta->meta_keywords ?? '';
             $seoMeta->seo_result = $this->seo->analyze($url, $keyword);
+            $seoMeta->pagespeed = app(PageSpeedService::class)->pageAnalyze($url);
+
             return $seoMeta;
         });       
 
