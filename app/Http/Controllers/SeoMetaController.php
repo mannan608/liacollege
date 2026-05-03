@@ -82,7 +82,7 @@ class SeoMetaController extends Controller
     public function index()
     {
         $seoMetas = SeoMeta::get()->map(function ($seoMeta) {
-            $url     = url($seoMeta->path) ?? '';
+            $url     = url($seoMeta->path) ?? url('/');
             $seoMeta->url = $url;
             $keyword = $seoMeta->meta_keywords ?? '';
             $seoMeta->seo_result = $this->seo->analyze($url, $keyword);
