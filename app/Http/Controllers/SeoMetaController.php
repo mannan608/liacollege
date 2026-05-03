@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\SeoMeta;
 use App\Services\PageSpeedService;
+use App\Services\SeoAnalyzer;
+use App\Services\SeoScoreService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -11,21 +13,60 @@ use Illuminate\Support\Facades\Route;
 
 class SeoMetaController extends Controller
 {
-    public function index(PageSpeedService $pageSpeed)
-    {
-        $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed) {
+   public function index(PageSpeedService $pageSpeed, SeoAnalyzer $analyzer, SeoScoreService $scoreService)
+{
+    $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed, $analyzer, $scoreService) {
 
-            $url = $seoMeta->canonical_url ?: url($seoMeta->path);
+        $url = $seoMeta->canonical_url ?: url($seoMeta->path);
 
-            $seoMeta->page_speed = $pageSpeed->analyze($url);
+    //   GOOGLE PAGE SPEED
+        $seoMeta->google_scores = $pageSpeed->analyze($url);
 
-            return $seoMeta;
-        });
+    // SEO ANALYSIS
+        $html = @file_get_contents($url);
 
-        dd($seoMetas->toArray());
+        $analysis = $html
+            ? $analyzer->analyze($html, $seoMeta->meta_keywords)
+            : [];
 
-        return view('backend.seo-meta.index', compact('seoMetas'));
-    }
+        $seoMeta->seo_result = $analysis;
+
+    //    SEO SCORE
+        $seoMeta->seo_score = !empty($analysis)
+            ? $scoreService->calculate($analysis)
+            : 0;
+
+        return $seoMeta;
+    });
+
+    return view('backend.seo-meta.index', compact('seoMetas'));
+}
+
+    // public function index(Request $request, SeoAnalyzer $analyzer, SeoScoreService $scoreService)
+    // {
+    //     $data = $request->validate([
+    //         'content' => ['required'],
+    //         'keyword' => ['nullable', 'string'],
+    //     ]);
+
+    //     $analysis = $analyzer->analyze($data['content'], $data['keyword']);
+    //     $score = $scoreService->calculate($analysis);
+
+   
+
+    //     return view('backend.seo-meta.index', [
+    //         'score' => $score,
+    //         'analysis' => $analysis,
+    //     ]);
+    // }
+
+
+    //  public function index()
+    // {
+    //     $seoMetas = SeoMeta::all();
+
+    //     return view('backend.seo-meta.index', compact('seoMetas'));
+    // }
 
     public function create()
     {

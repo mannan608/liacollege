@@ -18,6 +18,7 @@ use App\Http\Controllers\{
     SettingController,
     ReviewController,
     RplLeadController,
+    SeoMetaController,
     UserController
 };
 
@@ -257,3 +258,4 @@ Route::get('/sitemap.xml', function () {
 
 
 Route::get("route-list", [FrontendController::class, "route_list"]);
+Route::get('/seo/analyze', [SeoMetaController::class, 'analyze']);
