@@ -8,7 +8,7 @@ class PageSpeedService
 {
     public function analyze(string $url): array
     {
-        $response = Http::timeout(15)->get(
+        $response = Http::timeout(1500)->get(
             'https://www.googleapis.com/pagespeedonline/v5/runPagespeed',
             [
                  'key'      => env('GOOGLE_PAGESPEED_API_KEY'),

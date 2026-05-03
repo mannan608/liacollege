@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\SeoMeta;
 use App\Services\PageSpeedService;
+use App\Services\SeoAnalyzer;
+use App\Services\SeoScoreService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -11,18 +13,23 @@ use Illuminate\Support\Facades\Route;
 
 class SeoMetaController extends Controller
 {
-    public function index(PageSpeedService $pageSpeed)
+    // public function index(PageSpeedService $pageSpeed)
+    // {
+    //     $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed) {
+
+    //         $url = $seoMeta->canonical_url ?: url($seoMeta->path);
+
+    //         $seoMeta->page_speed = $pageSpeed->analyze($url);
+
+    //         return $seoMeta;
+    //     });
+
+    //     return view('backend.seo-meta.index', compact('seoMetas'));
+    // }
+
+     public function index()
     {
-        $seoMetas = SeoMeta::get()->map(function ($seoMeta) use ($pageSpeed) {
-
-            $url = $seoMeta->canonical_url ?: url($seoMeta->path);
-
-            $seoMeta->page_speed = $pageSpeed->analyze($url);
-
-            return $seoMeta;
-        });
-
-        dd($seoMetas->toArray());
+        $seoMetas = SeoMeta::all();
 
         return view('backend.seo-meta.index', compact('seoMetas'));
     }
@@ -244,4 +251,21 @@ class SeoMetaController extends Controller
     //         'scores'     => $scores,
     //     ]);
     // }
+
+
+    public function analyze(Request $request, SeoAnalyzer $analyzer, SeoScoreService $scoreService)
+    {
+        $data = $request->validate([
+            'content' => ['required'],
+            'keyword' => ['nullable', 'string'],
+        ]);
+
+        $analysis = $analyzer->analyze($data['content'], $data['keyword']);
+        $score = $scoreService->calculate($analysis);
+
+        return response()->json([
+            'score' => $score,
+            'analysis' => $analysis,
+        ]);
+    }
 }
