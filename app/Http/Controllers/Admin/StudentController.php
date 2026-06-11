@@ -12,7 +12,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = User::where('role','student')->get();
+        $students = User::where('role','user')->get();
         return view('admin.students.index', compact('students'));
     }
 

@@ -122,7 +122,7 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::resource('categories', CategoryController::class, [
         'names' => [
-            'index' => 'category.index',
+            'index' => 'categories.index',
             'create' => 'category.create',
             'store' => 'category.store',
             'show' => 'category.show',

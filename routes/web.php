@@ -21,6 +21,8 @@ use App\Http\Controllers\{
     SeoMetaController,
     UserController
 };
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Student\StudentController as StudentStudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -166,8 +168,8 @@ Route::middleware('auth')->group(function () {
     // CHANGED: cleaner but KEEPING your custom names
     Route::resource('users', UserController::class)->names('user');
     Route::resource('reviews', ReviewController::class)->names('review');
-    Route::resource('courses', CourseController::class)->names('course');
-    Route::resource('categories', CategoryController::class)->names('category');
+    // Route::resource('courses', CourseController::class)->names('course');
+    // Route::resource('categories', CategoryController::class)->names('category');
     Route::resource('settings', SettingController::class)->names('setting');
     Route::resource('contacts', ContactController::class)->names('contact');
     Route::get('seo-meta/{seoMeta}/google-score', [SeoMetaController::class, 'googleScore'])
@@ -263,24 +265,24 @@ Route::get("route-list", [FrontendController::class, "route_list"]);
 Route::get('/seo/analyze', [SeoMetaController::class, 'analyze']);
 
 
-Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth','admin'])->group(function () {
 
     Route::resource('categories', CategoryController::class);
     Route::resource('courses', CourseController::class);
-    Route::resource('students', StudentController::class);
+    // Route::resource('students', StudentController::class);
 
-    Route::post('students/{id}/categories', [StudentController::class,'assignCategories']);
-    Route::post('students/{id}/courses', [StudentController::class,'assignCourses']);
+    // Route::post('students/{id}/categories', [StudentStudentController::class,'assignCategories']);
+    // Route::post('students/{id}/courses', [StudentController::class,'assignCourses']);
 });
 
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard',[StudentController::class,'dashboard']);
+//     Route::get('/dashboard',[StudentController::class,'dashboard']);
 
-    Route::get('/categories',[StudentController::class,'categories']);
-    Route::get('/courses',[StudentController::class,'courses']);
+//     Route::get('/categories',[StudentController::class,'categories']);
+//     Route::get('/courses',[StudentController::class,'courses']);
 
-    Route::get('/courses/{course}',[StudentController::class,'show']);
-    Route::get('/courses/{course}/download',[StudentController::class,'download']);
+//     Route::get('/courses/{course}',[StudentController::class,'show']);
+//     Route::get('/courses/{course}/download',[StudentController::class,'download']);
 
-});
+// });

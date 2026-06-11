@@ -34,12 +34,12 @@ class CategoryController extends Controller
             'status' => $request->status ?? 1
         ]);
 
-        return redirect()->route('categories.index');
+        return redirect()->route('backend.categories.index')->with('success','Category created successfully'); 
     }
 
     public function edit(Category $category)
     {
-        return view('admin.categories.edit', compact('category'));
+        return view('admin.categories.create', compact('category'));
     }
 
     public function update(Request $request, Category $category)
@@ -54,12 +54,17 @@ class CategoryController extends Controller
             'status' => $request->status ?? 1
         ]);
 
-        return redirect()->route('categories.index');
+        return redirect()->route('backend.categories.index')->with('success','Category updated successfully');
     }
 
     public function destroy(Category $category)
     {
-        $category->delete();
-        return back();
+       // prevent deleting if courses exist
+    if ($category->courses()->count() > 0) {
+        return back()->with('error','Category has courses');
+    }
+
+    $category->delete();
+        return back()->with('success','Category deleted successfully');
     }
 }

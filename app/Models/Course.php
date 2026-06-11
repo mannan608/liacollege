@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Course extends Model
 {
@@ -17,4 +18,15 @@ class Course extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    protected static function boot()
+{
+    parent::boot();
+
+    static::deleting(function ($course) {
+
+        Storage::disk('public')->delete($course->image);
+        Storage::disk('public')->delete($course->pdf_file);
+    });
+}
 }
