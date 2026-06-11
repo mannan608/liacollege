@@ -11,181 +11,72 @@ use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Course::query()->orderByDesc('id');
-
-        // ===== Filters =====
-        $query->when($request->id, fn($q) => $q->where('id', $request->id));
-        $query->when($request->title, fn($q) => $q->where('name', 'LIKE', "%{$request->title}%"));
-        $query->when($request->created_by, fn($q) => $q->where('created_by', $request->created_by));
-
-        if ($request->date_from) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->date_to) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        $courses = $query->get();
-        $categoryById = Category::select('id', 'name')->pluck('name','id')->toArray();
-        $users   = User::select('id', 'name')->get();
-
-        return view('backend.course.index', compact('courses', 'users','categoryById'));
+        $courses = Course::with('category')->latest()->get();
+        return view('admin.courses.index', compact('courses'));
     }
 
     public function create()
-    {   
-        $categories = Category::all();
-        $course = null;
-        return view('backend.course.create', compact('course','categories'));
+    {
+        $categories = Category::pluck('name','id');
+        return view('admin.courses.create', compact('categories'));
     }
 
     public function store(Request $request)
-    {   
-        // return $request->all();
-        $request->validate([
-            'title'       => 'required|max:255',
-            'description' => 'nullable',
-            'banner'        => 'nullable|file|max:5120',
-        ]);
-
-        try {
-            DB::beginTransaction();
-
-            $fileName = null;
-
-            if ($request->hasFile('banner')) {
-                $file = $request->file('banner');
-
-                // Use getClientOriginalExtension() instead of ->extension()
-                $file_extension = $file->getClientOriginalExtension();
-
-                $fileName = sprintf(
-                    'banner-%s-%s.%s',
-                    uniqid(),
-                    now()->format('d_m_Y'),
-                    $file_extension
-                );
-
-                // Ensure folder exists
-                $uploadPath = public_path('uploads/courses');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
-
-                // Move file
-                $file->move($uploadPath, $fileName);
-            }
-
-            Course::create([
-                'title'       => $request->title,
-                'category_id' => $request->category_id,
-                'description' => $request->description,
-                'price' => $request->price,
-                'discount_percentage' => $request->discount_percentage,
-                'banner'        => $fileName,
-                'created_by'  => auth()->id(),
-                'created_at'  => now(),
-            ]);
-
-            DB::commit();
-            return redirect()->route('course.index')->with('success', 'Course created successfully!');
-        } catch (\Throwable $e) {
-            return $e->getMessage();
-            DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function edit($id)
-    {
-        $course = Course::find($id);
-        $categories = Category::all();
-        return view('backend.course.create', compact('course', 'categories'));
-    }
-    
-    public function show($id)
-    {
-        $course = Course::find($id);
-        return view('backend.course.show', compact('course'));
-    }
-
-    public function update(Request $request, $id)
     {
         $request->validate([
-            'title'       => 'required|max:255',
-            'description' => 'nullable',
-            'banner'        => 'nullable|file|max:5120',
+            'name' => 'required',
+            'category_id' => 'required',
+            'pdf' => 'required|mimes:pdf'
         ]);
 
-        try {
-            DB::beginTransaction();
+        $image = null;
 
-            $course  = Course::find($id);
-            $oldFile = $course->banner;
-            $fileName = $oldFile;
-
-            if ($request->hasFile('banner')) {
-                $file = $request->file('banner');
-
-                // Use getClientOriginalExtension() instead of ->extension()
-                $file_extension = $file->getClientOriginalExtension();
-
-                $fileName = sprintf(
-                    'collection-%s-%s.%s',
-                    uniqid(),
-                    now()->format('d_m_Y'),
-                    $file_extension
-                );
-
-                // Ensure folder exists
-                $uploadPath = public_path('uploads/Courses');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
-
-                // Move file
-                $file->move($uploadPath, $fileName);
-            }
-
-            $course->update([
-                'title'       => $request->title,
-                'category_id' => $request->category_id,
-                'description' => $request->description,
-                'price' => $request->price,
-                'discount_percentage' => $request->discount_percentage,
-                'banner'        => $fileName,
-                'updated_by'  => auth()->id(),
-                'updated_at'  => now(),
-            ]);
-
-            DB::commit();
-            return redirect()->route('course.index')->with('success', 'Course updated successfully!');
-        } catch (\Throwable $e) {
-
-            DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('courses/images','public');
         }
+
+        $pdf = $request->file('pdf')->store('courses/pdfs','private');
+
+        Course::create([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'image' => $image,
+            'pdf_file' => $pdf,
+            'status' => $request->status ?? 1
+        ]);
+
+        return redirect()->route('courses.index');
     }
 
-    public function destroy($id)
+    public function edit(Course $course)
     {
-        try {
-            $course = Course::find($id);
+        $categories = Category::pluck('name','id');
+        return view('admin.courses.edit', compact('course','categories'));
+    }
 
-            if ($course->file && file_exists(public_path('uploads/Courses/' . $course->file))) {
-                unlink(public_path('uploads/courses/' . $course->file));
-            }
+    public function update(Request $request, Course $course)
+    {
+        $data = $request->all();
 
-            $course->delete();
-
-            return back()->with('success', 'Course deleted!');
-
-
-        } catch (\Throwable $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('courses/images','public');
         }
+
+        if ($request->hasFile('pdf')) {
+            $data['pdf_file'] = $request->file('pdf')->store('courses/pdfs','private');
+        }
+
+        $course->update($data);
+
+        return redirect()->route('courses.index');
+    }
+
+    public function destroy(Course $course)
+    {
+        $course->delete();
+        return back();
     }
 }

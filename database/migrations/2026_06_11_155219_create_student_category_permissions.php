@@ -11,26 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('student_category_permissions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('image')->nullable();
-            $table->string('pdf_file');
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
-            $table->timestamps();
+            $table->unique(['student_id', 'category_id']);
         });
     }
-
-    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('student_category_permissions');
     }
 };

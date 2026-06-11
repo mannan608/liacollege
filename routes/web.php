@@ -261,3 +261,26 @@ Route::get('/sitemap.xml', function () {
 
 Route::get("route-list", [FrontendController::class, "route_list"]);
 Route::get('/seo/analyze', [SeoMetaController::class, 'analyze']);
+
+
+Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
+
+    Route::resource('categories', CategoryController::class);
+    Route::resource('courses', CourseController::class);
+    Route::resource('students', StudentController::class);
+
+    Route::post('students/{id}/categories', [StudentController::class,'assignCategories']);
+    Route::post('students/{id}/courses', [StudentController::class,'assignCourses']);
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard',[StudentController::class,'dashboard']);
+
+    Route::get('/categories',[StudentController::class,'categories']);
+    Route::get('/courses',[StudentController::class,'courses']);
+
+    Route::get('/courses/{course}',[StudentController::class,'show']);
+    Route::get('/courses/{course}/download',[StudentController::class,'download']);
+
+});
