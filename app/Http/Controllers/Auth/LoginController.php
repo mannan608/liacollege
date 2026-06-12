@@ -34,6 +34,7 @@ class LoginController extends Controller
     /** index page login */
     public function login()
     {
+        
         if (Auth::check()) {
 
             if (strtolower(Auth::user()->role) === 'student') {
