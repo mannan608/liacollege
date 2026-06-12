@@ -35,6 +35,21 @@
                         </span>
                     @enderror
                 </div> --}}
+
+                <div class="form-group local-forms">
+                    <label>Select Course <span class="login-danger">*</span></label>
+                    <select class="form-control select @error('course_id') is-invalid @enderror" name="course_id" id="course_id">
+                        <option selected disabled>Course</option>
+                        @foreach ($courses as $course)
+                            <option value="{{ $course->id }}">{{ $course->title }}</option>
+                        @endforeach
+                    </select>
+                    @error('course_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
                 
                 <div class="form-group">
                     <label>Password <span class="login-danger">*</span></label>
@@ -51,6 +66,17 @@
                     <button class="btn btn-primary btn-block" type="submit">Register</button>
                 </div>
             </form>
+
+            @if ($errors->any())
+    <div class="bg-red-100 p-4 rounded">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
             {{-- <div class="login-or">
                 <span class="or-line"></span>
                 <span class="span-or">or</span>

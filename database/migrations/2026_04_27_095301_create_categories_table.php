@@ -15,18 +15,14 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('banner')->nullable();
             $table->text('description')->nullable();
-
-            // Parent category for subcategory
             $table->foreignId('parent_id')
                 ->nullable()
                 ->constrained('categories')
                 ->nullOnDelete();
-
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

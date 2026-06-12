@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
-            $table->decimal('price', 10, 2)->default(0);
-            $table->integer('discount_percentage')->default(0);
+            $table->decimal('price', 10, 2)->nullable();
+            $table->integer('discount_percentage')->nullable();
 
             $table->string('banner')->nullable();
             $table->text('description')->nullable();
+            $table->string('course_material')->nullable();
 
             // Category relation
             $table->foreignId('category_id')
@@ -34,15 +35,8 @@ return new class extends Migration
                 ->nullOnDelete();
 
             // User tracking
-            $table->foreignId('created_by')
-                ->nullable()
-                ->constrained('users')
-                ->nullOnDelete();
-
-            $table->foreignId('updated_by')
-                ->nullable()
-                ->constrained('users')
-                ->nullOnDelete();
+           $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->timestamps();
         });

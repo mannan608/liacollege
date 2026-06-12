@@ -46,42 +46,15 @@ class CategoryController extends Controller
         $request->validate([
             'name'       => 'required|max:255',
             'description' => 'nullable',
-            'banner'        => 'nullable|file|max:5120',
         ]);
 
         try {
-            DB::beginTransaction();
-
-            $fileName = null;
-
-            if ($request->hasFile('banner')) {
-                $file = $request->file('banner');
-
-                // Use getClientOriginalExtension() instead of ->extension()
-                $file_extension = $file->getClientOriginalExtension();
-
-                $fileName = sprintf(
-                    'banner-%s-%s.%s',
-                    uniqid(),
-                    now()->format('d_m_Y'),
-                    $file_extension
-                );
-
-                // Ensure folder exists
-                $uploadPath = public_path('uploads/categories');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
-
-                // Move file
-                $file->move($uploadPath, $fileName);
-            }
+            DB::beginTransaction();          
 
             Category::create([
                 'name'       => $request->name,
                 'description' => $request->description,
                 'parent_id' => $request->parent_id,
-                'banner'        => $fileName,
                 'created_by'  => auth()->id(),
                 'created_at'  => now(),
             ]);
@@ -114,44 +87,17 @@ class CategoryController extends Controller
         $request->validate([
             'name'       => 'required|max:255',
             'description' => 'nullable',
-            'banner'        => 'nullable|file|max:5120',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $category  = Category::find($id);
-            $oldFile = $category->banner;
-            $fileName = $oldFile;
-
-            if ($request->hasFile('banner')) {
-                $file = $request->file('banner');
-
-                // Use getClientOriginalExtension() instead of ->extension()
-                $file_extension = $file->getClientOriginalExtension();
-
-                $fileName = sprintf(
-                    'collection-%s-%s.%s',
-                    uniqid(),
-                    now()->format('d_m_Y'),
-                    $file_extension
-                );
-
-                // Ensure folder exists
-                $uploadPath = public_path('uploads/categories');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
-
-                // Move file
-                $file->move($uploadPath, $fileName);
-            }
+            $category  = Category::find($id);           
 
             $category->update([
                 'name'       => $request->name,
                 'description' => $request->description,
                 'parent_id' => $request->parent_id,
-                'banner'        => $fileName,
                 'updated_by'  => auth()->id(),
                 'updated_at'  => now(),
             ]);

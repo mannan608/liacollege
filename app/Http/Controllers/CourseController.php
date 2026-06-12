@@ -6,7 +6,7 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
- 
+
 use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
@@ -17,7 +17,11 @@ class CourseController extends Controller
 
         // ===== Filters =====
         $query->when($request->id, fn($q) => $q->where('id', $request->id));
-        $query->when($request->title, fn($q) => $q->where('name', 'LIKE', "%{$request->title}%"));
+        $query->when(
+            $request->title,
+            fn($q) =>
+            $q->where('name', 'LIKE', "%{$request->title}%")
+        );
         $query->when($request->created_by, fn($q) => $q->where('created_by', $request->created_by));
 
         if ($request->date_from) {
@@ -29,73 +33,106 @@ class CourseController extends Controller
         }
 
         $courses = $query->get();
-        $categoryById = Category::select('id', 'name')->pluck('name','id')->toArray();
+        $categoryById = Category::select('id', 'name')->pluck('name', 'id')->toArray();
         $users   = User::select('id', 'name')->get();
 
-        return view('backend.course.index', compact('courses', 'users','categoryById'));
+        return view('backend.course.index', compact('courses', 'users', 'categoryById'));
     }
 
     public function create()
-    {   
+    {
         $categories = Category::all();
         $course = null;
-        return view('backend.course.create', compact('course','categories'));
+        return view('backend.course.create', compact('course', 'categories'));
     }
 
     public function store(Request $request)
-    {   
-        // return $request->all();
-        $request->validate([
-            'title'       => 'required|max:255',
-            'description' => 'nullable',
-            'banner'        => 'nullable|file|max:5120',
-        ]);
+    {
+        $request->validate(
+            [
+                'title' => 'required|max:255',
+                'category_id' => 'required|exists:categories,id',
+                'banner' => 'nullable|image|max:5120',
+                'course_material' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
+            ],
+            [
+                'title.required' => 'Course title is required.',
+                'category_id.required' => 'Please select a category.',
+                'banner.image' => 'Banner must be an image.',
+                'banner.max' => 'Banner size cannot exceed 5MB.',
+                'course_material.mimes' => 'Only PDF, DOC, DOCX, PPT, PPTX and ZIP files are allowed.',
+                'course_material.max' => 'Course material size cannot exceed 10MB.',
+            ]
+        );
 
         try {
+
             DB::beginTransaction();
 
-            $fileName = null;
+            $bannerName = null;
+            $courseMaterialName = null;
 
+            $uploadPath = public_path('uploads/courses');
+
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            // Banner Upload
             if ($request->hasFile('banner')) {
+
                 $file = $request->file('banner');
 
-                // Use getClientOriginalExtension() instead of ->extension()
-                $file_extension = $file->getClientOriginalExtension();
+                $bannerName = 'banner-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
 
-                $fileName = sprintf(
-                    'banner-%s-%s.%s',
-                    uniqid(),
-                    now()->format('d_m_Y'),
-                    $file_extension
-                );
+                $file->move($uploadPath, $bannerName);
+            }
 
-                // Ensure folder exists
-                $uploadPath = public_path('uploads/courses');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
+            // Course Material Upload
+            if ($request->hasFile('course_material')) {
 
-                // Move file
-                $file->move($uploadPath, $fileName);
+                $file = $request->file('course_material');
+
+                $courseMaterialName = 'material-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+                $file->move($uploadPath, $courseMaterialName);
             }
 
             Course::create([
-                'title'       => $request->title,
+                'title' => $request->title,
                 'category_id' => $request->category_id,
                 'description' => $request->description,
                 'price' => $request->price,
                 'discount_percentage' => $request->discount_percentage,
-                'banner'        => $fileName,
-                'created_by'  => auth()->id(),
-                'created_at'  => now(),
+                'banner' => $bannerName,
+                'course_material' => $courseMaterialName,
+                'created_by' => auth()->id(),
             ]);
 
             DB::commit();
-            return redirect()->route('course.index')->with('success', 'Course created successfully!');
-        } catch (\Throwable $e) {
-            return $e->getMessage();
+
+            return redirect()
+                ->route('course.index')
+                ->with('success', 'Course created successfully');
+        } catch (\Exception $e) {
+
             DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'error' => $e->getMessage()
+                ]);
         }
     }
 
@@ -105,7 +142,7 @@ class CourseController extends Controller
         $categories = Category::all();
         return view('backend.course.create', compact('course', 'categories'));
     }
-    
+
     public function show($id)
     {
         $course = Course::find($id);
@@ -115,77 +152,130 @@ class CourseController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title'       => 'required|max:255',
+            'title' => 'required|max:255',
             'description' => 'nullable',
-            'banner'        => 'nullable|file|max:5120',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'nullable|numeric',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100',
+            'banner' => 'nullable|image|max:5120',
+            'course_material' => 'nullable|file|max:10240',
         ]);
 
         try {
+
             DB::beginTransaction();
 
-            $course  = Course::find($id);
-            $oldFile = $course->banner;
-            $fileName = $oldFile;
+            $course = Course::findOrFail($id);
 
+            $uploadPath = public_path('uploads/courses');
+
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            $bannerName = $course->banner;
+            $courseMaterialName = $course->course_material;
+
+            // Banner Update
             if ($request->hasFile('banner')) {
-                $file = $request->file('banner');
 
-                // Use getClientOriginalExtension() instead of ->extension()
-                $file_extension = $file->getClientOriginalExtension();
-
-                $fileName = sprintf(
-                    'collection-%s-%s.%s',
-                    uniqid(),
-                    now()->format('d_m_Y'),
-                    $file_extension
-                );
-
-                // Ensure folder exists
-                $uploadPath = public_path('uploads/Courses');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
+                if (
+                    $course->banner &&
+                    file_exists($uploadPath . '/' . $course->banner)
+                ) {
+                    unlink($uploadPath . '/' . $course->banner);
                 }
 
-                // Move file
-                $file->move($uploadPath, $fileName);
+                $file = $request->file('banner');
+
+                $bannerName = 'banner-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+                $file->move($uploadPath, $bannerName);
+            }
+
+            // Course Material Update
+            if ($request->hasFile('course_material')) {
+
+                if (
+                    $course->course_material &&
+                    file_exists($uploadPath . '/' . $course->course_material)
+                ) {
+                    unlink($uploadPath . '/' . $course->course_material);
+                }
+
+                $file = $request->file('course_material');
+
+                $courseMaterialName = 'material-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+                $file->move($uploadPath, $courseMaterialName);
             }
 
             $course->update([
-                'title'       => $request->title,
+                'title' => $request->title,
                 'category_id' => $request->category_id,
                 'description' => $request->description,
                 'price' => $request->price,
                 'discount_percentage' => $request->discount_percentage,
-                'banner'        => $fileName,
-                'updated_by'  => auth()->id(),
-                'updated_at'  => now(),
+                'banner' => $bannerName,
+                'course_material' => $courseMaterialName,
+                'updated_by' => auth()->id(),
             ]);
 
             DB::commit();
-            return redirect()->route('course.index')->with('success', 'Course updated successfully!');
-        } catch (\Throwable $e) {
+
+            return redirect()
+                ->route('course.index')
+                ->with('success', 'Course updated successfully');
+        } catch (\Exception $e) {
 
             DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
+
+            return back()
+                ->withInput()
+                ->withErrors(['error' => $e->getMessage()]);
         }
     }
 
     public function destroy($id)
     {
         try {
-            $course = Course::find($id);
 
-            if ($course->file && file_exists(public_path('uploads/Courses/' . $course->file))) {
-                unlink(public_path('uploads/courses/' . $course->file));
+            $course = Course::findOrFail($id);
+
+            $uploadPath = public_path('uploads/courses');
+
+            if (
+                $course->banner &&
+                file_exists($uploadPath . '/' . $course->banner)
+            ) {
+                unlink($uploadPath . '/' . $course->banner);
+            }
+
+            if (
+                $course->course_material &&
+                file_exists($uploadPath . '/' . $course->course_material)
+            ) {
+                unlink($uploadPath . '/' . $course->course_material);
             }
 
             $course->delete();
 
-            return back()->with('success', 'Course deleted!');
+            return back()->with('success', 'Course deleted successfully');
+        } catch (\Exception $e) {
 
-
-        } catch (\Throwable $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
         }
     }
 }

@@ -13,6 +13,7 @@ class Course extends Model
         'price',
         'discount_percentage',
         'banner',
+        'course_material',
         'category_id',
         'description',
         'parent_id',

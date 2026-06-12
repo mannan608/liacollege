@@ -900,4 +900,10 @@ class FrontendController extends Controller
 
         return response()->json($data);
     }
+
+       public function studentDashboard()
+        {
+            $setting=null;
+            return view('frontend.student.dashboard', compact('setting'));
+        }
 }

@@ -67,26 +67,6 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group local-forms">
-                                        <label>Banner</label>
-                                        <input type="file"
-                                            name="banner"
-                                            class="form-control"
-                                            accept="image/*"
-                                            onchange="previewBanner(event)">
-                                        
-                                        <div class="mt-2">
-                                            <img id="banner-preview"
-                                                src="{{ optional($category)->banner ? asset('uploads/categories/' . $category->banner) : '' }}"
-                                                class="img-thumbnail"
-                                                width="150"
-                                                style="{{ optional($category)->banner ? '' : 'display:none;' }}">
-
-                                        </div>
-                                    </div>
-                                </div>
-
                                 {{-- Actions --}}
                                 <div class="col-12">
                                     <div class="d-flex">

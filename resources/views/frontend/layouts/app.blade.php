@@ -1,5 +1,5 @@
 {{-- // resources\views\frontend\layouts\app.blade.php --}}
-@php
+{{-- @php
   $headerClass = 'header-two';
   $logoAsset = optional($setting)->logo ? 'uploads/settings/' . $setting->logo : 'assets/img/logo.png';
   $logoWhite = optional($setting)->logo_white ? 'uploads/settings/' . $setting->logo_white : 'assets/img/logo-white.webp';
@@ -7,7 +7,7 @@
     $headerClass = 'header-one';
     $logoAsset = $logoWhite;
   }
-@endphp
+@endphp --}}
 <!DOCTYPE html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
@@ -37,6 +37,12 @@
     <!-- custom style css -->
     <link rel="stylesheet" href="{{ asset('frontend/css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/custom4.css') }}">
+    <script src="
+https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/license.min.js
+"></script>
+<link href="
+https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
+" rel="stylesheet">
     <style>
         footer.rts-footer i {
             color: #e2b838;

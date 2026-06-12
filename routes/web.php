@@ -102,8 +102,12 @@ Route::controller(FrontendController::class)->group(function () {
 
     // Fast Track
     Route::get('/fast-track-qualifications', 'fast_track_qualifications')->name('fast-track-qualifications');
+
+    // Route::get('students/dashboard',  'studentDashboard')->name('student.dashboard');
+    //  Route::get('profile', [HomeController::class, 'profile'])->name('profile');
     
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +126,7 @@ Route::controller(LoginController::class)->group(function () {
 // CHANGED: grouped register
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'register')->name('register');
-    Route::post('/register', 'storeUser')->name('register.store');
+    Route::post('/register', 'storeUser')->name('register.store');  
 });
 
 /*
@@ -161,6 +165,18 @@ Route::post('/fast-track/{slug}', [QualificationsLeadController::class, 'singleC
 |--------------------------------------------------------------------------
 */
 
+// Route::middleware(['auth', 'student'])->group(function () {
+
+//     Route::get('/students/dashboard', [FrontendController::class, 'studentDashboard'])
+//         ->name('student.dashboard');
+
+// });
+
+Route::get('/students/dashboard', function () {
+    return 'Student Dashboard Working';
+})->middleware(['auth', 'student'])
+  ->name('student.dashboard');
+
 Route::middleware('auth')->group(function () {
 
     Route::get('profile', [HomeController::class, 'profile'])->name('profile');
@@ -178,7 +194,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('seo-meta', \App\Http\Controllers\SeoMetaController::class)->names('seo-meta');
     Route::resource('rpl-lead', RplLeadController::class)->names('rpl-lead');
     Route::resource('qualification-lead', QualificationsLeadController::class)->names('qualification-lead');
+    
+//   Route::get('/students/dashboard', [FrontendController::class, 'studentDashboard'])
+//         ->name('student.dashboard');
+    Route::get('students', [RegisterController::class, 'index'])->name('student.index'); 
+    Route::get('students/{id}', [RegisterController::class, 'show'])->name('student.show');
+    Route::get('students/{id}/edit', [RegisterController::class, 'edit'])->name('student.edit');
+    Route::put('students/{id}', [RegisterController::class, 'update'])->name('student.update');
+    Route::delete('students/{id}', [RegisterController::class, 'destroy'])->name('student.destroy');
+   
 });
+
 
 
 // site map 

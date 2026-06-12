@@ -12,17 +12,17 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     /**
-    * Where to redirect users after login.
-    *
-    * @var string
-    */
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('guest')->except([
@@ -33,8 +33,18 @@ class LoginController extends Controller
     }
     /** index page login */
     public function login()
-    {   
+    {
+        if (Auth::check()) {
+
+            if (strtolower(Auth::user()->role) === 'student') {
+                return redirect()->route('student.dashboard');
+            }
+
+            return redirect()->route('dashboard');
+        }
+
         $setting = Setting::first();
+
         return view('auth.login', compact('setting'));
     }
 
@@ -54,23 +64,24 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-        /** ✅ Role-based redirect */
-        if (strtolower(trim($user->role)) == 'User') {
+        // Student
+        if (strtolower(trim($user->role)) === 'student') {
+
             return redirect()
-                ->route('profile')
+                ->route('student.dashboard')
                 ->with('success', 'Login successfully :)');
         }
 
+        // Admin
         return redirect()
             ->route('dashboard')
             ->with('success', 'Login successfully :)');
     }
 
     /** logout */
-    public function logout( Request $request)
+    public function logout(Request $request)
     {
         Auth::logout();
         return redirect('login')->with('success', 'Logout successfully :)');
     }
-
 }
