@@ -21,14 +21,13 @@ class User extends Authenticatable
         'user_id',
         'name',
         'email',
-        'join_date',
         'phone',
         'status',
         'role',
         'avatar',
-        'position',
-        'department',
+        'course_id',
         'password',
+
     ];
 
      public function categories()
@@ -79,4 +78,9 @@ class User extends Authenticatable
             }
         });
     }
+
+   public function courses()
+{
+    return $this->belongsToMany(Course::class);
+}
 }

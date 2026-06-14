@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Response;
-use App\Models\Course;
 
 // Controllers
 use App\Http\Controllers\{
@@ -24,95 +22,33 @@ use App\Http\Controllers\{
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Student\StudentController as StudentStudentController;
 
-/*
-|--------------------------------------------------------------------------
-| Utility Route (DEV ONLY)
-|--------------------------------------------------------------------------
-*/
 
-// CHANGED: prevent production misuse
 Route::get("clear", function () {
-    abort_if(!app()->environment('local'), 403); // CHANGED
+    abort_if(!app()->environment('local'), 403); 
 
-    Artisan::call('optimize:clear'); // CHANGED (cleaner)
+    Artisan::call('optimize:clear'); 
     return "Cache cleared";
 });
 
-/*
-|--------------------------------------------------------------------------
-| Helper (BETTER APPROACH)
-|--------------------------------------------------------------------------
-*/
-
-// CHANGED: simplified helper (recommended to move to helpers.php)
 if (!function_exists('set_active')) {
     function set_active($route)
     {
-        return request()->routeIs($route) ? 'active' : ''; // CHANGED
+        return request()->routeIs($route) ? 'active' : ''; 
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Frontend Routes
-|--------------------------------------------------------------------------
-*/
+// Route::controller(LoginController::class)->group(function () {
+//     Route::get('/login', 'login')->name('login');
+//     Route::post('/login', 'authenticate');
+//     Route::get('/logout', 'logout')->name('logout');
+//     Route::post('change/password', 'changePassword')->name('change/password');
+// });
 
-// CHANGED: grouped controller
-Route::controller(FrontendController::class)->group(function () {
 
-    Route::get('/', 'index')->name('home');
-    Route::get('/about', 'about')->name('about');
-    Route::get('/contact', 'contact')->name('contact');
-    Route::get('/faq', 'faq')->name('faq');
-
-    // Policies
-    Route::get('/policy-and-procedure', 'policyAndProcedure')->name('policyAndProcedure');
-    Route::get('/complaints-and-appeals-policy', 'complaintsAndAppealsPolicy')->name('complaintsAndAppealsPolicy');
-    Route::get('/learning-resources-policy', 'learningResourcesPolicy')->name('learningResourcesPolicy');
-    Route::get('/reassessment-policy', 'reassessmentPolicy')->name('reassessmentPolicy');
-    Route::get('/schedule-of-administrative-fees', 'scheduleOfAdministrativeFees')->name('scheduleOfAdministrativeFees');
-    Route::get('/refund-cancellation-policy', 'refundCancellationPolicy')->name('refundCancellationPolicy');
-
-    // Courses
-    Route::get('/course-list', 'courseList')->name('course.list');
-    Route::get('/course/{id}', 'singleCourse')->name('single.course');
-    Route::get('/category/{id}', 'singleCategory')->name('single.category');
-
-    Route::get('/course-details', 'courseDetails')->name('course.details');
-
-    // Enrollment
-    Route::get('/enrolment', 'enrolment')->name('enrolment'); // CHANGED (duplicate removed)
-
-    Route::get('/work-placement', 'workPlacement')->name('workPlacement');
-
-    // Application
-    Route::get('/application', 'application')->name('application');
-    Route::post('/application', 'store')->name('application.store');
-
-    // Course Names
-    Route::get('individual-support', 'individualSupport')->name('individualSupport');
-    Route::get('ageing-support', 'ageingSupport')->name('ageingSupport');
-    Route::get('disability-support', 'disabilitySupport')->name('disabilitySupport');
-    Route::get('community-service', 'communityService')->name('communityService');
-    Route::get('community-services', 'communityServices')->name('communityServices');
-
-    Route::get('cardiopulmonary-resuscitation', 'cardiopulmonaryResuscitation')->name('cardiopulmonaryResuscitation');
-    Route::get('first-aid-cpr', 'firstAidCpr')->name('firstAidCpr');
-    Route::get('leadership-management', 'leadershipManagement')->name('leadershipManagement');
-    Route::get('project-management', 'projectManagement')->name('projectManagement');
-
-    // Fast Track
-    Route::get('/fast-track-qualifications', 'fast_track_qualifications')->name('fast-track-qualifications');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-*/
-
-// CHANGED: grouped login
+// Route::controller(RegisterController::class)->group(function () {
+//     Route::get('/register', 'register')->name('register');
+//     Route::post('/register', 'storeUser')->name('register.store');  
+// });
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'login')->name('login');
     Route::post('/login', 'authenticate');
@@ -120,169 +56,41 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('change/password', 'changePassword')->name('change/password');
 });
 
-// CHANGED: grouped register
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'register')->name('register');
-    Route::post('/register', 'storeUser')->name('register.store');
+    Route::post('/register', 'storeUser')->name('register.store');  
 });
 
-/*
-|--------------------------------------------------------------------------
-| Other Public Routes
-|--------------------------------------------------------------------------
-*/
 
-Route::match(['get', 'post'], 'user/password-reset', [UserController::class, 'password_reset'])
-    ->name('password.reset');
+Route::middleware(['auth', 'student'])->prefix('student')->group(function () {
 
-// CHANGED: safer slug handling
-Route::get('/fast-track/{slug}', function ($slug) {
-    $view = "meta-service.pages.fast-track.$slug";
+    Route::get('/dashboard', [FrontendController::class, 'studentDashboard'])
+        ->name('student.dashboard');
 
-    abort_unless(view()->exists($view), 404); // CHANGED
-
-    return view($view);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Form Submissions
-|--------------------------------------------------------------------------
-*/
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
-Route::post('/check-eligibility', [RplLeadController::class, 'store'])->name('check-eligibility.store');
-Route::post('/qualification-lead', [QualificationsLeadController::class, 'store'])->name('qualification-lead.store');
-Route::post('/fast-track/{slug}', [QualificationsLeadController::class, 'singleCourseStore'])->name('single-course-store');
-
-/*
-|--------------------------------------------------------------------------
-| Authenticated Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
 
     Route::get('profile', [HomeController::class, 'profile'])->name('profile');
-    Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-    // CHANGED: cleaner but KEEPING your custom names
     Route::resource('users', UserController::class)->names('user');
     Route::resource('reviews', ReviewController::class)->names('review');
     // Route::resource('courses', CourseController::class)->names('course');
     // Route::resource('categories', CategoryController::class)->names('category');
     Route::resource('settings', SettingController::class)->names('setting');
     Route::resource('contacts', ContactController::class)->names('contact');
+
     Route::get('seo-meta/{seoMeta}/google-score', [SeoMetaController::class, 'googleScore'])
         ->name('seo-meta.google-score');
-    Route::resource('seo-meta', \App\Http\Controllers\SeoMetaController::class)->names('seo-meta');
+
+    Route::resource('seo-meta', SeoMetaController::class)->names('seo-meta');
     Route::resource('rpl-lead', RplLeadController::class)->names('rpl-lead');
     Route::resource('qualification-lead', QualificationsLeadController::class)->names('qualification-lead');
+
+    Route::resource('students', RegisterController::class)->names('student');
+
 });
 
 
-// site map 
-
-
-Route::get('/sitemap.xml', function () {
-
-    $urls = [];
-
-    /*
-    |--------------------------------------------------------------------------
-    | STATIC ROUTES
-    |--------------------------------------------------------------------------
-    */
-
-    $staticRoutes = [
-        '/',
-        '/about',
-        '/contact',
-        '/faq',
-        '/course-list',
-        '/enrolment',
-        '/application',
-    ];
-
-    foreach ($staticRoutes as $route) {
-        $urls[] = [
-            'loc' => url($route),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'weekly',
-            'priority' => $route === '/' ? '1.0' : '0.8',
-        ];
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | DYNAMIC COURSES
-    |--------------------------------------------------------------------------
-    */
-
-    if (class_exists(Course::class)) {
-        $courses = Course::select('id', 'updated_at')->get();
-
-        foreach ($courses as $course) {
-            $urls[] = [
-                'loc' => url('/course/' . $course->id),
-                'lastmod' => optional($course->updated_at)->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.9',
-            ];
-        }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | GENERATE XML
-    |--------------------------------------------------------------------------
-    */
-
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
-    foreach ($urls as $url) {
-        $xml .= '<url>';
-        $xml .= '<loc>' . $url['loc'] . '</loc>';
-
-        if (!empty($url['lastmod'])) {
-            $xml .= '<lastmod>' . $url['lastmod'] . '</lastmod>';
-        }
-
-        $xml .= '<changefreq>' . $url['changefreq'] . '</changefreq>';
-        $xml .= '<priority>' . $url['priority'] . '</priority>';
-        $xml .= '</url>';
-    }
-
-    $xml .= '</urlset>';
-
-    return Response::make($xml, 200, [
-        'Content-Type' => 'application/xml',
-    ]);
-});
-
-
-Route::get("route-list", [FrontendController::class, "route_list"]);
-Route::get('/seo/analyze', [SeoMetaController::class, 'analyze']);
-
-
-Route::middleware(['auth','admin'])->group(function () {
-
-    Route::resource('categories', CategoryController::class);
-    Route::resource('courses', CourseController::class);
-    // Route::resource('students', StudentController::class);
-
-    // Route::post('students/{id}/categories', [StudentStudentController::class,'assignCategories']);
-    // Route::post('students/{id}/courses', [StudentController::class,'assignCourses']);
-});
-
-// Route::middleware('auth')->group(function () {
-
-//     Route::get('/dashboard',[StudentController::class,'dashboard']);
-
-//     Route::get('/categories',[StudentController::class,'categories']);
-//     Route::get('/courses',[StudentController::class,'courses']);
-
-//     Route::get('/courses/{course}',[StudentController::class,'show']);
-//     Route::get('/courses/{course}/download',[StudentController::class,'download']);
-
-// });

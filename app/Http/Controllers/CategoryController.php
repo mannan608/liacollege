@@ -5,66 +5,128 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
+ 
 use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
-     public function index()
+    public function index(Request $request)
     {
-        $categories = Category::latest()->get();
-        return view('admin.categories.index', compact('categories'));
+        $query = Category::query()->orderByDesc('id');
+
+        // ===== Filters =====
+        $query->when($request->id, fn($q) => $q->where('id', $request->id));
+        $query->when($request->name, fn($q) => $q->where('name', 'LIKE', "%{$request->name}%"));
+        $query->when($request->created_by, fn($q) => $q->where('created_by', $request->created_by));
+
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $categories = $query->get();
+        $categoryById = $categories->pluck('name','id')->toArray();
+        return view('backend.category.index', compact('categories', 'categoryById'));
     }
 
     public function create()
-    {
-        return view('admin.categories.create');
+    {   
+        $categories = Category::all();
+        $category = null;
+        // return $category;
+        return view('backend.category.create', compact('category','categories'));
     }
 
     public function store(Request $request)
+    {   
+        // return $request->all();
+        $request->validate([
+            'name'       => 'required|max:255',
+            'description' => 'nullable',
+        ]);
+
+        try {
+            DB::beginTransaction();          
+
+            Category::create([
+                'name'       => $request->name,
+                'description' => $request->description,
+                'parent_id' => $request->parent_id,
+                'created_by'  => auth()->id(),
+                'created_at'  => now(),
+            ]);
+
+            DB::commit();
+            return redirect()->route('category.index')->with('success', 'Category created successfully!');
+        } catch (\Throwable $e) {
+            // return $e->getMessage();
+            DB::rollBack();
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function edit($id)
+    {
+        $category = Category::find($id);
+        // return $category;
+        $categories = Category::all();
+        return view('backend.category.create', compact('category','categories'));
+    }
+    
+    public function show($id)
+    {
+        $category = Category::find($id);
+        return view('backend.category.show', compact('category'));
+    }
+
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|unique:categories'
+            'name'       => 'required|max:255',
+            'description' => 'nullable',
         ]);
 
-        Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'status' => $request->status ?? 1
-        ]);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('backend.categories.index')->with('success','Category created successfully'); 
+            $category  = Category::find($id);           
+
+            $category->update([
+                'name'       => $request->name,
+                'description' => $request->description,
+                'parent_id' => $request->parent_id,
+                'updated_by'  => auth()->id(),
+                'updated_at'  => now(),
+            ]);
+
+            DB::commit();
+            return redirect()->route('category.index')->with('success', 'Category updated successfully!');
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
-    public function edit(Category $category)
+    public function destroy($id)
     {
-        return view('admin.categories.create', compact('category'));
-    }
+        try {
+            $category = Category::find($id);
 
-    public function update(Request $request, Category $category)
-    {
-        $request->validate([
-            'name' => 'required'
-        ]);
+            if ($category->file && file_exists(public_path('uploads/categories/' . $category->file))) {
+                unlink(public_path('uploads/categories/' . $category->file));
+            }
 
-        $category->update([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'status' => $request->status ?? 1
-        ]);
+            $category->delete();
 
-        return redirect()->route('backend.categories.index')->with('success','Category updated successfully');
-    }
+            return back()->with('success', 'Category deleted!');
 
-    public function destroy(Category $category)
-    {
-       // prevent deleting if courses exist
-    if ($category->courses()->count() > 0) {
-        return back()->with('error','Category has courses');
-    }
 
-    $category->delete();
-        return back()->with('success','Category deleted successfully');
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

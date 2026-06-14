@@ -20,14 +20,16 @@ class SeoMetaController extends Controller
 
     public function index()
     {
-        $seoMetas = SeoMeta::get()->map(function ($seoMeta) {
-            $url     = url($seoMeta->path) ?? url('/');
-            $seoMeta->url = $url;
-            $keyword = $seoMeta->meta_keywords ?? '';
-            $seoMeta->seo_result = $this->seo->analyze($url, $keyword);
+        // $seoMetas = SeoMeta::get()->map(function ($seoMeta) {
+        //     $url     = url($seoMeta->path) ?? url('/');
+        //     $seoMeta->url = $url;
+        //     $keyword = $seoMeta->meta_keywords ?? '';
+        //     $seoMeta->seo_result = $this->seo->analyze($url, $keyword);
 
-            return $seoMeta;
-        });       
+        //     return $seoMeta;
+        // });       
+
+        $seoMetas = SeoMeta::all(); // CHANGED: defer analysis to view for better UX
 
         return view('backend.seo-meta.index', compact('seoMetas'));
     }

@@ -5,9 +5,9 @@
                 <li class="menu-title">
                     <span>Main Menu</span>
                 </li>
-                @if (auth()->user()->role == 'Admin')
+                @if (auth()->user()->role == 'admin')
                     <li>
-                        <a href="{{ route('dashboard') }}" {{set_active(['dashboard'])}}><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+                        <a href="{{ route('admin.dashboard') }}" {{set_active(['dashboard'])}}><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
                     </li>
                     <li>
                         <a href="{{ route('user.show', auth()->user()->id) }}" {{set_active(['user.show'])}}><i class="fas fa-user"></i> <span>Profile</span></a>
@@ -36,6 +36,9 @@
                     </li>
                       <li>
                         <a href="{{ route('qualification-lead.index') }}" {{set_active(['qualification-lead.index'])}}><i class="fas fa-search"></i> <span>Qualification Leads</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ route('student.index') }}" {{set_active(['student.index'])}}><i class="fas fa-search"></i> <span>Students</span></a>
                     </li>
                     <li>
                         <a href="{{ route('logout') }}" {{set_active(['logout'])}}><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>

@@ -47,10 +47,10 @@
     <div class="main-wrapper">
         <div class="header">
             <div class="header-left">
-                <a href="{{ route('dashboard') }}" class="logo">
+                <a href="{{ route('admin.dashboard') }}" class="logo">
                     <img src="{{ optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('assets/img/logo.png') }}" alt="Logo">
                 </a>
-                <a href="{{ route('dashboard') }}" class="logo logo-small">
+                <a href="{{ route('admin.dashboard') }}" class="logo logo-small">
                     <img src="{{ optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('assets/img/logo.png') }}" alt="Logo" width="30" height="30">
                 </a>
             </div>

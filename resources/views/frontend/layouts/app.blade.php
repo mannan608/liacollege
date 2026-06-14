@@ -1,5 +1,5 @@
 {{-- // resources\views\frontend\layouts\app.blade.php --}}
-@php
+{{-- @php
   $headerClass = 'header-two';
   $logoAsset = optional($setting)->logo ? 'uploads/settings/' . $setting->logo : 'assets/img/logo.png';
   $logoWhite = optional($setting)->logo_white ? 'uploads/settings/' . $setting->logo_white : 'assets/img/logo-white.webp';
@@ -7,16 +7,17 @@
     $headerClass = 'header-one';
     $logoAsset = $logoWhite;
   }
-@endphp
+@endphp --}}
 <!DOCTYPE html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  @include('meta-service.component.seo')
-  <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/images/logo/logo.png') }}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @include('meta-service.component.seo')
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/images/logo/logo.png') }}">
     <!-- animate css -->
     <link rel="stylesheet" href="{{ asset('frontend/css/plugins/animate.min.css') }}">
     <!-- fontawesome 6.4.2 -->
@@ -37,154 +38,243 @@
     <!-- custom style css -->
     <link rel="stylesheet" href="{{ asset('frontend/css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/custom4.css') }}">
+    <script src="
+                            https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/license.min.js
+                            "></script>
+    <link href="
+https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
+" rel="stylesheet">
     <style>
         footer.rts-footer i {
             color: #e2b838;
         }
+
         .rts-footer-menu i {
             margin-right: 5px;
         }
+
         .rts-footer-widget .rts-footer-menu ul li a:hover {
             color: white;
         }
-        .right-side, .left-side {
+
+        .right-side,
+        .left-side {
             width: 50%;
         }
+
         .rts__author--img img {
             height: 50px;
         }
+
         .program-menu a {
             font-size: 12px;
         }
+
         .communication-btn img {
             height: 36px;
         }
+
         .progress-wrap {
             bottom: 100px;
+        }
+
+        .login__btn i {
+            font-size: 22px;
+
+        }
+
+        .translate__lang ul {
+            background: white;
+        }
+
+        .dropdown-toggle {
+            border: none;
+
+            ul li a {
+                text-decoration: none;
+                color: var(--color-gray);
+                font-size: 14px;
+            }
+        }
+
+        .dropdown-menu li a {
+            font-size: 14px;
+        }
+
+
+        .dropdown-toggle::after {
+            display: none;
+            border: none;
         }
     </style>
     <!-- Meta Pixel Code -->
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window,document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-     fbq('init', '925639160003172'); 
-    fbq('track', 'PageView');
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '925639160003172');
+        fbq('track', 'PageView');
     </script>
     <noscript>
-     <img height="1" width="1" 
-    src="https://www.facebook.com/tr?id=925639160003172&ev=PageView
-    &noscript=1"/>
+        <img height="1" width="1"
+            src="https://www.facebook.com/tr?id=925639160003172&ev=PageView
+    &noscript=1" />
     </noscript>
     <!-- End Meta Pixel Code -->
     <!--<script -->
-    <!--  src="https://beta.leadconnectorhq.com/loader.js"  -->
+        <!--  src="https://beta.leadconnectorhq.com/loader.js"  
+        -->
     <!--  data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js" -->
     <!-- data-widget-id="69a7c72799dd5643e63ded8b"   > -->
     <!-- </script>-->
-    <script 
-      src="https://beta.leadconnectorhq.com/loader.js"  
-      data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js" 
-     data-widget-id="691ff546be8b70bc978e5c9c"   > 
-     </script>
+    <script src="https://beta.leadconnectorhq.com/loader.js"
+        data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js"
+        data-widget-id="691ff546be8b70bc978e5c9c"></script>
 </head>
+
 <body>
     <!-- header area start -->
     <header class="header header__sticky v__3">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="header__wrapper" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="header__wrapper"
+                        style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
 
-                    <!-- Left Side (Social + Left Menu) -->
-                    <div class="header-menu">
-                        <div class="header__social__link">
-                            <a href="https://www.facebook.com/leadershipinstituteaus"><i class="fa-brands fa-facebook"></i></a>
-                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-                            <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                        </div>
-                        <div class="header__menu">
-                            <div class="navigation">
-                                <nav class="navigation__menu">
-                                    <ul>
-                                        <li class="navigation__menu--item">
-                                            <a href="{{ url('/') }}" class="navigation__menu--item__link">Home</a>
-                                        </li>
-                                        <li class="navigation__menu--item">
-                                            <a href="{{ url('about') }}" class="navigation__menu--item__link">About</a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                        <!-- Left Side (Social + Left Menu) -->
+                        <div class="header-menu">
+                            <div class="header__social__link">
+                                <a href="https://www.facebook.com/leadershipinstituteaus"><i
+                                        class="fa-brands fa-facebook"></i></a>
+                                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                                <a href="#"><i class="fa-brands fa-youtube"></i></a>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Logo (Always Center) -->
-                    <div class="header__logo p-2">
-                        <a class="header__logo--link" href="{{ url('/') }}">
-                            <img src="{{ asset('frontend/images/logo/logo.png') }}" class="logo-img" alt="Logo">
-                        </a>
-                    </div>
-
-                    <!-- Right Side (Right Menu + Lang + Icons) -->
-                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 100px;">
-                        <div class="header__menu">
-                            <div class="navigation">
-                                <nav class="navigation__menu">
-                                    <ul>
-                                        <li class="navigation__menu--item has-child has-arrow">
-                                            <a href="javascript:void(0);" class="navigation__menu--item__link">Course</a>
-                                            <ul class="submenu sub__style">
-                                                <li><a href="{{ url('individual-support') }}">CHC33021 Certificate III in Individual Support</a></li>
-                                                <li><a href="{{ url('ageing-support') }}">CHC43015 Certificate IV in Ageing Support</a></li>
-                                                <li><a href="{{ url('community-service') }}">CHC52021 Diploma of Community Services</a></li>
-                                                <li><a href="{{ url('community-services') }}">CHC52025 Diploma of Community Services</a></li>
-                                                <li><a href="{{ url('leadership-management') }}">BSB50420 Diploma of Leadership and Management</a></li>
-                                                <li><a href="{{ url('project-management') }}">BSB50820 Diploma of Project Management</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="navigation__menu--item">
-                                            <a class="navigation__menu--item__link" href="{{ url('contact') }}">Contact</a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                        <div class="header__right">
-                            <div class="header__right--item">
-                                <div id="langSwitcher" class="lang__trigger">
-                                    <span class="selected__lang">English</span>
-                                    <i class="fa-light fa-globe"></i>
-                                    <div class="translate__lang">
+                            <div class="header__menu">
+                                <div class="navigation">
+                                    <nav class="navigation__menu">
                                         <ul>
-                                            <li><a href="#" class="active">English</a></li>
-                                            <li><a href="#">French</a></li>
-                                            <li><a href="#">Spanish</a></li>
-                                            <li><a href="#">Romanian</a></li>
+                                            <li class="navigation__menu--item">
+                                                <a href="{{ url('/') }}"
+                                                    class="navigation__menu--item__link">Home</a>
+                                            </li>
+                                            <li class="navigation__menu--item">
+                                                <a href="{{ url('about') }}"
+                                                    class="navigation__menu--item__link">About</a>
+                                            </li>
                                         </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logo (Always Center) -->
+                        <div class="header__logo p-2">
+                            <a class="header__logo--link" href="{{ url('/') }}">
+                                <img src="{{ asset('frontend/images/logo/logo.png') }}" class="logo-img"
+                                    alt="Logo">
+                            </a>
+                        </div>
+
+                        <!-- Right Side (Right Menu + Lang + Icons) -->
+                        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 100px;">
+                            <div class="header__menu">
+                                <div class="navigation">
+                                    <nav class="navigation__menu">
+                                        <ul>
+                                            <li class="navigation__menu--item has-child has-arrow">
+                                                <a href="javascript:void(0);"
+                                                    class="navigation__menu--item__link">Course</a>
+                                                <ul class="submenu sub__style">
+                                                    <li><a href="{{ url('individual-support') }}">CHC33021 Certificate
+                                                            III in Individual Support</a></li>
+                                                    <li><a href="{{ url('ageing-support') }}">CHC43015 Certificate IV
+                                                            in Ageing Support</a></li>
+                                                    <li><a href="{{ url('community-service') }}">CHC52021 Diploma of
+                                                            Community Services</a></li>
+                                                    <li><a href="{{ url('community-services') }}">CHC52025 Diploma of
+                                                            Community Services</a></li>
+                                                    <li><a href="{{ url('leadership-management') }}">BSB50420 Diploma
+                                                            of Leadership and Management</a></li>
+                                                    <li><a href="{{ url('project-management') }}">BSB50820 Diploma of
+                                                            Project Management</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="navigation__menu--item">
+                                                <a class="navigation__menu--item__link"
+                                                    href="{{ url('contact') }}">Contact</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            <div class="header__right">
+                                <div class="header__right--item">
+
+                                    @auth
+
+                                        <div class="dropdown">
+                                            <button class="login__btn dropdown-toggle" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-light fa-user"></i>
+                                            </button>
+
+                                            <ul class="dropdown-menu px-4" >
+                                                <li>
+                                                    <a href="{{ url(auth()->user()->role . '/dashboard') }}">
+                                                        Dashboard
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <form action="{{ route('logout') }}" method="get">
+                                                        @csrf
+                                                        <button type="submit" style="font-size: 14px;border: none; text-align: left">
+                                                            Logout
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    @endauth
+
+                                    @guest
+                                        <a href="{{ route('login') }}" class="login__btn">
+                                            <i class="fa-light fa-user"></i>
+                                        </a>
+                                    @endguest
+
+                                    <div id="search-btn" class="search__trigger">
+                                        <i class="fa-sharp fa-light fa-magnifying-glass"></i>
+                                    </div>
+                                    <div id="menu-btn" class="menu__trigger">
+                                        <img src="{{ asset('frontend/images/icon/menu__bar-3.svg') }}"
+                                            alt="bar">
                                     </div>
                                 </div>
-                                <div id="search-btn" class="search__trigger">
-                                    <i class="fa-sharp fa-light fa-magnifying-glass"></i>
-                                </div>
-                                <div id="menu-btn" class="menu__trigger">
-                                    <img src="{{ asset('frontend/images/icon/menu__bar-3.svg') }}" alt="bar">
-                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
     <!-- header area end -->
     @yield('content')
     <!-- footer start -->
@@ -194,9 +284,11 @@
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="rts-footer-widget w-320">
                         <a class='d-block rts-footer-logo mb-4' href='index.html'>
-                            <img src="{{ asset('frontend/images/logo/logo.png') }}" style="height: 100px" alt="LIA">
+                            <img src="{{ asset('frontend/images/logo/logo.png') }}" style="height: 100px"
+                                alt="LIA">
                         </a>
-                        <i class="fa fa-map-marker"></i> <span>Level 14 333 Collins St, MELBOURNE, VIC, 3000</span><br />
+                        <i class="fa fa-map-marker"></i> <span>Level 14 333 Collins St, MELBOURNE, VIC,
+                            3000</span><br />
 
                         <i class="fa fa-phone"></i> <span>0479 110 567</span><br />
                         <i class="fa fa-phone"></i> <span>0468 092 898 (Urgent Enquiry)</span><br />
@@ -209,7 +301,8 @@
                             <a href="http://wa.me/+61468092898" target="_blank">
                                 <img src="{{ asset('frontend/images/whatsapp.png') }}">
                             </a>
-                            <a href="https://api.leadconnectorhq.com/widget/booking/dp31qqshThiwc7Uslqjp" target="_blank">
+                            <a href="https://api.leadconnectorhq.com/widget/booking/dp31qqshThiwc7Uslqjp"
+                                target="_blank">
                                 <img src="{{ asset('frontend/images/meeting.png') }}">
                             </a>
                         </div>
@@ -231,12 +324,24 @@
                         <h6 class="rt-semi">Qualifications</h6>
                         <div class="rts-footer-menu">
                             <ul>
-                                <li><a href="{{ url('individual-support') }}"><span><i class="fa-light fa-arrow-right"></i></span>CHC33021 Certificate III in Individual Support</a></li>
-                                <li><a href="{{ url('ageing-support') }}"><span><i class="fa-light fa-arrow-right"></i></span>CHC43015 Certificate IV in Ageing Support</a></li>
-                                <li><a href="{{ url('community-service') }}"><span><i class="fa-light fa-arrow-right"></i></span>CHC52021 Diploma of Community Services</a></li>
-                                <li><a href="{{ url('community-services') }}"><span><i class="fa-light fa-arrow-right"></i></span>CHC52025 Diploma of Community Services</a></li>
-                                <li><a href="{{ url('leadership-management') }}"><span><i class="fa-light fa-arrow-right"></i></span>BSB50420 Diploma of Leadership and Management</a></li>
-                                <li><a href="{{ url('project-management') }}"><span><i class="fa-light fa-arrow-right"></i></span>BSB50820 Diploma of Project Management</a></li>
+                                <li><a href="{{ url('individual-support') }}"><span><i
+                                                class="fa-light fa-arrow-right"></i></span>CHC33021 Certificate III in
+                                        Individual Support</a></li>
+                                <li><a href="{{ url('ageing-support') }}"><span><i
+                                                class="fa-light fa-arrow-right"></i></span>CHC43015 Certificate IV in
+                                        Ageing Support</a></li>
+                                <li><a href="{{ url('community-service') }}"><span><i
+                                                class="fa-light fa-arrow-right"></i></span>CHC52021 Diploma of
+                                        Community Services</a></li>
+                                <li><a href="{{ url('community-services') }}"><span><i
+                                                class="fa-light fa-arrow-right"></i></span>CHC52025 Diploma of
+                                        Community Services</a></li>
+                                <li><a href="{{ url('leadership-management') }}"><span><i
+                                                class="fa-light fa-arrow-right"></i></span>BSB50420 Diploma of
+                                        Leadership and Management</a></li>
+                                <li><a href="{{ url('project-management') }}"><span><i
+                                                class="fa-light fa-arrow-right"></i></span>BSB50820 Diploma of Project
+                                        Management</a></li>
                             </ul>
                         </div>
                     </div>
@@ -248,7 +353,9 @@
         <div class="container">
             <div class="row">
                 <div class="rt-center">
-                    <p class="--p-xs">Copyright &copy; <span id="year"></span> All Rights Reserved <a href="#" style="color:#e5b258;">Education and Training Pty Ltd</a> trading as Leadership Institute Australia</p>
+                    <p class="--p-xs">Copyright &copy; <span id="year"></span> All Rights Reserved <a
+                            href="#" style="color:#e5b258;">Education and Training Pty Ltd</a> trading as
+                        Leadership Institute Australia</p>
                 </div>
             </div>
         </div>
@@ -265,7 +372,9 @@
             </div>
             <div class="inner-content">
                 <p class="disc">
-                    Leadership Institute Australia is a Registered Training Organisation delivering nationally recognised qualifications across Australia. We help professionals gain industry-ready skills and advance their careers through recognised education pathways.
+                    Leadership Institute Australia is a Registered Training Organisation delivering nationally
+                    recognised qualifications across Australia. We help professionals gain industry-ready skills and
+                    advance their careers through recognised education pathways.
                 </p>
                 <!-- offcanvase banner -->
                 <div class="offcanvase__banner mt--50">
@@ -305,12 +414,23 @@
                     <li class="has-droupdown">
                         <a href="#" class="main">Course</a>
                         <ul class="submenu mm-collapse">
-                            <li><a class='mobile-menu-link' href="https://liacollege.edu.au/individual-support">CHC33021 Certificate III in Individual Support</a></li>
-                            <li><a class='mobile-menu-link' href="https://liacollege.edu.au/ageing-support">CHC43015 Certificate IV in Ageing Support</a></li>
-                            <li><a class='mobile-menu-link' href="https://liacollege.edu.au/community-service">CHC52021 Diploma of Community Services</a></li>
-                            <li><a class='mobile-menu-link' href="https://liacollege.edu.au/community-services">CHC52025 Diploma of Community Services</a></li>
-                            <li><a class='mobile-menu-link' href="https://liacollege.edu.au/leadership-management">BSB50420 Diploma of Leadership and Management</a></li>
-                            <li><a class='mobile-menu-link' href="https://liacollege.edu.au/project-management">BSB50820 Diploma of Project Management</a></li>
+                            <li><a class='mobile-menu-link'
+                                    href="https://liacollege.edu.au/individual-support">CHC33021 Certificate III in
+                                    Individual Support</a></li>
+                            <li><a class='mobile-menu-link' href="https://liacollege.edu.au/ageing-support">CHC43015
+                                    Certificate IV in Ageing Support</a></li>
+                            <li><a class='mobile-menu-link'
+                                    href="https://liacollege.edu.au/community-service">CHC52021 Diploma of Community
+                                    Services</a></li>
+                            <li><a class='mobile-menu-link'
+                                    href="https://liacollege.edu.au/community-services">CHC52025 Diploma of Community
+                                    Services</a></li>
+                            <li><a class='mobile-menu-link'
+                                    href="https://liacollege.edu.au/leadership-management">BSB50420 Diploma of
+                                    Leadership and Management</a></li>
+                            <li><a class='mobile-menu-link'
+                                    href="https://liacollege.edu.au/project-management">BSB50820 Diploma of Project
+                                    Management</a></li>
                         </ul>
                     </li>
                     <li>
@@ -321,11 +441,13 @@
 
             <div class="offcanvase__info--content mt--30">
                 <!--<a href="callto:+61485826710"><span><i class="fa-sharp fa-light fa-phone"></i></span>+(61) 485-826-710</a>-->
-                <a href="#"><span><i class="fa-sharp fa-light fa-location-dot"></i></span>Level 14 333 Collins St, MELBOURNE, VIC, 3000</a>
+                <a href="#"><span><i class="fa-sharp fa-light fa-location-dot"></i></span>Level 14 333 Collins
+                    St, MELBOURNE, VIC, 3000</a>
                 <div class="offcanvase__info--content--social">
                     <p class="title">Follow Us:</p>
                     <div class="social__links">
-                        <a href="https://www.facebook.com/leadershipinstituteaus"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://www.facebook.com/leadershipinstituteaus"><i
+                                class="fa-brands fa-facebook"></i></a>
                         <a href="#"><i class="fa-brands fa-instagram"></i></a>
                         <a href="#"><i class="fa-brands fa-linkedin"></i></a>
                         <a href="#"><i class="fa-brands fa-youtube"></i></a>
@@ -341,7 +463,8 @@
         <div class="container">
             <div class="search-input-inner">
                 <div class="input-div">
-                    <input class="search-input autocomplete ui-autocomplete-input" type="text" placeholder="Search by keyword or #" autocomplete="off">
+                    <input class="search-input autocomplete ui-autocomplete-input" type="text"
+                        placeholder="Search by keyword or #" autocomplete="off">
                     <button><i class="far fa-search"></i></button>
                 </div>
             </div>
@@ -351,7 +474,9 @@
     <!-- rts backto top start -->
     <div class="progress-wrap">
         <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 307.919;"></path>
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
+                style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 307.919;">
+            </path>
         </svg>
     </div>
     <!-- rts back to top end -->
@@ -390,4 +515,5 @@
     <!-- main Js -->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
 </body>
+
 </html>

@@ -12,17 +12,17 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     /**
-    * Where to redirect users after login.
-    *
-    * @var string
-    */
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('guest')->except([
@@ -33,44 +33,44 @@ class LoginController extends Controller
     }
     /** index page login */
     public function login()
-    {   
+    {
+
         $setting = Setting::first();
+
         return view('auth.login', compact('setting'));
     }
 
     /** login with databases */
     public function authenticate(Request $request)
-    {
-        $request->validate([
-            'email'    => 'required|string',
-            'password' => 'required|string',
+{
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    if (!Auth::attempt($credentials)) {
+        return back()->withErrors([
+            'email' => 'Invalid credentials.',
         ]);
-
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return back()->with('error', 'Email or password is incorrect');
-        }
-
-        $request->session()->regenerate();
-
-        $user = Auth::user();
-
-        /** ✅ Role-based redirect */
-        if (strtolower(trim($user->role)) == 'User') {
-            return redirect()
-                ->route('profile')
-                ->with('success', 'Login successfully :)');
-        }
-
-        return redirect()
-            ->route('dashboard')
-            ->with('success', 'Login successfully :)');
     }
 
+    $request->session()->regenerate();
+
+    $user = Auth::user();
+
+    return match ($user->role) {
+        'admin' => redirect()->route('admin.dashboard'),
+        'student' => redirect()->route('student.dashboard'),
+        default => tap(Auth::logout(), function () {
+        }) ?: redirect()->route('login')
+            ->withErrors(['role' => 'Role not assigned']),
+    };
+}
+
     /** logout */
-    public function logout( Request $request)
+    public function logout(Request $request)
     {
         Auth::logout();
         return redirect('login')->with('success', 'Logout successfully :)');
     }
-
 }

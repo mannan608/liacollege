@@ -7,7 +7,7 @@
                 <div class="col-12">
                     <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <a class="breadcrumb-item active">{{ optional($setting)->id ? 'Edit' : 'Add' }} Setting</a>
-                        <a href="{{ route('dashboard') }}">Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </div>
                 </div>
             </div>
@@ -192,7 +192,7 @@
                     </div>
                     <div class="card">
                         <div class="card-body text-end">
-                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">Cancel</a>
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary">Save Settings</button>
                         </div>
                     </div>

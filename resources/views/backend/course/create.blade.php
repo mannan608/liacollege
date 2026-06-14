@@ -19,42 +19,134 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <form method="POST" enctype="multipart/form-data"
-                                action="{{ isset($course) ? route('courses.update', $course->id) : route('courses.store') }}">
-
+                            <form
+                                action="{{ optional($course)->id ? route('course.update', $course->id) : route('course.store') }}"
+                                method="POST" enctype="multipart/form-data">
                                 @csrf
-
-                                @if (isset($course))
+                                @if (optional($course)->id)
                                     @method('PUT')
                                 @endif
 
-                                <input type="text" name="name" value="{{ $course->name ?? old('name') }}"
-                                    placeholder="Course Name">
+                                <div class="row">
+                                    {{-- Title --}}
+                                    <div class="col-md-6">
+                                        <div class="form-group local-forms">
+                                            <label>Title</label>
+                                            <input type="text" name="title" class="form-control"
+                                                value="{{ old('title', $course->title ?? '') }}" required>
+                                        </div>
+                                    </div>
 
-                                <select name="category_id">
-                                    @foreach ($categories as $id => $name)
-                                        <option value="{{ $id }}"
-                                            {{ isset($course) && $course->category_id == $id ? 'selected' : '' }}>
-                                            {{ $name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                    {{-- Category --}}
+                                    <div class="col-md-6">
+                                        <div class="form-group local-forms">
+                                            <label>Category</label>
+                                            <select name="category_id" class="form-control" required>
+                                                <option value="">Select Category</option>
+                                                @foreach ($categories as $category)
+                                                    <option value="{{ $category->id }}"
+                                                        {{ old('category_id', $course->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
 
-                                <input type="file" name="image">
-                                @if (isset($course) && $course->image)
-                                    <img src="{{ asset('storage/' . $course->image) }}" width="80">
-                                @endif
+                                    {{-- Price --}}
+                                    <div class="col-md-4">
+                                        <div class="form-group local-forms">
+                                            <label>Price</label>
+                                            <input type="number" name="price" class="form-control" step="0.01"
+                                                value="{{ old('price', $course->price ?? '') }}">
+                                        </div>
+                                    </div>
 
-                                <input type="file" name="pdf">
+                                    {{-- Discount --}}
+                                    <div class="col-md-4">
+                                        <div class="form-group local-forms">
+                                            <label>Discount (%)</label>
+                                            <input type="number" name="discount_percentage" class="form-control"
+                                                step="0.01" min="0" max="100"
+                                                value="{{ old('discount_percentage', $course->discount_percentage ?? '') }}">
+                                        </div>
+                                    </div>
 
-                                <button type="submit">
-                                    {{ isset($course) ? 'Update' : 'Create' }}
-                                </button>
+                                    {{-- Banner --}}
+                                    <div class="col-md-4">
+                                        <div class="form-group local-forms">
+                                            <label>Banner</label>
+                                            <input type="file" name="banner" class="form-control" accept="image/*"
+                                                onchange="previewBanner(event)">
+
+                                            <div class="mt-2">
+                                                <img id="banner-preview"
+                                                    src="{{ optional($course)->banner ? asset('uploads/courses/' . $course->banner) : '' }}"
+                                                    class="img-thumbnail" width="150"
+                                                    style="{{ optional($course)->banner ? '' : 'display:none;' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group local-forms">
+                                            <label>Course Material</label>
+                                            <input type="file" name="course_material"
+                                                class="form-control @error('course_material') is-invalid @enderror"
+                                                accept=".pdf,.doc,.docx,.ppt,.pptx,.zip">
+
+                                            @error('course_material')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        @error('course_material')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Description --}}
+                                    <div class="col-md-12">
+                                        <div class="form-group local-forms">
+                                            <label>Description</label>
+                                            <textarea name="description" class="form-control" id="my-editor" required>{{ old('description', $course->description ?? '') }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    {{-- Actions --}}
+                                    <div class="col-12">
+                                        <div class="d-flex">
+                                            <a href="{{ route('course.index') }}" class="btn btn-secondary me-2">Cancel</a>
+                                            <button type="submit" class="btn btn-primary">
+                                                {{-- {{ optional($course)->id ? 'Update' : 'Create' }} --}}
+                                                {{ isset($course) ? 'Update' : 'Create' }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        {{-- @if ($errors->any())
+            <div class="bg-red-100 p-4 rounded">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif --}}
     </div>
+
+    {{-- Course Material Preview --}}
+    {{-- Banner Preview --}}
+    <script>
+        function previewBanner(event) {
+            const img = document.getElementById('banner-preview');
+            img.src = URL.createObjectURL(event.target.files[0]);
+            img.style.display = 'block';
+        }
+    </script>
 @endsection

@@ -4,117 +4,278 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
- 
+
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Course::with('category')->latest()->get();
-        return view('backend.courses.index', compact('courses'));
+        $query = Course::query()->orderByDesc('id');
+
+        // ===== Filters =====
+        $query->when($request->id, fn($q) => $q->where('id', $request->id));
+        $query->when(
+            $request->title,
+            fn($q) =>
+            $q->where('name', 'LIKE', "%{$request->title}%")
+        );
+        $query->when($request->created_by, fn($q) => $q->where('created_by', $request->created_by));
+
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $courses = $query->get();
+        $categoryById = Category::select('id', 'name')->pluck('name', 'id')->toArray();
+        $users   = User::select('id', 'name')->get();
+
+        return view('backend.course.index', compact('courses', 'users', 'categoryById'));
     }
 
     public function create()
     {
-        $categories = Category::pluck('name','id');
-        return view('backend.courses.create', compact('categories'));
+        $categories = Category::all();
+        $course = null;
+        return view('backend.course.create', compact('course', 'categories'));
     }
 
     public function store(Request $request)
     {
+        $request->validate(
+            [
+                'title' => 'required|max:255',
+                'category_id' => 'required|exists:categories,id',
+                'banner' => 'nullable|image|max:5120',
+                'course_material' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
+            ],
+            [
+                'title.required' => 'Course title is required.',
+                'category_id.required' => 'Please select a category.',
+                'banner.image' => 'Banner must be an image.',
+                'banner.max' => 'Banner size cannot exceed 5MB.',
+                'course_material.mimes' => 'Only PDF, DOC, DOCX, PPT, PPTX and ZIP files are allowed.',
+                'course_material.max' => 'Course material size cannot exceed 10MB.',
+            ]
+        );
+
+        try {
+
+            DB::beginTransaction();
+
+            $bannerName = null;
+            $courseMaterialName = null;
+
+            $uploadPath = public_path('uploads/courses');
+
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            // Banner Upload
+            if ($request->hasFile('banner')) {
+
+                $file = $request->file('banner');
+
+                $bannerName = 'banner-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+                $file->move($uploadPath, $bannerName);
+            }
+
+            // Course Material Upload
+            if ($request->hasFile('course_material')) {
+
+                $file = $request->file('course_material');
+
+                $courseMaterialName = 'material-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+                $file->move($uploadPath, $courseMaterialName);
+            }
+
+            Course::create([
+                'title' => $request->title,
+                'category_id' => $request->category_id,
+                'description' => $request->description,
+                'price' => $request->price,
+                'discount_percentage' => $request->discount_percentage,
+                'banner' => $bannerName,
+                'course_material' => $courseMaterialName,
+                'created_by' => auth()->id(),
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('course.index')
+                ->with('success', 'Course created successfully');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'error' => $e->getMessage()
+                ]);
+        }
+    }
+
+    public function edit($id)
+    {
+        $course = Course::find($id);
+        $categories = Category::all();
+        return view('backend.course.create', compact('course', 'categories'));
+    }
+
+    public function show($id)
+    {
+        $course = Course::find($id);
+        return view('backend.course.show', compact('course'));
+    }
+
+    public function update(Request $request, $id)
+    {
         $request->validate([
-        'name' => 'required',
-        'category_id' => 'required',
-        'image' => 'nullable|image',
-        'pdf' => 'required|mimes:pdf'
-    ]);
+            'title' => 'required|max:255',
+            'description' => 'nullable',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'nullable|numeric',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100',
+            'banner' => 'nullable|image|max:5120',
+            'course_material' => 'nullable|file|max:10240',
+        ]);
 
-    $imagePath = null;
+        try {
 
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')
-            ->store('courses/images','public');
-    }
+            DB::beginTransaction();
 
-    $pdfPath = $request->file('pdf')
-        ->store('courses/pdfs','public');
+            $course = Course::findOrFail($id);
 
-    Course::create([
-        'name' => $request->name,
-        'slug' => Str::slug($request->name),
-        'category_id' => $request->category_id,
-        'image' => $imagePath,
-        'pdf_file' => $pdfPath,
-        'status' => 1
-    ]);
+            $uploadPath = public_path('uploads/courses');
 
-        return redirect()->route('backend.courses.index')->with('success','Course created successfully');
-    }
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
 
-    public function edit(Course $course)
-    {
-        $categories = Category::pluck('name','id');
-        return view('backend.courses.edit', compact('course','categories'));
-    }
+            $bannerName = $course->banner;
+            $courseMaterialName = $course->course_material;
 
-    public function update(Request $request, Course $course)
-    {
-         $request->validate([
-        'name' => 'required',
-        'category_id' => 'required',
-    ]);
+            // Banner Update
+            if ($request->hasFile('banner')) {
 
-    $data = [
-        'name' => $request->name,
-        'slug' => Str::slug($request->name),
-        'category_id' => $request->category_id,
-        'status' => $request->status ?? 1
-    ];
+                if (
+                    $course->banner &&
+                    file_exists($uploadPath . '/' . $course->banner)
+                ) {
+                    unlink($uploadPath . '/' . $course->banner);
+                }
 
-    // image replace
-    if ($request->hasFile('image')) {
+                $file = $request->file('banner');
 
-        if ($course->image) {
-            Storage::disk('public')->delete($course->image);
+                $bannerName = 'banner-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+                $file->move($uploadPath, $bannerName);
+            }
+
+            // Course Material Update
+            if ($request->hasFile('course_material')) {
+
+                if (
+                    $course->course_material &&
+                    file_exists($uploadPath . '/' . $course->course_material)
+                ) {
+                    unlink($uploadPath . '/' . $course->course_material);
+                }
+
+                $file = $request->file('course_material');
+
+                $courseMaterialName = 'material-' .
+                    uniqid() .
+                    '-' .
+                    now()->format('d_m_Y') .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+                $file->move($uploadPath, $courseMaterialName);
+            }
+
+            $course->update([
+                'title' => $request->title,
+                'category_id' => $request->category_id,
+                'description' => $request->description,
+                'price' => $request->price,
+                'discount_percentage' => $request->discount_percentage,
+                'banner' => $bannerName,
+                'course_material' => $courseMaterialName,
+                'updated_by' => auth()->id(),
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('course.index')
+                ->with('success', 'Course updated successfully');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()
+                ->withInput()
+                ->withErrors(['error' => $e->getMessage()]);
         }
-
-        $data['image'] = $request->file('image')
-            ->store('courses/images','public');
     }
 
-    // pdf replace
-    if ($request->hasFile('pdf')) {
-
-        if ($course->pdf_file) {
-            Storage::disk('public')->delete($course->pdf_file);
-        }
-
-        $data['pdf_file'] = $request->file('pdf')
-            ->store('courses/pdfs','public');
-    }
-
-    $course->update($data);
-
-        return redirect()->route('backend.courses.index')->with('success','Course updated successfully');
-    }
-
-    public function destroy(Course $course)
+    public function destroy($id)
     {
-         // delete image
-    if ($course->image) {
-        Storage::disk('public')->delete($course->image);
-    }
+        try {
 
-    // delete pdf
-    if ($course->pdf_file) {
-        Storage::disk('public')->delete($course->pdf_file);
-    }
+            $course = Course::findOrFail($id);
 
-    $course->delete();
-        return back()->with('success','Course deleted successfully');
+            $uploadPath = public_path('uploads/courses');
+
+            if (
+                $course->banner &&
+                file_exists($uploadPath . '/' . $course->banner)
+            ) {
+                unlink($uploadPath . '/' . $course->banner);
+            }
+
+            if (
+                $course->course_material &&
+                file_exists($uploadPath . '/' . $course->course_material)
+            ) {
+                unlink($uploadPath . '/' . $course->course_material);
+            }
+
+            $course->delete();
+
+            return back()->with('success', 'Course deleted successfully');
+        } catch (\Exception $e) {
+
+            return back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

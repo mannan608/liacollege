@@ -6,7 +6,7 @@
             <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <ul class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('dashboard') }}">Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active">All Categories</li>
                 </ul>

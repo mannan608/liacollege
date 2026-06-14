@@ -11,22 +11,24 @@ class Course extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'category_id','name','slug','image','pdf_file','status'
+        'title',
+        'price',
+        'discount_percentage',
+        'banner',
+        'course_material',
+        'category_id',
+        'description',
+        'parent_id',
+        'created_by',
+        'updated_by'
     ];
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    protected static function boot()
+    public function users()
 {
-    parent::boot();
-
-    static::deleting(function ($course) {
-
-        Storage::disk('public')->delete($course->image);
-        Storage::disk('public')->delete($course->pdf_file);
-    });
+    return $this->belongsToMany(User::class);
+}
+public function category()
+{
+    return $this->belongsTo(Category::class);
 }
 }

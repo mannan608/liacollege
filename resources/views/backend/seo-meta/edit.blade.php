@@ -7,7 +7,7 @@
                 <div class="col-12">
                     <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <a class="breadcrumb-item active">Edit SEO Meta</a>
-                        <a href="{{ route('dashboard') }}">Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </div>
                 </div>
             </div>

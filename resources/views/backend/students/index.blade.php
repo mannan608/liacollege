@@ -5,36 +5,30 @@
         <div class="page-header">
             <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <ul class="breadcrumb mb-0">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active">All Reviews</li>
+                    <li class="breadcrumb-item active">All Students</li>
                 </ul>
-                <a href="{{ route('review.create') }}">
-                    Add New
-                </a>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-table">
                     <div class="card-body">
-                        <form method="GET" action="{{ route('review.index') }}">
+                        <form method="GET" action="{{ route('student.index') }}">
                             <div class="row">
                                 <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <input type="text"
-                                               name="title"
+                                               name="name"
                                                class="form-control"
-                                               placeholder="Search by Title..."
-                                               value="{{ request('title') }}">
+                                               placeholder="Search by name..."
+                                               value="{{ request('name') }}">
                                     </div>
                                 </div>
 
                                 <!-- Buttons -->
                                 <div class="col-md-3 col-12">
                                     <button type="submit" class="btn btn-primary">Filter</button>
-                                    <a href="{{ route('review.index') }}" class="btn btn-secondary">Reset</a>
+                                    <a href="{{ route('student.index') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
                         </form>
@@ -45,42 +39,27 @@
                                 <thead class="student-thread">
                                     <tr>
                                         <th>ID</th>
-                                        <th>Avatar</th>
                                         <th>Name</th>
-                                        <th>Designation</th>
-                                        <th>Description</th>
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($reviews as $review)
+                                    @foreach($students as $student)
                                         <tr>
-                                            <td>{{ $review->id }}</td>
-                                            <td>
-                                                @if($review->avatar)
-                                                    <img src="{{ asset('uploads/reviews/' . $review->avatar) }}" alt="Avatar" style="max-width: 100px; max-height: 100px;" />
-                                                @else
-                                                    <span class="text-muted">No File</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $review->name }}</td>
-                                            <td>{{ $review->designation }}</td>
-
-                                            <td>{{ Str::limit($review->description, 40) }}</td>
-
-                                            
+                                            <td>{{ $student->id }}</td>                                           
+                                            <td>{{ $student->name }}</td>
                                             <td class="text-end">
                                                 <div class="actions">
-                                                    <a href="{{ route('review.show', $review->id) }}"
+                                                    <a href="{{ route('student.show', $student->id) }}"
                                                        class="btn btn-sm bg-primary-light mr-2">
                                                         <i class="far fa-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('review.edit', $review->id) }}"
+                                                    <a href="{{ route('student.edit', $student->id) }}"
                                                        class="btn btn-sm bg-primary-light mr-2">
                                                         <i class="far fa-edit"></i>
                                                     </a>
 
-                                                    <form action="{{ route('review.destroy', $review->id) }}"
+                                                    <form action="{{ route('student.destroy', $student->id) }}"
                                                           method="POST"
                                                           style="display:inline-block;">
                                                         @csrf

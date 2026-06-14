@@ -27,11 +27,36 @@
                                     @method('PUT')
                                 @endif
 
-                                <input type="text" name="name" placeholder="Category Name"
-                                    value="{{ $category->name ?? old('name') }}">
-                                <button type="submit">{{ isset($category) ? 'Update' : 'Create' }}</button>
-                            </form>
-                        </div>
+                                            @foreach($categories as $parent)
+                                                <option value="{{ $parent->id }}"
+                                                    {{ old('parent_id', optional($category)->parent_id) == $parent->id ? 'selected' : '' }}>
+                                                    {{ $parent->name }}
+                                                </option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group local-forms">
+                                        <label>Description</label>
+                                        <textarea
+                                            name="description"
+                                            rows="4"
+                                            class="form-control"
+                                        >{{ old('description', optional($category)->description) }}</textarea>
+                                    </div>
+                                </div>
+
+                                {{-- Actions --}}
+                                <div class="col-12">
+                                    <div class="d-flex">
+                                        <a href="{{ route('category.index') }}" class="btn btn-secondary me-2">Cancel</a>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

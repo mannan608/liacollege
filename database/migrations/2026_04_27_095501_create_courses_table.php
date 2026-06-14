@@ -13,13 +13,31 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('image')->nullable();
-            $table->string('pdf_file');
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
+
+            $table->string('title');
+            $table->decimal('price', 10, 2)->nullable();
+            $table->integer('discount_percentage')->nullable();
+
+            $table->string('banner')->nullable();
+            $table->text('description')->nullable();
+            $table->string('course_material')->nullable();
+
+            // Category relation
+            $table->foreignId('category_id')
+                ->nullable()
+                ->constrained('categories')
+                ->nullOnDelete();
+
+            // Parent course (optional)
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->constrained('courses')
+                ->nullOnDelete();
+
+            // User tracking
+           $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+
             $table->timestamps();
         });
     }
