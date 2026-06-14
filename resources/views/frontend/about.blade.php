@@ -11,7 +11,7 @@
                             <li class="breadcrumb-item"><a href='index.html'>Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">about</li>
                         </ul>
-                        <h2 class="section-title">mmm About Leadership Institute Australia</h2>
+                        <h2 class="section-title">About Leadership Institute Australia</h2>
                     </div>
                 </div>
             </div>
