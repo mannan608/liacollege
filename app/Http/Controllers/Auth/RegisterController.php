@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Models\User;
  
@@ -29,7 +30,7 @@ class RegisterController extends Controller
             'phone'     => 'required|string|max:255|unique:users',
             'password'  => 'required|string|min:6|confirmed',
             'password_confirmation' => 'required',
-            'course'    => 'nullable',
+            'course_id' => 'required|exists:courses,id',
         ]);  
         
         User::create([
@@ -37,7 +38,7 @@ class RegisterController extends Controller
             'avatar'    => $request->image,
             'phone'     => $request->phone,
             'email'     => $request->email,
-            'course'    => $request->course,
+            'course_id' => $request->course_id,
             'password'  => Hash::make($request->password),
         ]);
         return redirect()->route('login')->with('success', 'Create new account successfully :)');
@@ -56,7 +57,7 @@ class RegisterController extends Controller
     public function edit($id)
     {
         $student = User::find($id);
-        $courses = DB::table('courses')->get();
+         $courses = Course::all();
         return view('backend.students.edit', compact('student', 'courses'));
     }
     public function update(Request $request, $id)
@@ -65,7 +66,7 @@ class RegisterController extends Controller
             'name'      => 'required|string|max:255',
             'email'     => 'required|string|email|max:255|unique:users,email,'.$id,
             'phone'     => 'required|string|max:255|unique:users,phone,'.$id,
-            'role' => 'required|in:admin,student',
+            'role' => 'required|string|in:student',
             'course_id'    => 'nullable',
         ]);
         $student = User::find($id);

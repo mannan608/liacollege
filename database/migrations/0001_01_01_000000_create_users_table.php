@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->string('role')->nullable();
             $table->string('avatar')->nullable();
-            $table->integer('course_id')->nullable();
+            $table->string('course_ids')->nullable();
 
             $table->string('password');
             $table->rememberToken();

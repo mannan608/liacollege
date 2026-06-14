@@ -24,10 +24,9 @@ class User extends Authenticatable
         'status',
         'role',
         'avatar',
-        'position',
-        'department',
-        'password',
         'course_id',
+        'password',
+
     ];
 
     /**
@@ -67,5 +66,10 @@ class User extends Authenticatable
                 $model->user_id = '000' . sprintf("%03s", $nextID);
             }
         });
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
     }
 }

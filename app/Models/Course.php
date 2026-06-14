@@ -20,4 +20,9 @@ class Course extends Model
         'created_by',
         'updated_by'
     ];
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
