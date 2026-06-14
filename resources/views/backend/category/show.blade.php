@@ -7,7 +7,7 @@
                     <div class="col-12">
                         <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <a class="breadcrumb-item active">Category Details</a>
-                            <a href="{{ route('category.index') }}"><Caption></Caption>ategory List</a>
+                            <a href="{{ route('categories.index') }}"><Caption></Caption>ategory List</a>
                         </div>
                     </div>
                 </div>
@@ -42,14 +42,14 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="fw-semibold text-muted">category</label>
-                                    <p class="mb-0">{{ $category->description ?? '—' }}</p>
+                                    <p class="mb-0">{{ $categories->description ?? '—' }}</p>
                                 </div>
                             </div>
                         </div>
 
                         {{-- Footer --}}
                         <div class="card-footer text-end bg-white">
-                            <a href="{{ route('category.index') }}" class="btn btn-sm btn-outline-secondary">
+                            <a href="{{ route('categories.index') }}" class="btn btn-sm btn-outline-secondary">
                                 Back
                             </a>
                         </div>

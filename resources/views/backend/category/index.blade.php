@@ -10,7 +10,7 @@
                     </li>
                     <li class="breadcrumb-item active">All Categories</li>
                 </ul>
-                <a href="{{ route('category.create') }}">
+                <a href="{{ route('categories.create') }}">
                     Add New
                 </a>
             </div>
@@ -19,7 +19,7 @@
             <div class="col-sm-12">
                 <div class="card card-table">
                     <div class="card-body">
-                        <form method="GET" action="{{ route('category.index') }}">
+                        <form method="GET" action="{{ route('categories.index') }}">
                             <div class="row">
                                 <div class="col-md-3 col-6">
                                     <div class="form-group">
@@ -34,7 +34,7 @@
                                 <!-- Buttons -->
                                 <div class="col-md-3 col-12">
                                     <button type="submit" class="btn btn-primary">Filter</button>
-                                    <a href="{{ route('category.index') }}" class="btn btn-secondary">Reset</a>
+                                    <a href="{{ route('categories.index') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
                         </form>

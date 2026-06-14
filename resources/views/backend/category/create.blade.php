@@ -1,50 +1,31 @@
 @extends('backend.layouts.master')
 @section('content')
-<div class="page-wrapper">
-    <div class="content container-fluid">
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col-12">
-                    <div class="page-sub-header d-flex justify-content-between align-items-center">
-                        <span>{{ optional($category)->id ? 'Edit' : 'Add' }} Category</span>
-                        <a href="{{ route('category.index') }}">Category List</a>
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col-12">
+                        <div class="page-sub-header d-flex justify-content-between align-items-center">
+
+                            <a href="{{ route('categories.index') }}">Category List</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
 
-                        <form 
-                            action="{{ optional($category)->id ? route('category.update', $category->id) : route('category.store') }}" 
-                            method="POST" 
-                            enctype="multipart/form-data"
-                        >
-                            @csrf
-                            @if(optional($category)->id)
-                                @method('PUT')
-                            @endif
+                            <form
+                                action="{{ isset($category) ? route('categories.update', $category->id) : route('categories.store') }}">
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group local-forms">
-                                        <label>Name</label>
-                                        <input type="text"
-                                            name="name"
-                                            class="form-control"
-                                            value="{{ old('name', $category->name ?? '') }}"
-                                            required>
-                                    </div>
-                                </div>
+                                @csrf
 
-                                <div class="col-md-6">
-                                    <div class="form-group local-forms">
-                                        <label>Parent Category</label>
-                                        <select name="parent_id" class="form-control">
-                                            <option value="">Select Category</option>
+                                @if (isset($category))
+                                    @method('PUT')
+                                @endif
 
                                             @foreach($categories as $parent)
                                                 <option value="{{ $parent->id }}"
@@ -81,14 +62,4 @@
             </div>
         </div>
     </div>
-</div>
-
-{{-- Banner Preview --}}
-<script>
-function previewBanner(event) {
-    const img = document.getElementById('banner-preview');
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = 'block';
-}
-</script>
 @endsection
