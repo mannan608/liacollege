@@ -42,9 +42,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            
+            </div>            
 
             <!-- About Details Section -->
             <div class="row">

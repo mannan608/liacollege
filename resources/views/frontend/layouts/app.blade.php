@@ -38,6 +38,7 @@
     <!-- custom style css -->
     <link rel="stylesheet" href="{{ asset('frontend/css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/custom4.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/student-portal.css') }}">
     <script src="
                             https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/license.min.js
                             "></script>
