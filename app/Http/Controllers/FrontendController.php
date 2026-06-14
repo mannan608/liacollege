@@ -8,6 +8,7 @@ use App\Http\Requests\StoreQuizAnswerRequest;
 use App\Models\QuizAnswer;
 use App\Models\Review;
 use App\Models\Setting;
+use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -901,9 +902,22 @@ class FrontendController extends Controller
         return response()->json($data);
     }
 
-       public function studentDashboard()
-        {
-            $setting=null;
-            return view('frontend.student.dashboard', compact('setting'));
-        }
+public function studentDashboard()
+{
+    $setting=null;
+    $student = User::with([
+        'courses.category'
+    ])->findOrFail(auth()->id());
+
+    $courses = $student->courses
+        ->groupBy(fn ($course) => $course->category?->name ?? 'Uncategorized');
+
+        // return $courses;
+
+    return view('frontend.student.dashboard', compact(
+        'setting',
+        'student',
+        'courses'
+    ));
+}
 }

@@ -25,104 +25,74 @@
 
         </div> --}}
 
-        <div class="dashboard-nav ">
-            <div class="nav-pill" data-target="planning" style="cursor: pointer">
-                <div class="d-flex gap-3">
-                    <div class="" style="font-size: 34px; color: #007bff">
-                        <i class="fi fi-rr-paper-plane"></i>
-                    </div>
-                    <div class="d-flex flex-column gap-1">
-                        Assessment Planning
-                        <span style="font-size: 12px">Jump to section</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="nav-pill" data-target="planning" style="cursor: pointer">
-                <div class="d-flex gap-3">
-                    <div class="" style="font-size: 34px; color: #007bff">
-                        <i class="fi fi-rr-paper-plane"></i>
-                    </div>
-                    <div class="d-flex flex-column gap-1">
-                        Assessment Planning
-                        <span style="font-size: 12px">Jump to section</span>
+        <div class="dashboard-nav">
+            @foreach ($courses as $category => $items)
+                <div class="nav-pill" data-target="section-{{ Str::slug($category) }}" style="cursor:pointer">
+                    <div class="d-flex gap-3">
+                        <div style="font-size:34px;color:#007bff">
+                            <i class="fi fi-rr-paper-plane"></i>
+                        </div>
+                        <div class="d-flex flex-column gap-1">
+                            {{ $category }}
+                            <span style="font-size:12px">Jump to section</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="nav-pill" data-target="planning" style="cursor: pointer">
-                <div class="d-flex gap-3">
-                    <div class="" style="font-size: 34px; color: #007bff">
-                        <i class="fi fi-rr-paper-plane"></i>
-                    </div>
-                    <div class="d-flex flex-column gap-1">
-                        Assessment Planning
-                        <span style="font-size: 12px">Jump to section</span>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
 
-        <!-- Assessment Section -->
 
-        <section id="planning" class="section-card">
+        {{-- Dynamic Sections --}}
+        @foreach ($courses as $category => $items)
+            <section id="section-{{ Str::slug($category) }}" class="section-card">
 
-            <div class="mb-4">
-                <h3 class="section-title">
-                    📋 Assessment Planning
-                </h3>
+                <div class="mb-4">
+                    <h3 class="section-title">
+                        📋 {{ $category }}
+                    </h3>
 
-                <p class="section-subtitle">
-                    Structured planning modules for academic assessments.
-                </p>
-            </div>
+                    <p class="section-subtitle">
+                        Resources available under {{ $category }}.
+                    </p>
+                </div>
 
-            <div class="row g-4">
+                
 
-                <div class="col-lg-6">
-                    <div class="resource-card">
+                <div class="row g-4">
 
-                        <div class="d-flex gap-3">
-                            <a href="#" class="badge-modern">
-                                Preview
-                            </a>
-                            <a href="#" class="badge-download">
-                                Download
-                            </a>
+                    @foreach ($items as $course)
+                        <div class="col-lg-6">
+                            <div class="resource-card">
+
+                                <h5 class="mt-3">
+                                    {{ $course->title }}
+                                </h5>
+
+                                <p>
+                                    {{ $course->description }}
+                                </p>
+                                <div class="documents">
+                                    <h6 class="mb-3">AP – Templates</h6>
+
+                                    {{-- class="badge-modern" --}}
+                                    <ul class="p-0 m-0">
+                                        <li class="d-flex justify-content-between gap-4">
+                                            <a href="#" class="d-flex align-items-center gap-2 w-75"> <span class="doc-icon"><i class="fi fi-tr-file-pdf"></i></span> <span class="course-document">Document 1</span></a>
+                                            <div class="w-25 d-flex justify-content-end">
+                                                <a href="#" class="badge-download ">Download</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
                         </div>
+                    @endforeach
 
-                        <h5 class="mt-3">
-                            AS - Assessment Planning
-                        </h5>
-
-                        <p>
-                            Complete roadmap, milestones and rubrics.
-                        </p>
-
-                    </div>
                 </div>
 
-                <div class="col-lg-6">
-                    <div class="resource-card">
-
-                        <span class="badge-modern">
-                            Collaborative
-                        </span>
-
-                        <h5 class="mt-3">
-                            Group Assessment Framework
-                        </h5>
-
-                        <p>
-                            Peer evaluation templates and planning guides.
-                        </p>
-
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
+            </section>
+        @endforeach
 
         <!-- Documents -->
 
@@ -232,6 +202,15 @@
         });
     </script>
     <style>
+
+        .course-document{
+            font-size: 14px;
+            color: black;
+        }
+        .doc-icon{
+            font-size: 28px;
+            color: black;
+        }
         :root {
             --primary: #2563eb;
             --primary-light: #eff6ff;

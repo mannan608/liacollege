@@ -1,4 +1,3 @@
-
 @extends('auth.auth-layout')
 @section('content')
     <div class="login-right">
@@ -23,10 +22,11 @@
                 <input type="hidden" class="image" name="image" value="photo_defaults.png">
                 <div class="form-group local-forms">
                     <label>Select Course <span class="login-danger">*</span></label>
-                    <select class="form-control select @error('course_id') is-invalid @enderror" name="course_id" id="course_id">
-                        <option selected disabled>Course</option>
+                    <select name="courses[]" multiple class="form-control">
                         @foreach ($courses as $course)
-                            <option value="{{ $course->id }}">{{ $course->title }}</option>
+                            <option value="{{ $course->id }}">
+                                {{ $course->title }}
+                            </option>
                         @endforeach
                     </select>
                     @error('course_id')
@@ -35,16 +35,20 @@
                         </span>
                     @enderror
                 </div>
-                
+
                 <div class="form-group">
                     <label>Password <span class="login-danger">*</span></label>
-                    <input type="password" class="form-control pass-input  @error('password') is-invalid @enderror" name="password" required>
+                    <input type="password" class="form-control pass-input  @error('password') is-invalid @enderror"
+                        name="password" required>
                     <span class="profile-views feather-eye"><i class="toggle-password" data-feather="eye"></i></span>
                 </div>
                 <div class="form-group">
                     <label>Confirm password <span class="login-danger">*</span></label>
-                    <input type="password" class="form-control pass-confirm @error('password_confirmation') is-invalid @enderror" name="password_confirmation" required>
-                    <span class="profile-views reg-feather-eye"><i class="reg-toggle-password" data-feather="eye"></i></span>
+                    <input type="password"
+                        class="form-control pass-confirm @error('password_confirmation') is-invalid @enderror"
+                        name="password_confirmation" required>
+                    <span class="profile-views reg-feather-eye"><i class="reg-toggle-password"
+                            data-feather="eye"></i></span>
                 </div>
                 <div class=" dont-have">Already Registered? <a href="{{ route('login') }}">Login</a></div>
                 <div class="form-group mb-0">
@@ -53,14 +57,14 @@
             </form>
 
             @if ($errors->any())
-    <div class="bg-red-100 p-4 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+                <div class="bg-red-100 p-4 rounded">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             {{-- <div class="login-or">
                 <span class="or-line"></span>

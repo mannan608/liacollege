@@ -34,49 +34,48 @@
                                 {{-- insert defaults --}}
                                 <input type="hidden" class="image" name="image" value="photo_defaults.png">
 
-                                <div class="form-group local-forms">
+                                {{-- <div class="form-group local-forms">
                                     <label>Select Course <span class="login-danger">*</span></label>
-                                    <select class="form-control select @error('course_id') is-invalid @enderror"
-                                        name="course_id" id="course_id">
-                                        <option selected disabled>Course</option>
+                                    <select name="courses[]" multiple class="form-control">
                                         @foreach ($courses as $course)
-                                            <option value="{{ $course->id }}"
-                                                {{ $student->course_id == $course->id ? 'selected' : '' }}>
+                                            <option value="{{ $course->id }}" @selected(in_array($course->id, old('courses', $student->courses->pluck('id')->toArray())))>
                                                 {{ $course->title }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @error('course_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                </div> --}}
+                                <div class="form-group">
+                                    <label>Select Course <span class="login-danger">*</span></label>
+
+                                    @php
+                                        $selectedCourses = old('courses', $student->courses->pluck('id')->toArray());
+                                    @endphp
+
+                                    <div class="row">
+                                        @foreach ($courses as $course)
+                                            <div class="col-md-4">
+                                                <label style="display: flex; align-items: center; gap: 6px;">
+                                                    <input type="checkbox" name="courses[]" value="{{ $course->id }}"
+                                                        {{ in_array($course->id, $selectedCourses) ? 'checked' : '' }}>
+                                                    {{ $course->title }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
+
                                 <div class="form-group local-forms">
                                     <label>Select Role <span class="login-danger">*</span></label>
 
-                                    <select class="form-control select @error('role') is-invalid @enderror" name="role"
-                                        id="role">
+                                    <select name="role" class="form-control">
                                         <option value="">Select Role</option>
 
-                                        <option value="admin"
-                                            {{ old('role', $user->role ?? '') == 'admin' ? 'selected' : '' }}>
-                                            Admin
-                                        </option>
-
                                         <option value="student"
-                                            {{ old('role', $user->role ?? '') == 'student' ? 'selected' : '' }}>
+                                            {{ old('role', $student->role) == 'student' ? 'selected' : '' }}>
                                             Student
                                         </option>
                                     </select>
-
-                                    @error('role')
-                                        <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
                                 </div>
-
 
                                 <div class="form-group mb-0">
                                     <button class="btn btn-primary btn-block" type="submit">Update Student</button>
