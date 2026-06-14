@@ -97,7 +97,7 @@
                                         </div>
 
                                         <p class="resource-desc">
-                                            {{ $course->description }}
+                                             {!! $course->description !!}
                                         </p>
 
                                         <div class="resource-files mt-4">
