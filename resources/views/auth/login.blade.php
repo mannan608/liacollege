@@ -1,28 +1,30 @@
-
 @extends('auth.auth-layout')
 @section('content')
-<div class="login-right">
-    <div class="login-right-wrap">
-        <h1>Welcome to {{ optional($setting)->name ?? 'Our College' }}</h1>
-        <p class="account-subtitle">Need an account? <a href="{{ route('register') }}">Sign Up</a></p>
-        <h2>Sign in</h2>
-        <form action="{{ route('login') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label>Email<span class="login-danger">*</span></label>
-                <input type="email" placeholder="Enter Email" class="form-control @error('email') is-invalid @enderror" name="email">
-            </div>
-            <div class="form-group position-relative">
-                <label>Password <span class="login-danger">*</span></label>
-                <input
-                    type="password"
-                    class="form-control pass-input @error('password') is-invalid @enderror"
-                    placeholder="Enter Password"
-                    name="password"
-                >
-                <span class="profile-views feather-eye"><i class="toggle-password" data-feather="eye"></i></span>
-            </div>
-            {{-- <div class="forgotpass">
+    <div class="login-right">
+        <div class="login-right-wrap">
+            <h1>Welcome to {{ optional($setting)->name ?? 'Our College' }}</h1>
+            <p class="account-subtitle">Need an account? <a href="{{ route('register') }}">Sign Up</a></p>
+            <h2>Sign in</h2>
+            <form action="{{ route('login') }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label>Email<span class="login-danger">*</span></label>
+                    <input type="email" placeholder="Enter Email" class="form-control @error('email') is-invalid @enderror"
+                        name="email">
+                    @error('email')
+                        <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                    @enderror
+                </div>
+                <div class="form-group position-relative">
+                    <label>Password <span class="login-danger">*</span></label>
+                    <input type="password" class="form-control pass-input @error('password') is-invalid @enderror"
+                        placeholder="Enter Password" name="password">
+                    <span class="profile-views feather-eye"><i class="toggle-password" data-feather="eye"></i></span>
+                    @error('password')
+                        <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                    @enderror
+                </div>
+                {{-- <div class="forgotpass">
                 <div class="remember-me">
                     <label class="custom_check mr-2 mb-0 d-inline-flex remember-me"> Remember me
                         <input type="checkbox" name="radio">
@@ -31,21 +33,25 @@
                 </div>
                 <a href="forgot-password.html">Forgot Password?</a>
             </div> --}}
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit">Login</button>
-            </div>
-        </form>
-        {{-- <div class="login-or">
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit">Login</button>
+                </div>
+            </form>
+            @error('role')
+                <div class="alert alert-danger">
+                    {{ $message }}
+                </div>
+            @enderror
+            {{-- <div class="login-or">
             <span class="or-line"></span>
             <span class="span-or">or</span>
         </div> --}}
-        {{-- <div class="social-login">
+            {{-- <div class="social-login">
             <a href="#"><i class="fab fa-google-plus-g"></i></a>
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-linkedin-in"></i></a>
         </div> --}}
+        </div>
     </div>
-</div>
-
 @endsection
