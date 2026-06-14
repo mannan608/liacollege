@@ -66,7 +66,7 @@ class LoginController extends Controller
         $user = Auth::user();
 
         // Student
-        if (strtolower(trim($user->role)) === 'student') {
+        if (strtolower(trim($user->role)) === 'Student') {
 
             return redirect()
                 ->route('student.dashboard')
