@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class StudentMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,7 @@ class StudentMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!auth()->check() || auth()->user()->role !== 'student') {
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
             abort(403);
         }
 

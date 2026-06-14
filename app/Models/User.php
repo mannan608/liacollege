@@ -20,7 +20,6 @@ class User extends Authenticatable
         'user_id',
         'name',
         'email',
-        'join_date',
         'phone',
         'status',
         'role',
@@ -28,6 +27,7 @@ class User extends Authenticatable
         'position',
         'department',
         'password',
+        'course_id',
     ];
 
     /**

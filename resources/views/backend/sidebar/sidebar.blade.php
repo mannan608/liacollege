@@ -5,9 +5,9 @@
                 <li class="menu-title">
                     <span>Main Menu</span>
                 </li>
-                @if (auth()->user()->role == 'Admin')
+                @if (auth()->user()->role == 'admin')
                     <li>
-                        <a href="{{ route('dashboard') }}" {{set_active(['dashboard'])}}><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+                        <a href="{{ route('admin.dashboard') }}" {{set_active(['dashboard'])}}><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
                     </li>
                     <li>
                         <a href="{{ route('user.show', auth()->user()->id) }}" {{set_active(['user.show'])}}><i class="fas fa-user"></i> <span>Profile</span></a>
