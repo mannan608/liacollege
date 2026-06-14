@@ -42,30 +42,29 @@ class LoginController extends Controller
 
     /** login with databases */
     public function authenticate(Request $request)
-{
-    $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
-
-    if (!Auth::attempt($credentials)) {
-        return back()->withErrors([
-            'email' => 'Invalid credentials.',
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
+
+        if (!Auth::attempt($credentials)) {
+            return back()->withErrors([
+                'email' => 'Invalid credentials.',
+            ]);
+        }
+
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'student' => redirect()->route('student.dashboard'),
+            default => tap(Auth::logout(), function () {}) ?: redirect()->route('login')
+                ->withErrors(['role' => 'Role not assigned']),
+        };
     }
-
-    $request->session()->regenerate();
-
-    $user = Auth::user();
-
-    return match ($user->role) {
-        'admin' => redirect()->route('admin.dashboard'),
-        'student' => redirect()->route('student.dashboard'),
-        default => tap(Auth::logout(), function () {
-        }) ?: redirect()->route('login')
-            ->withErrors(['role' => 'Role not assigned']),
-    };
-}
 
     /** logout */
     public function logout(Request $request)
