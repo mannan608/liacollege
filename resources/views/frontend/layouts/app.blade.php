@@ -40,8 +40,8 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/custom4.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/student-portal.css') }}">
     <script src="
-                            https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/license.min.js
-                            "></script>
+                                https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/license.min.js
+                                "></script>
     <link href="
 https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
 " rel="stylesheet">
@@ -185,7 +185,7 @@ https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
                         </div>
 
                         <!-- Logo (Always Center) -->
-                        <div class="header__logo p-2">
+                        <div class="header__logo">
                             <a class="header__logo--link" href="{{ url('/') }}">
                                 <img src="{{ asset('frontend/images/logo/logo.png') }}" class="logo-img"
                                     alt="Logo">
@@ -235,7 +235,7 @@ https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
                                                 <i class="fa-light fa-user"></i>
                                             </button>
 
-                                            <ul class="dropdown-menu px-4" >
+                                            <ul class="dropdown-menu px-4">
                                                 <li>
                                                     <a href="{{ url(auth()->user()->role . '/dashboard') }}">
                                                         Dashboard
@@ -245,7 +245,8 @@ https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
                                                 <li>
                                                     <form action="{{ route('logout') }}" method="get">
                                                         @csrf
-                                                        <button type="submit" style="font-size: 14px;border: none; text-align: left">
+                                                        <button type="submit"
+                                                            style="font-size: 14px;border: none; text-align: left">
                                                             Logout
                                                         </button>
                                                     </form>

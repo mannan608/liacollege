@@ -40,6 +40,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
+                                        <th>Role</th>
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
@@ -48,6 +49,7 @@
                                         <tr>
                                             <td>{{ $student->id }}</td>                                           
                                             <td>{{ $student->name }}</td>
+                                            <td>{{ $student->role }}</td>
                                             <td class="text-end">
                                                 <div class="actions">
                                                     <a href="{{ route('student.show', $student->id) }}"
