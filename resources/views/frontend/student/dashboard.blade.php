@@ -97,7 +97,7 @@
                                         </div>
 
                                         <p class="resource-desc">
-                                             {!! $course->description !!}
+                                            {!! $course->description !!}
                                         </p>
 
                                         <div class="resource-files mt-4">
@@ -111,13 +111,11 @@
                                                     <div class="pdf-icon">
                                                         <i class="fi fi-tr-file-pdf"></i>
                                                     </div>
-
-                                                    <div>
-                                                        <h6>Document 1</h6>
-                                                    </div>
+                                                    <h6>{{ $course->title }}</h6>
                                                 </a>
 
-                                                <a href="#" class="download-btn">
+                                                <a href="{{ route('document.download', $course->id) }}"
+                                                    class="download-btn">
                                                     <i class="fi fi-rr-download"></i>
                                                     Download
                                                 </a>
@@ -244,6 +242,6 @@
 
         });
     </script>
-  
+
 
 @endsection

@@ -12,6 +12,7 @@ use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 class FrontendController extends Controller
 {
@@ -919,5 +920,16 @@ public function studentDashboard()
         'student',
         'courses'
     ));
+}
+
+public function documentDownload(Course $course)
+{
+    $filePath = public_path('uploads/courses/' . $course->course_material);
+
+    if (! file_exists($filePath)) {
+        abort(404, 'File not found');
+    }
+
+    return response()->download($filePath);
 }
 }
