@@ -46,7 +46,7 @@
 <body>
     <div class="main-wrapper">
         <div class="header">
-            <div class="header-left">
+            <div class="header-left py-3">
                 <a href="{{ route('admin.dashboard') }}" class="logo">
                     <img src="{{ optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('assets/img/logo.png') }}" alt="Logo">
                 </a>

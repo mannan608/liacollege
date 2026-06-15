@@ -2372,7 +2372,7 @@ div.dataTables_wrapper div.dataTables_length select {
 
 .header .header-left {
     float: left;
-    height: 60px;
+    /* height: 60px; */
     padding: 0 20px;
     position: relative;
     width: 259px;
@@ -2622,7 +2622,7 @@ div.dataTables_wrapper div.dataTables_length select {
     height: 100%;
     left: 0;
     position: fixed;
-    top: 60px;
+    top: 84px;
     width: 100%;
     z-index: 1000
 }
@@ -2750,7 +2750,7 @@ footer p {
     left: 0;
     margin-top: 0;
     position: fixed;
-    top: 60px;
+    top: 84px;
     transition: all .2s ease-in-out 0s;
     width: 259px;
     z-index: 1001;

@@ -1,104 +1,122 @@
 @extends('backend.layouts.master')
 @section('content')
-<div class="page-wrapper">
-    <div class="content container-fluid">
-        <div class="page-header">
-            <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <ul class="breadcrumb mb-0">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active">All Courses</li>
-                </ul>
-                <a href="{{ route('course.create') }}">
-                    Add New
-                </a>
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <ul class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">All Courses</li>
+                    </ul>
+                    <a href="{{ route('course.create') }}">
+                        Add New
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-table">
-                    <div class="card-body">
-                        <form method="GET" action="{{ route('course.index') }}">
-                            <div class="row">
-                                <div class="col-md-3 col-6">
-                                    <div class="form-group">
-                                        <input type="text"
-                                               name="title"
-                                               class="form-control"
-                                               placeholder="Search by Title..."
-                                               value="{{ request('title') }}">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card card-table">
+                        <div class="card-body">
+                            <form method="GET" action="{{ route('course.index') }}">
+                                <div class="row">
+                                    <div class="col-md-3 col-6">
+                                        <div class="form-group">
+                                            <input type="text" name="title" class="form-control"
+                                                placeholder="Search by Title..." value="{{ request('title') }}">
+                                        </div>
+                                    </div>
+
+                                    <!-- Buttons -->
+                                    <div class="col-md-3 col-12">
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                        <a href="{{ route('course.index') }}" class="btn btn-secondary">Reset</a>
                                     </div>
                                 </div>
+                            </form>
 
-                                <!-- Buttons -->
-                                <div class="col-md-3 col-12">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
-                                    <a href="{{ route('course.index') }}" class="btn btn-secondary">Reset</a>
-                                </div>
-                            </div>
-                        </form>
-
-                        <!-- Table -->
-                        <div class="table-responsive mt-3">
-                            <table class="table table-hover table-center mb-0 datatable table-striped">
-                                <thead class="student-thread">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Banner</th>
-                                        <th>Title</th>
-                                        <th>Section</th>
-                                        <th class="text-end">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($courses as $course)
+                            <!-- Table -->
+                            <div class="table-responsive mt-3">
+                                <table class="table table-hover table-center mb-0 datatable table-striped">
+                                    <thead class="student-thread">
                                         <tr>
-                                            <td>{{ $course->id }}</td>
-                                            <td>
-                                                @if($course->banner)
-                                                    <img src="{{ asset('uploads/courses/' . $course->banner) }}" alt="Banner" style="max-width: 100px; max-height: 100px;" />
-                                                @else
-                                                    <span class="text-muted">No File</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $course->title }}</td>
-                                            <td>{{ $categoryById[$course->category_id] ?? '' }}</td>
-
-                                            
-                                            <td class="text-end">
-                                                <div class="actions">
-                                                    <a href="{{ route('course.show', $course->id) }}"
-                                                       class="btn btn-sm bg-primary-light mr-2">
-                                                        <i class="far fa-eye"></i>
-                                                    </a>
-                                                    <a href="{{ route('course.edit', $course->id) }}"
-                                                       class="btn btn-sm bg-primary-light mr-2">
-                                                        <i class="far fa-edit"></i>
-                                                    </a>
-
-                                                    <form action="{{ route('course.destroy', $course->id) }}"
-                                                          method="POST"
-                                                          style="display:inline-block;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="btn btn-sm bg-danger"
-                                                                onclick="return confirm('Are you sure?')">
-                                                            <i class="far fa-trash-alt text-white"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
+                                            <th>ID</th>
+                                            <th>Documents</th>
+                                            <th>Title</th>
+                                            <th>Section</th>
+                                            <th class="text-end">Action</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div><!-- /table -->
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($courses as $course)
+                                            <tr>
+                                                <td>{{ $course->id }}</td>
+                                                <td>
+                                                    @if ($course->course_material)
+                                                        @php
+                                                            $file = $course->course_material;
+                                                            $extension = strtolower(
+                                                                pathinfo($file, PATHINFO_EXTENSION),
+                                                            );
+                                                            $url = asset('uploads/courses/' . $file);
+                                                        @endphp
+
+                                                        @if ($extension === 'pdf')
+                                                            <a href="{{ $url }}" target="_blank"
+                                                                class="btn btn-danger btn-sm">
+                                                                <i class="fas fa-file-pdf"></i> View PDF
+                                                            </a>
+                                                        @elseif(in_array($extension, ['doc', 'docx']))
+                                                            <a href="{{ $url }}" target="_blank"
+                                                                class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-file-word"></i> View DOC
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ $url }}" target="_blank"
+                                                                class="btn btn-secondary btn-sm">
+                                                                <i class="fas fa-file"></i> Open File
+                                                            </a>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-muted">No File</span>
+                                                    @endif
+                                                </td>
+                                                <td>{{ $course->title }}</td>
+                                                <td>{{ $categoryById[$course->category_id] ?? '' }}</td>
+
+
+                                                <td class="text-end">
+                                                    <div class="actions">
+                                                        <a href="{{ route('course.show', $course->id) }}"
+                                                            class="btn btn-sm bg-primary-light mr-2">
+                                                            <i class="far fa-eye"></i>
+                                                        </a>
+                                                        <a href="{{ route('course.edit', $course->id) }}"
+                                                            class="btn btn-sm bg-primary-light mr-2">
+                                                            <i class="far fa-edit"></i>
+                                                        </a>
+
+                                                        <form action="{{ route('course.destroy', $course->id) }}"
+                                                            method="POST" style="display:inline-block;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-sm bg-danger"
+                                                                onclick="return confirm('Are you sure?')">
+                                                                <i class="far fa-trash-alt text-white"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div><!-- /table -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 @endsection

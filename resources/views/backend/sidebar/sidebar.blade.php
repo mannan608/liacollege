@@ -31,14 +31,14 @@
                         <a href="{{ route('seo-meta.index') }}" {{set_active(['seo-meta.index'])}}><i class="fas fa-search"></i> <span>SEO</span></a>
                     </li>
                       <li>
-                        <a href="{{ route('rpl-lead.index') }}" {{set_active(['rpl-lead.index'])}}><i class="fas fa-search"></i> <span>Eligibility Check Leads</span></a>
+                        <a href="{{ route('rpl-lead.index') }}" {{set_active(['rpl-lead.index'])}}><i class="fa fa-headset"></i> <span>Eligibility Check Leads</span></a>
                     </li>
                     </li>
                       <li>
-                        <a href="{{ route('qualification-lead.index') }}" {{set_active(['qualification-lead.index'])}}><i class="fas fa-search"></i> <span>Qualification Leads</span></a>
+                        <a href="{{ route('qualification-lead.index') }}" {{set_active(['qualification-lead.index'])}}><i class="fa fa-headset"></i><span>Qualification Leads</span></a>
                     </li>
                     <li>
-                        <a href="{{ route('student.index') }}" {{set_active(['student.index'])}}><i class="fas fa-search"></i> <span>Students</span></a>
+                        <a href="{{ route('student.index') }}" {{set_active(['student.index'])}}><i class="fas fa-user"></i> <span>Students</span></a>
                     </li>
                     <li>
                         <a href="{{ route('logout') }}" {{set_active(['logout'])}}><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>

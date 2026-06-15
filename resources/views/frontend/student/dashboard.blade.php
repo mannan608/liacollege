@@ -128,9 +128,6 @@
                     </section>
                 @endforeach
             </div>
-
-
-
         </div>
 
         <!-- Documents -->
