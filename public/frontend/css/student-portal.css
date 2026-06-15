@@ -60,6 +60,19 @@
     box-shadow: 0 10px 30px rgba(0,0,0,.05);
 }
 
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+.resource-desc p,.line-clamp-2{
+     display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
 .nav-pill {
     border: 1px solid var(--primary);
     background: #fff;
@@ -299,6 +312,7 @@
             padding: 14px;
             border-radius: 16px;
             transition: .3s;
+            gap: 24px;
         }
 
       

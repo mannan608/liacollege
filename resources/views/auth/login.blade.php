@@ -1,7 +1,7 @@
 @extends('auth.auth-layout')
 @section('content')
     <div class="login-right">
-        <div class="login-right-wrap">
+        <div class="login-right-wrap">            
             <h1>Welcome to {{ optional($setting)->name ?? 'Our College' }}</h1>
             <p class="account-subtitle">Need an account? <a href="{{ route('register') }}">Sign Up</a></p>
             <h2>Sign in</h2>
@@ -24,15 +24,6 @@
                         <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                     @enderror
                 </div>
-                {{-- <div class="forgotpass">
-                <div class="remember-me">
-                    <label class="custom_check mr-2 mb-0 d-inline-flex remember-me"> Remember me
-                        <input type="checkbox" name="radio">
-                        <span class="checkmark"></span>
-                    </label>
-                </div>
-                <a href="forgot-password.html">Forgot Password?</a>
-            </div> --}}
                 <div class="form-group">
                     <button class="btn btn-primary btn-block" type="submit">Login</button>
                 </div>
@@ -42,16 +33,6 @@
                     {{ $message }}
                 </div>
             @enderror
-            {{-- <div class="login-or">
-            <span class="or-line"></span>
-            <span class="span-or">or</span>
-        </div> --}}
-            {{-- <div class="social-login">
-            <a href="#"><i class="fab fa-google-plus-g"></i></a>
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-        </div> --}}
         </div>
     </div>
 @endsection

@@ -76,11 +76,12 @@
                                         </option>
                                     </select>
                                 </div>
-
-                                <div class="form-group mb-0">
-                                    <button class="btn btn-primary btn-block" type="submit">Update Student</button>
+                                <div class="d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-primary  w-fit" type="submit">Update Student</button>
                                 </div>
+
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -88,3 +89,9 @@
         </div>
     </div>
 @endsection
+
+<style>
+    .w-fit {
+        width: fit-content;
+    }
+</style>

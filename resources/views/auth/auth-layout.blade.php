@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,24 +13,25 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+   
     {{-- message toastr --}}
-	<link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
-	<script src="{{ asset('assets/js/toastr_jquery.min.js') }}"></script>
-	<script src="{{ asset('assets/js/toastr.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
+    <script src="{{ asset('assets/js/toastr_jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            @if(session('success'))
+            @if (session('success'))
                 toastr.success("{{ session('success') }}");
             @endif
-            @if(session('error'))
+            @if (session('error'))
                 toastr.error("{{ session('error') }}");
             @endif
-        
-            @if(session('info'))
+
+            @if (session('info'))
                 toastr.info("{{ session('info') }}");
             @endif
-        
-            @if(session('warning'))
+
+            @if (session('warning'))
                 toastr.warning("{{ session('warning') }}");
             @endif
         });
@@ -39,8 +39,8 @@
 </head>
 
 <body>
-    <style>    
-        .invalid-feedback{
+    <style>
+        .invalid-feedback {
             font-size: 14px;
         }
     </style>
@@ -49,7 +49,7 @@
             <div class="container">
                 <div class="loginbox">
                     <div class="login-left d-none d-md-block">
-                        <img class="img-fluid" src="{{ asset('assets/img/login.jpg') }}" alt="Logo">
+                        <img class="img-fluid" src="{{ asset('/university.png') }}" alt="Logo">
                     </div>
                     @yield('content')
                 </div>
@@ -61,6 +61,16 @@
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
+    <!-- Include the Multi Select JS class -->
+<script>
+    $(document).ready(function () {
+$('#courses').select2({
+placeholder: 'Select courses',
+allowClear: true
+});
+});
+</script>
+  
 </body>
 
 </html>
