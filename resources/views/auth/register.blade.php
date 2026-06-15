@@ -1,4 +1,6 @@
 @extends('auth.auth-layout')
+
+
 @section('content')
     <div class="login-right">
         <div class="login-right-wrap">
@@ -20,9 +22,9 @@
                 </div>
                 {{-- insert defaults --}}
                 <input type="hidden" class="image" name="image" value="photo_defaults.png">
-                <div class="form-group local-forms">
+                <div class="form-group ">
                     <label>Select Course <span class="login-danger">*</span></label>
-                    <select name="courses[]" multiple class="form-control">
+                    <select id="courses" name="courses[]" multiple data-placeholder=" ">
                         @foreach ($courses as $course)
                             <option value="{{ $course->id }}">
                                 {{ $course->title }}
@@ -35,6 +37,7 @@
                         </span>
                     @enderror
                 </div>
+
 
                 <div class="form-group">
                     <label>Password <span class="login-danger">*</span></label>
@@ -55,27 +58,42 @@
                     <button class="btn btn-primary btn-block" type="submit">Register</button>
                 </div>
             </form>
-
-            @if ($errors->any())
-                <div class="bg-red-100 p-4 rounded">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            {{-- <div class="login-or">
-                <span class="or-line"></span>
-                <span class="span-or">or</span>
-            </div>
-            <div class="social-login">
-                <a href="#"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-            </div> --}}
         </div>
     </div>
 @endsection
+
+
+<style>
+  .select2-container {
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    width: 100% !important;
+    vertical-align: middle;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    margin-top: 10px;
+}
+
+    .selected-item {
+        position: relative;
+        padding-right: 24px !important;
+    }
+
+    .selected-item .remove-btn {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+    .login-danger {
+        color: red;
+    }
+
+    .login-wrapper .loginbox .login-right .login-right-wrap .form-group label {
+        z-index: 9;
+    }
+</style>

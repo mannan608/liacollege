@@ -40,9 +40,9 @@
                                     {{-- Category --}}
                                     <div class="col-md-6">
                                         <div class="form-group local-forms">
-                                            <label>Category</label>
+                                            <label>Section</label>
                                             <select name="category_id" class="form-control" required>
-                                                <option value="">Select Category</option>
+                                                <option value="">Select Section</option>
                                                 @foreach ($categories as $category)
                                                     <option value="{{ $category->id }}"
                                                         {{ old('category_id', $course->category_id ?? '') == $category->id ? 'selected' : '' }}>

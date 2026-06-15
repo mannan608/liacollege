@@ -16,7 +16,7 @@
                         <a href="{{ route('user.index') }}" {{set_active(['users'])}}><i class="fas fa-shield-alt"></i> <span>Users</span></a>
                     </li>
                     <li>
-                        <a href="{{ route('category.index') }}" {{set_active(['category.index'])}}><i class="fas fa-book"></i> <span>Categories</span></a>
+                        <a href="{{ route('category.index') }}" {{set_active(['category.index'])}}><i class="fas fa-book"></i> <span>Sections</span></a>
                     </li>
                     <li>
                         <a href="{{ route('course.index') }}" {{set_active(['course.index'])}}><i class="fas fa-book"></i> <span>Courses</span></a>

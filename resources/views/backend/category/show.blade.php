@@ -6,8 +6,8 @@
                 <div class="row align-items-center">
                     <div class="col-12">
                         <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                            <a class="breadcrumb-item active">Category Details</a>
-                            <a href="{{ route('category.index') }}"><Caption></Caption>ategory List</a>
+                            <a class="breadcrumb-item active">Section Details</a>
+                            <a href="{{ route('category.index') }}"><Caption></Caption>Section List</a>
                         </div>
                     </div>
                 </div>
@@ -16,7 +16,7 @@
                 <div class="col-lg-10 col-md-12 mx-auto">
                     <div class="card shadow-sm">
                         <div class="card-header bg-light">
-                            <h5 class="mb-0">Category Details</h5>
+                            <h5 class="mb-0">Section Details</h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">

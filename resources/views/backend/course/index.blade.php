@@ -47,7 +47,7 @@
                                         <th>ID</th>
                                         <th>Banner</th>
                                         <th>Title</th>
-                                        <th>Category</th>
+                                        <th>Section</th>
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>

@@ -88,13 +88,15 @@
                                             </div>
 
                                             <div>
-                                                <h5>{{ $course->title }}</h5>
+                                                <h5 class="line-clamp-2">{{ $course->title }}</h5>
                                             </div>
                                         </div>
 
-                                        <p class="resource-desc">
+                                        <div class="resource-desc">
+                                            <p >
                                             {!! $course->description !!}
                                         </p>
+                                        </div>
 
                                         <div class="resource-files mt-4">
                                             <div class="resource-files-header">

@@ -8,7 +8,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
-                    <li class="breadcrumb-item active">All Categories</li>
+                    <li class="breadcrumb-item active">All Section</li>
                 </ul>
                 <a href="{{ route('category.create') }}">
                     Add New
@@ -47,7 +47,7 @@
                                         <th>ID</th>
                                         <th>Image</th>
                                         <th>Name</th>
-                                        <th>Parent Category</th>
+                                        <th>Parent Section</th>
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>

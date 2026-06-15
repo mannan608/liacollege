@@ -6,8 +6,8 @@
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="page-sub-header d-flex justify-content-between align-items-center">
-                        <span>{{ optional($category)->id ? 'Edit' : 'Add' }} Category</span>
-                        <a href="{{ route('category.index') }}">Category List</a>
+                        <span>{{ optional($category)->id ? 'Edit' : 'Add' }} Section</span>
+                        <a href="{{ route('category.index') }}">Section List</a>
                     </div>
                 </div>
             </div>
@@ -42,9 +42,9 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group local-forms">
-                                        <label>Parent Category</label>
+                                        <label>Parent Section</label>
                                         <select name="parent_id" class="form-control">
-                                            <option value="">Select Category</option>
+                                            <option value="">Select Section</option>
 
                                             @foreach($categories as $parent)
                                                 <option value="{{ $parent->id }}"
