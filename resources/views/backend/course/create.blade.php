@@ -99,9 +99,6 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        @error('course_material')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
                                     </div>
 
                                     {{-- Description --}}
@@ -129,7 +126,7 @@
                 </div>
             </div>
         </div>
-        {{-- @if ($errors->any())
+        @if ($errors->any())
             <div class="bg-red-100 p-4 rounded">
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -137,7 +134,7 @@
                     @endforeach
                 </ul>
             </div>
-        @endif --}}
+        @endif
     </div>
 
     {{-- Course Material Preview --}}

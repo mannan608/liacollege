@@ -22,16 +22,16 @@ use App\Http\Controllers\{
 
 
 Route::get("clear", function () {
-    abort_if(!app()->environment('local'), 403); 
+    abort_if(!app()->environment('local'), 403);
 
-    Artisan::call('optimize:clear'); 
+    Artisan::call('optimize:clear');
     return "Cache cleared";
 });
 
 if (!function_exists('set_active')) {
     function set_active($route)
     {
-        return request()->routeIs($route) ? 'active' : ''; 
+        return request()->routeIs($route) ? 'active' : '';
     }
 }
 
@@ -56,7 +56,7 @@ Route::controller(LoginController::class)->group(function () {
 
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'register')->name('register');
-    Route::post('/register', 'storeUser')->name('register.store');  
+    Route::post('/register', 'storeUser')->name('register.store');
 });
 
 
@@ -65,6 +65,8 @@ Route::middleware(['auth', 'student'])->prefix('student')->group(function () {
     Route::get('/dashboard', [FrontendController::class, 'studentDashboard'])
         ->name('student.dashboard');
 
+    Route::get('/download-document/{course}', [FrontendController::class, 'documentDownload'])
+    ->name('document.download');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
@@ -88,7 +90,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::resource('qualification-lead', QualificationsLeadController::class)->names('qualification-lead');
 
     Route::resource('students', RegisterController::class)->names('student');
-
 });
-
-
