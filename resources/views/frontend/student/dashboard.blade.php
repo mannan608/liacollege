@@ -78,11 +78,7 @@
                                 Resources available under {{ $category }}.
                             </p>
                         </div>
-
-
-
                         <div class="row g-4">
-
                             @foreach ($items as $course)
                                 <div class="col-lg-6">
                                     <div class="resource-card">
@@ -111,7 +107,7 @@
                                                     <div class="pdf-icon">
                                                         <i class="fi fi-tr-file-pdf"></i>
                                                     </div>
-                                                    <h6>{{ $course->title }}</h6>
+                                                    <h6 class="line-clamp-1">{{ $course->title }}</h6>
                                                 </a>
 
                                                 <a href="{{ route('document.download', $course->id) }}"
