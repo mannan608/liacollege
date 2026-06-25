@@ -40,8 +40,8 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/custom4.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/student-portal.css') }}">
     <script src="
-                                https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/license.min.js
-                                "></script>
+                                    https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/license.min.js
+                                    "></script>
     <link href="
 https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
 " rel="stylesheet">
@@ -256,10 +256,13 @@ https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
                                     @endauth
 
                                     @guest
-                                        <a href="{{ route('login') }}" class="login__btn">
+                                        <a href="{{ route('login') }}" class="login__btn " data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Student Login">
                                             <i class="fa-light fa-user"></i>
                                         </a>
                                     @endguest
+                                    
 
                                     <div id="search-btn" class="search__trigger">
                                         <i class="fa-sharp fa-light fa-magnifying-glass"></i>
@@ -516,6 +519,15 @@ https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
     <script src="{{ asset('frontend/js/plugins/nice-select.min.js') }}"></script>
     <!-- main Js -->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
 </body>
 
 </html>

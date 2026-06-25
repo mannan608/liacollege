@@ -2,7 +2,7 @@
 @section('content')
     <!-- header banner -->
     <div class="banner v__3">
-        <div class="banner__wrapper">
+        <div class="banner__wrapper mt-2">
             <div class="swiper swiper-data" data-swiper='{
                     "slidesPerView":1,
                     "effect": "fade",

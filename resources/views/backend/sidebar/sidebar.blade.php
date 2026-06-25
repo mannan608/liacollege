@@ -9,19 +9,23 @@
                     <li>
                         <a href="{{ route('admin.dashboard') }}" {{set_active(['dashboard'])}}><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
                     </li>
-                    <li>
-                        <a href="{{ route('user.show', auth()->user()->id) }}" {{set_active(['user.show'])}}><i class="fas fa-user"></i> <span>Profile</span></a>
-                    </li>
-                    <li>
-                        <a href="{{ route('user.index') }}" {{set_active(['users'])}}><i class="fas fa-shield-alt"></i> <span>Users</span></a>
-                    </li>
-                    <li>
-                        <a href="{{ route('category.index') }}" {{set_active(['category.index'])}}><i class="fas fa-book"></i> <span>Sections</span></a>
-                    </li>
-                    <li>
+                     <li>
                         <a href="{{ route('course.index') }}" {{set_active(['course.index'])}}><i class="fas fa-book"></i> <span>Courses</span></a>
                     </li>
                     <li>
+                        <a href="{{ route('student.index') }}" {{set_active(['student.index'])}}><i class="fas fa-user"></i> <span>Students</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ route('user.show', auth()->user()->id) }}" {{set_active(['user.show'])}}><i class="fas fa-user"></i> <span>Profile</span></a>
+                    </li>
+                    {{-- <li>
+                        <a href="{{ route('user.index') }}" {{set_active(['users'])}}><i class="fas fa-shield-alt"></i> <span>Users</span></a>
+                    </li> --}}
+                    {{-- <li>
+                        <a href="{{ route('category.index') }}" {{set_active(['category.index'])}}><i class="fas fa-book"></i> <span>Sections</span></a>
+                    </li> --}}
+                   
+                    {{-- <li>
                         <a href="{{ route('review.index') }}" {{set_active(['review.index'])}}><i class="fas fa-comments"></i> <span>Reviews</span></a>
                     </li>
                     <li>
@@ -36,10 +40,8 @@
                     </li>
                       <li>
                         <a href="{{ route('qualification-lead.index') }}" {{set_active(['qualification-lead.index'])}}><i class="fa fa-headset"></i><span>Qualification Leads</span></a>
-                    </li>
-                    <li>
-                        <a href="{{ route('student.index') }}" {{set_active(['student.index'])}}><i class="fas fa-user"></i> <span>Students</span></a>
-                    </li>
+                    </li> --}}
+                    
                     <li>
                         <a href="{{ route('logout') }}" {{set_active(['logout'])}}><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
                     </li>

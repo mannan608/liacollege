@@ -244,9 +244,8 @@ body {
 
 .file-info h6 {
     margin: 0;
-    color: #0f172a;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .pdf-icon {
@@ -260,8 +259,9 @@ body {
 }
 
 .download-btn {
-    background: linear-gradient(135deg, #2563eb, #4f46e5);
-    color: white;
+    background: white;
+    border: 1px solid #d1d5db;
+    color: Black;
     padding: 6px 16px;
     border-radius: 12px;
     text-decoration: none;
@@ -274,11 +274,11 @@ body {
     white-space: nowrap;
 }
 
-.download-btn:hover,
+/* .download-btn:hover,
 .download-btn:focus {
     color: white;
     transform: scale(1.05);
-}
+} */
 
 .course-document {
     font-size: 14px;
@@ -522,4 +522,53 @@ body {
     .logo-img {
         height: 38px;
     }
+}
+
+
+.enroll-courses{
+    h5{
+        font-size: 22px;
+        font-weight: 600;
+    }
+}
+
+.course-content{
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 12px;
+    background: white;
+    h5{
+        font-size: 18px;
+        font-weight: 600;
+    }
+    p{
+        font-size: 14px;
+    }
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-weight: 600;
+}
+
+.enroll-course{
+    border: 1px solid #e2e8f0;
+    padding: 8px 24px;
+    border-radius: 12px;
+    background: white;
+   ul{
+    text-decoration: none;
+    list-style: none;
+    font-size: 18px;
+    font-weight: 600;
+   }
 }
