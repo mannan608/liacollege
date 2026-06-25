@@ -3,38 +3,71 @@
     <div class="page-wrapper">
         <div class="content container-fluid">
             <div class="page-header">
-                <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <ul class="breadcrumb mb-0">
-                        <li class="breadcrumb-item">
-                            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">All Courses</li>
-                    </ul>
-                    <a href="{{ route('course.create') }}">
-                        Add New
-                    </a>
+                <div class="page-sub-header bg-white shadow-sm rounded-3 p-3 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 w-100">
+
+                        <!-- Breadcrumb -->
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">
+                                        <i class="fas fa-home me-1"></i> Dashboard
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">
+                                    All Courses
+                                </li>
+                            </ol>
+                        </nav>
+
+                        <!-- Add Button -->
+                        <a href="{{ route('course.create') }}" class="btn btn-primary d-flex align-items-center gap-2 px-4">
+                            <i class="fas fa-plus"></i>
+                            <span>Add New Course</span>
+                        </a>
+
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card card-table">
                         <div class="card-body">
-                            <form method="GET" action="{{ route('course.index') }}">
-                                <div class="row">
-                                    <div class="col-md-3 col-6">
-                                        <div class="form-group">
-                                            <input type="text" name="title" class="form-control"
-                                                placeholder="Search by Title..." value="{{ request('title') }}">
-                                        </div>
-                                    </div>
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-body">
+                                    <form method="GET" action="{{ route('course.index') }}">
+                                        <div class="row g-3 align-items-end">
 
-                                    <!-- Buttons -->
-                                    <div class="col-md-3 col-12">
-                                        <button type="submit" class="btn btn-primary">Filter</button>
-                                        <a href="{{ route('course.index') }}" class="btn btn-secondary">Reset</a>
-                                    </div>
+                                            <!-- Search Title -->
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">
+                                                        <i class="fas fa-search"></i>
+                                                    </span>
+                                                    <input type="text" name="title" class="form-control"
+                                                        placeholder="Search by title..." value="{{ request('title') }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- Actions -->
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="d-flex gap-2">
+                                                    <button type="submit" class="btn btn-primary px-4">
+                                                        <i class="fas fa-filter me-1"></i>
+                                                        Filter
+                                                    </button>
+
+                                                    <a href="{{ route('course.index') }}" class="btn btn-light border px-4">
+                                                        <i class="fas fa-rotate-left me-1"></i>
+                                                        Reset
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
+                            </div>
 
                             <!-- Table -->
                             <div class="table-responsive mt-3">
