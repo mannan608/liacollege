@@ -45,7 +45,7 @@
                                     </select>
                                 </div> --}}
                                 <div class="form-group">
-                                    <label>Select Course <span class="login-danger">*</span></label>
+                                    <label>Permission Course <span class="login-danger">*</span></label>
 
                                     @php
                                         $selectedCourses = old('courses', $student->courses->pluck('id')->toArray());

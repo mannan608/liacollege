@@ -906,9 +906,7 @@ class FrontendController extends Controller
 public function studentDashboard()
 {
     $setting=null;
-    $student = User::with([
-        'courses.category'
-    ])->findOrFail(auth()->id());
+    $student = User::with('courses')->findOrFail(auth()->id());
 
     $courses = $student->courses
         ->groupBy(fn ($course) => $course->category?->name ?? 'Uncategorized');
