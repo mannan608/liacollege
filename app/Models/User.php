@@ -72,4 +72,19 @@ class User extends Authenticatable
 {
     return $this->belongsToMany(Course::class);
 }
+
+public function coursePolicies()
+{
+    return $this->belongsToMany(CoursePolicy::class, 'user_course_policies');
+}
+
+public function courseAssignments()
+{
+    return $this->belongsToMany(CourseAssignment::class, 'user_course_assignments');
+}
+
+public function courseMaterials()
+{
+    return $this->belongsToMany(CourseMaterial::class, 'user_course_materials');
+}
 }

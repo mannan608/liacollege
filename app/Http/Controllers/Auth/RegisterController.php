@@ -60,8 +60,8 @@ class RegisterController extends Controller
     }
    public function edit($id)
 {
-    $student = User::with('courses')->findOrFail($id);
-    $courses = Course::all();
+    $student = User::with(['courses', 'coursePolicies', 'courseAssignments', 'courseMaterials'])->findOrFail($id);
+    $courses = Course::with(['policies', 'assignments', 'materials'])->get();
 
     return view('backend.students.edit', compact('student', 'courses'));
 }
@@ -80,6 +80,14 @@ class RegisterController extends Controller
         // multiple courses
         'courses'   => ['nullable', 'array'],
         'courses.*' => ['exists:courses,id'],
+
+        // policies, assignments, materials
+        'course_policies' => ['nullable', 'array'],
+        'course_policies.*' => ['exists:course_policies,id'],
+        'course_assignments' => ['nullable', 'array'],
+        'course_assignments.*' => ['exists:course_assignments,id'],
+        'course_materials' => ['nullable', 'array'],
+        'course_materials.*' => ['exists:course_materials,id'],
     ]);
 
     $student->update([
@@ -97,6 +105,11 @@ class RegisterController extends Controller
     if ($request->has('courses')) {
         $student->courses()->sync($request->courses);
     }
+
+    // sync policies
+    $student->coursePolicies()->sync($request->input('course_policies', []));
+    $student->courseAssignments()->sync($request->input('course_assignments', []));
+    $student->courseMaterials()->sync($request->input('course_materials', []));
 
     return redirect()
         ->route('student.index')

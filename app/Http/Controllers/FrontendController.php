@@ -906,12 +906,20 @@ class FrontendController extends Controller
 public function studentDashboard()
 {
     $setting=null;
-    $student = User::with('courses')->findOrFail(auth()->id());
+    $student = User::with([
+        'courses',
+        'coursePolicies',
+        'courseAssignments',
+        'courseMaterials'
+    ])->findOrFail(auth()->id());
 
-    $courses = $student->courses
-        ->groupBy(fn ($course) => $course->category?->name ?? 'Uncategorized');
-
-        // return $courses;
+    // For each course, only keep the policies/assignments/materials that the student has access to
+    $courses = $student->courses->map(function ($course) use ($student) {
+        $course->policies = $student->coursePolicies->where('course_id', $course->id);
+        $course->assignments = $student->courseAssignments->where('course_id', $course->id);
+        $course->materials = $student->courseMaterials->where('course_id', $course->id);
+        return $course;
+    })->groupBy(fn ($course) => $course->category?->name ?? 'Uncategorized');
 
     return view('frontend.student.dashboard', compact(
         'setting',
