@@ -263,4 +263,21 @@ class CourseController extends Controller
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    public function showCourseAssignments($id)
+    {
+        $course = Course::with(['assignments.submissions.user'])->findOrFail($id);
+        return view('backend.courses.assignments', compact('course'));
+    }
+
+    public function downloadSubmission(CourseAssignmentSubmission $submission)
+    {
+        $filePath = public_path('uploads/submissions/' . $submission->file);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->download($filePath);
+    }
 }

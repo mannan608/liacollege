@@ -142,6 +142,10 @@
 
                                                 <td class="text-end">
                                                     <div class="actions">
+                                                        {{-- <a href="{{ route('course.assignments', $course->id) }}"
+                                                            class="btn btn-sm bg-info-light mr-2">
+                                                            <i class="fas fa-file-alt"></i> Assignments
+                                                        </a> --}}
                                                         <a href="{{ route('course.show', $course->id) }}"
                                                             class="btn btn-sm bg-primary-light mr-2">
                                                             <i class="far fa-eye"></i>

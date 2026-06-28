@@ -25,4 +25,9 @@ class CourseAssignment extends Model
     {
         return $this->belongsToMany(User::class, 'user_course_assignments');
     }
+
+    public function submissions()
+    {
+        return $this->hasMany(CourseAssignmentSubmission::class, 'course_assignment_id');
+    }
 }

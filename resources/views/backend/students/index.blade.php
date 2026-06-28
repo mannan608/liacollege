@@ -7,6 +7,10 @@
                 <ul class="breadcrumb mb-0">
                     <li class="breadcrumb-item active">All Students</li>
                 </ul>
+                <a href="{{ route('register') }}" class="btn btn-primary d-flex align-items-center gap-2 px-4">
+                            <i class="fas fa-plus"></i>
+                            <span>Add New Student</span>
+                        </a>
             </div>
         </div>
         <div class="row">
@@ -40,7 +44,8 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Role</th>
+                                        <th>Phone</th>
+                                        <th>Mail</th>
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
@@ -49,7 +54,8 @@
                                         <tr>
                                             <td>{{ $student->id }}</td>                                           
                                             <td>{{ $student->name }}</td>
-                                            <td>{{ $student->role }}</td>
+                                            <td>{{ $student->phone }}</td>
+                                            <td>{{ $student->email }}</td>
                                             <td class="text-end">
                                                 <div class="actions">
                                                     <a href="{{ route('student.show', $student->id) }}"

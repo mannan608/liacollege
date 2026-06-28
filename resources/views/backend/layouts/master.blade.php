@@ -242,5 +242,13 @@
             $("#my-editor").summernote();
         });
     </script>
+    <script>
+    $(document).ready(function () {
+$('#courses').select2({
+placeholder: 'Select courses',
+allowClear: true
+});
+});
+</script>
 </body>
 </html>
