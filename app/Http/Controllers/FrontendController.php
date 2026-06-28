@@ -9,6 +9,9 @@ use App\Models\QuizAnswer;
 use App\Models\Review;
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\CourseAssignment;
+use App\Models\CourseAssignmentSubmission;
+use App\Traits\FileUploadTrait;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FrontendController extends Controller
 {
+    use FileUploadTrait;
     public function index(Request $request)
     {
         $setting = Setting::find(1);
@@ -907,19 +911,69 @@ public function studentDashboard()
 {
     $setting=null;
     $student = User::with([
-        'courses.category'
+        'courses',
+        'coursePolicies',
+        'courseAssignments',
+        'courseMaterials',
+        'assignmentSubmissions'
     ])->findOrFail(auth()->id());
 
-    $courses = $student->courses
-        ->groupBy(fn ($course) => $course->category?->name ?? 'Uncategorized');
-
-        // return $courses;
+    // For each course, only keep the policies/assignments/materials that the student has access to
+    $courses = $student->courses->map(function ($course) use ($student) {
+        $course->policies = $student->coursePolicies->where('course_id', $course->id);
+        $course->assignments = $student->courseAssignments->where('course_id', $course->id)->map(function ($assignment) use ($student) {
+            // Count how many times the student has submitted this assignment
+            $assignment->submission_count = $student->assignmentSubmissions->where('course_assignment_id', $assignment->id)->count();
+            // Get all submissions
+            $assignment->submissions = $student->assignmentSubmissions->where('course_assignment_id', $assignment->id);
+            return $assignment;
+        });
+        $course->materials = $student->courseMaterials->where('course_id', $course->id);
+        return $course;
+    })->groupBy(fn ($course) => $course->category?->name ?? 'Uncategorized');
 
     return view('frontend.student.dashboard', compact(
         'setting',
         'student',
         'courses'
     ));
+}
+
+public function submitAssignment(\Illuminate\Http\Request $request, CourseAssignment $assignment)
+{
+    $student = auth()->user();
+
+    // Check if student has access to this assignment
+    $hasAccess = $student->courseAssignments->contains($assignment->id);
+    if (!$hasAccess) {
+        abort(403, 'You do not have access to this assignment');
+    }
+
+    // Check submission limit
+    $submissionCount = $student->assignmentSubmissions()->where('course_assignment_id', $assignment->id)->count();
+    
+    if ($assignment->submission_limit !== 999 && $submissionCount >= $assignment->submission_limit) {
+        return back()->with('error', 'You have reached the maximum submission limit for this assignment.');
+    }
+
+    $request->validate([
+        'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:51200',
+        'notes' => 'nullable|string',
+    ]);
+
+    $filePath = null;
+    if ($request->hasFile('file')) {
+        $filePath = $this->uploadFile($request->file('file'), 'uploads/submissions');
+    }
+
+    CourseAssignmentSubmission::create([
+        'user_id' => $student->id,
+        'course_assignment_id' => $assignment->id,
+        'file' => $filePath,
+        'notes' => $request->notes,
+    ]);
+
+    return back()->with('success', 'Assignment submitted successfully!');
 }
 
 public function documentDownload(Course $course)

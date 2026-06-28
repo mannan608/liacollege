@@ -2,6 +2,36 @@
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
+
+            <!-- Success/Error Messages -->
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Please fix the following errors:</strong>
+                    <ul class="mb-0 mt-2">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <div class="page-header">
                 <div class="page-sub-header bg-white shadow-sm rounded-3 p-3 mb-4">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 w-100">
@@ -75,9 +105,10 @@
                                     <thead class="student-thread">
                                         <tr>
                                             <th>ID</th>
-                                            <th>Documents</th>
                                             <th>Title</th>
-                                            <th>Section</th>
+                                            <th>Created By</th>
+                                            <th>Updated By</th>
+                                            <th>Created At</th>
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
@@ -85,42 +116,36 @@
                                         @foreach ($courses as $course)
                                             <tr>
                                                 <td>{{ $course->id }}</td>
+                                                <td>{{ $course->title }}</td>
                                                 <td>
-                                                    @if ($course->course_material)
-                                                        @php
-                                                            $file = $course->course_material;
-                                                            $extension = strtolower(
-                                                                pathinfo($file, PATHINFO_EXTENSION),
-                                                            );
-                                                            $url = asset('uploads/courses/' . $file);
-                                                        @endphp
-
-                                                        @if ($extension === 'pdf')
-                                                            <a href="{{ $url }}" target="_blank"
-                                                                class="btn btn-danger btn-sm">
-                                                                <i class="fas fa-file-pdf"></i> View PDF
-                                                            </a>
-                                                        @elseif(in_array($extension, ['doc', 'docx']))
-                                                            <a href="{{ $url }}" target="_blank"
-                                                                class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-file-word"></i> View DOC
-                                                            </a>
-                                                        @else
-                                                            <a href="{{ $url }}" target="_blank"
-                                                                class="btn btn-secondary btn-sm">
-                                                                <i class="fas fa-file"></i> Open File
-                                                            </a>
-                                                        @endif
+                                                    @if ($course->createdBy)
+                                                        <span class="badge bg-primary">
+                                                            {{ $course->createdBy->name ?? 'Unknown' }}
+                                                        </span>
                                                     @else
-                                                        <span class="text-muted">No File</span>
+                                                        <span class="text-muted">-</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $course->title }}</td>
-                                                <td>{{ $categoryById[$course->category_id] ?? '' }}</td>
+                                                <td>
+                                                    @if ($course->updatedBy)
+                                                        <span class="badge bg-info">
+                                                            {{ $course->updatedBy->name ?? 'Unknown' }}
+                                                        </span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $course->created_at ? $course->created_at->format('Y-m-d H:i') : '-' }}
+                                                </td>
 
 
                                                 <td class="text-end">
                                                     <div class="actions">
+                                                        {{-- <a href="{{ route('course.assignments', $course->id) }}"
+                                                            class="btn btn-sm bg-info-light mr-2">
+                                                            <i class="fas fa-file-alt"></i> Assignments
+                                                        </a> --}}
                                                         <a href="{{ route('course.show', $course->id) }}"
                                                             class="btn btn-sm bg-primary-light mr-2">
                                                             <i class="far fa-eye"></i>

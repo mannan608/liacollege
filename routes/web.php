@@ -65,6 +65,9 @@ Route::middleware(['auth', 'student'])->prefix('student')->group(function () {
     Route::get('/dashboard', [FrontendController::class, 'studentDashboard'])
         ->name('student.dashboard');
 
+    Route::post('/assignments/{assignment}/submit', [FrontendController::class, 'submitAssignment'])
+        ->name('student.assignment.submit');
+
     Route::get('/download-document/{course}', [FrontendController::class, 'documentDownload'])
     ->name('document.download');
 });
@@ -90,4 +93,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::resource('qualification-lead', QualificationsLeadController::class)->names('qualification-lead');
 
     Route::resource('students', RegisterController::class)->names('student');
+
+    // Course Assignment Submissions
+    Route::get('courses/{course}/assignments', [CourseController::class, 'showCourseAssignments'])
+        ->name('course.assignments');
+    Route::get('submissions/{submission}/download', [CourseController::class, 'downloadSubmission'])
+        ->name('submission.download');
+        
 });

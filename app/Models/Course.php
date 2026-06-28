@@ -7,26 +7,40 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
-    use HasFactory;
     protected $fillable = [
         'title',
-        'price',
-        'discount_percentage',
-        'banner',
-        'course_material',
-        'category_id',
         'description',
-        'parent_id',
+        'banner',
         'created_by',
         'updated_by'
     ];
 
     public function users()
-{
-    return $this->belongsToMany(User::class);
-}
-public function category()
-{
-    return $this->belongsTo(Category::class);
-}
+    {
+        return $this->belongsToMany(User::class);
+    }
+    public function policies()
+    {
+        return $this->hasMany(CoursePolicy::class);
+    }
+
+    public function assignments()
+    {
+        return $this->hasMany(CourseAssignment::class);
+    }
+
+    public function materials()
+    {
+        return $this->hasMany(CourseMaterial::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }

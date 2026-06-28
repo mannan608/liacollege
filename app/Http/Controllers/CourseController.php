@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Course;
+use App\Models\CoursePolicy;
+use App\Models\CourseAssignment;
+use App\Models\CourseMaterial;
 use App\Models\User;
+use App\Traits\FileUploadTrait;
+use App\Http\Requests\CourseStoreRequest;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
+    use FileUploadTrait;
     public function index(Request $request)
     {
-        $query = Course::query()->orderByDesc('id');
+        $query = Course::with(['createdBy', 'updatedBy'])->orderByDesc('id');
 
         // ===== Filters =====
         $query->when($request->id, fn($q) => $q->where('id', $request->id));
@@ -33,91 +38,82 @@ class CourseController extends Controller
         }
 
         $courses = $query->get();
-        $categoryById = Category::select('id', 'name')->pluck('name', 'id')->toArray();
         $users   = User::select('id', 'name')->get();
 
-        return view('backend.course.index', compact('courses', 'users', 'categoryById'));
+        return view('backend.course.index', compact('courses', 'users'));
     }
 
     public function create()
     {
-        $categories = Category::all();
         $course = null;
-        return view('backend.course.create', compact('course', 'categories'));
+        return view('backend.course.create', compact('course'));
     }
 
-    public function store(Request $request)
+    public function store(CourseStoreRequest $request)
     {
-        $request->validate(
-            [
-                'title' => 'required|max:255',
-                'category_id' => 'required|exists:categories,id',
-                'banner' => 'nullable|image|max:5120',
-                'course_material' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
-            ],
-            [
-                'title.required' => 'Course title is required.',
-                'category_id.required' => 'Please select a category.',
-                'banner.image' => 'Banner must be an image.',
-                'banner.max' => 'Banner size cannot exceed 5MB.',
-                'course_material.mimes' => 'Only PDF, DOC, DOCX, PPT, PPTX and ZIP files are allowed.',
-                'course_material.max' => 'Course material size cannot exceed 10MB.',
-            ]
-        );
-
         try {
-
             DB::beginTransaction();
 
-            $bannerName = null;
-            $courseMaterialName = null;
-
-            $uploadPath = public_path('uploads/courses');
-
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0755, true);
-            }
-
-            // Banner Upload
+            $bannerPath = null;
             if ($request->hasFile('banner')) {
-
-                $file = $request->file('banner');
-
-                $bannerName = 'banner-' .
-                    uniqid() .
-                    '-' .
-                    now()->format('d_m_Y') .
-                    '.' .
-                    $file->getClientOriginalExtension();
-
-                $file->move($uploadPath, $bannerName);
+                $bannerPath = $this->uploadFile($request->file('banner'), 'uploads/courses');
             }
 
-            // Course Material Upload
-            if ($request->hasFile('course_material')) {
-
-                $file = $request->file('course_material');
-
-                $courseMaterialName = 'material-' .
-                    uniqid() .
-                    '-' .
-                    now()->format('d_m_Y') .
-                    '.' .
-                    $file->getClientOriginalExtension();
-
-                $file->move($uploadPath, $courseMaterialName);
-            }
-
-            Course::create([
+            $course = Course::create([
                 'title' => $request->title,
-                'category_id' => $request->category_id,
                 'description' => $request->description,
-                'price' => $request->price,
-                'discount_percentage' => $request->discount_percentage,
-                'banner' => $bannerName,
-                'course_material' => $courseMaterialName,
+                'banner' => $bannerPath,
                 'created_by' => auth()->id(),
+                'updated_by' => auth()->id(),
             ]);
+
+            if ($request->has('policy_title')) {
+                foreach ($request->policy_title as $index => $title) {
+                    if (!empty($title) && !empty($request->policy_url[$index])) {
+                        CoursePolicy::create([
+                            'course_id' => $course->id,
+                            'title' => $title,
+                            'url' => $request->policy_url[$index],
+                            'sort_order' => $index,
+                        ]);
+                    }
+                }
+            }
+
+            if ($request->has('assignment_name')) {
+                foreach ($request->assignment_name as $index => $name) {
+                    if (!empty($name)) {
+                        $filePath = null;
+                        if ($request->hasFile("assignment_file.$index")) {
+                            $filePath = $this->uploadFile($request->file("assignment_file.$index"), 'uploads/assignments');
+                        }
+
+                        CourseAssignment::create([
+                            'course_id' => $course->id,
+                            'title' => $name,
+                            'file' => $filePath,
+                            'allow_submission' => $request->show_submit[$index] ?? 1,
+                            'submission_limit' => $request->submission_limit[$index] ?? 1,
+                            'sort_order' => $index,
+                        ]);
+                    }
+                }
+            }
+
+            if ($request->has('material_name')) {
+                foreach ($request->material_name as $index => $name) {
+                    if (!empty($name) && $request->hasFile("material_file.$index")) {
+                        $filePath = $this->uploadFile($request->file("material_file.$index"), 'uploads/materials');
+
+                        CourseMaterial::create([
+                            'course_id' => $course->id,
+                            'title' => $name,
+                            'file' => $filePath,
+                            'sort_order' => $index,
+                        ]);
+                    }
+                }
+            }
 
             DB::commit();
 
@@ -125,111 +121,105 @@ class CourseController extends Controller
                 ->route('course.index')
                 ->with('success', 'Course created successfully');
         } catch (\Exception $e) {
-
             DB::rollBack();
 
             return back()
                 ->withInput()
-                ->withErrors([
-                    'error' => $e->getMessage()
-                ]);
+                ->withErrors(['error' => $e->getMessage()]);
         }
     }
 
     public function edit($id)
     {
-        $course = Course::find($id);
-        $categories = Category::all();
-        return view('backend.course.create', compact('course', 'categories'));
+        $course = Course::with(['policies', 'assignments', 'materials'])->findOrFail($id);
+        return view('backend.course.create', compact('course'));
     }
 
     public function show($id)
     {
-        $course = Course::find($id);
+        $course = Course::with(['policies', 'assignments', 'materials'])->findOrFail($id);
         return view('backend.course.show', compact('course'));
     }
 
-    public function update(Request $request, $id)
+    public function update(CourseStoreRequest $request, $id)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'nullable',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'nullable|numeric',
-            'discount_percentage' => 'nullable|numeric|min:0|max:100',
-            'banner' => 'nullable|image|max:5120',
-            'course_material' => 'nullable|file|max:10240',
-        ]);
-
         try {
-
             DB::beginTransaction();
 
             $course = Course::findOrFail($id);
 
-            $uploadPath = public_path('uploads/courses');
-
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0755, true);
-            }
-
-            $bannerName = $course->banner;
-            $courseMaterialName = $course->course_material;
-
-            // Banner Update
+            $bannerPath = $course->banner;
             if ($request->hasFile('banner')) {
-
-                if (
-                    $course->banner &&
-                    file_exists($uploadPath . '/' . $course->banner)
-                ) {
-                    unlink($uploadPath . '/' . $course->banner);
-                }
-
-                $file = $request->file('banner');
-
-                $bannerName = 'banner-' .
-                    uniqid() .
-                    '-' .
-                    now()->format('d_m_Y') .
-                    '.' .
-                    $file->getClientOriginalExtension();
-
-                $file->move($uploadPath, $bannerName);
-            }
-
-            // Course Material Update
-            if ($request->hasFile('course_material')) {
-
-                if (
-                    $course->course_material &&
-                    file_exists($uploadPath . '/' . $course->course_material)
-                ) {
-                    unlink($uploadPath . '/' . $course->course_material);
-                }
-
-                $file = $request->file('course_material');
-
-                $courseMaterialName = 'material-' .
-                    uniqid() .
-                    '-' .
-                    now()->format('d_m_Y') .
-                    '.' .
-                    $file->getClientOriginalExtension();
-
-                $file->move($uploadPath, $courseMaterialName);
+                $bannerPath = $this->uploadFile($request->file('banner'), 'uploads/courses', $course->banner);
             }
 
             $course->update([
                 'title' => $request->title,
-                'category_id' => $request->category_id,
                 'description' => $request->description,
-                'price' => $request->price,
-                'discount_percentage' => $request->discount_percentage,
-                'banner' => $bannerName,
-                'course_material' => $courseMaterialName,
+                'banner' => $bannerPath,
                 'updated_by' => auth()->id(),
             ]);
+
+            $course->policies()->delete();
+            if ($request->has('policy_title')) {
+                foreach ($request->policy_title as $index => $title) {
+                    if (!empty($title) && !empty($request->policy_url[$index])) {
+                        CoursePolicy::create([
+                            'course_id' => $course->id,
+                            'title' => $title,
+                            'url' => $request->policy_url[$index],
+                            'sort_order' => $index,
+                        ]);
+                    }
+                }
+            }
+
+            foreach ($course->assignments as $assignment) {
+                if ($assignment->file) {
+                    $this->deleteFile($assignment->file);
+                }
+            }
+            $course->assignments()->delete();
+            if ($request->has('assignment_name')) {
+                foreach ($request->assignment_name as $index => $name) {
+                    if (!empty($name)) {
+                        $filePath = null;
+                        if ($request->hasFile("assignment_file.$index")) {
+                            $filePath = $this->uploadFile($request->file("assignment_file.$index"), 'uploads/assignments');
+                        }
+
+                        CourseAssignment::create([
+                            'course_id' => $course->id,
+                            'title' => $name,
+                            'file' => $filePath,
+                            'allow_submission' => $request->show_submit[$index] ?? 1,
+                            'submission_limit' => $request->submission_limit[$index] ?? 1,
+                            'sort_order' => $index,
+                        ]);
+                    }
+                }
+            }
+
+            foreach ($course->materials as $material) {
+                if ($material->file) {
+                    $this->deleteFile($material->file);
+                }
+            }
+            $course->materials()->delete();
+            if ($request->has('material_name')) {
+                foreach ($request->material_name as $index => $name) {
+                    if (!empty($name) && $request->hasFile("material_file.$index")) {
+                        $filePath = $this->uploadFile($request->file("material_file.$index"), 'uploads/materials');
+
+                        CourseMaterial::create([
+                            'course_id' => $course->id,
+                            'title' => $name,
+                            'file' => $filePath,
+                            'sort_order' => $index,
+                        ]);
+                    }
+                }
+            }
 
             DB::commit();
 
@@ -237,7 +227,6 @@ class CourseController extends Controller
                 ->route('course.index')
                 ->with('success', 'Course updated successfully');
         } catch (\Exception $e) {
-
             DB::rollBack();
 
             return back()
@@ -249,33 +238,46 @@ class CourseController extends Controller
     public function destroy($id)
     {
         try {
+            $course = Course::with(['policies', 'assignments', 'materials'])->findOrFail($id);
 
-            $course = Course::findOrFail($id);
-
-            $uploadPath = public_path('uploads/courses');
-
-            if (
-                $course->banner &&
-                file_exists($uploadPath . '/' . $course->banner)
-            ) {
-                unlink($uploadPath . '/' . $course->banner);
+            if ($course->banner) {
+                $this->deleteFile($course->banner);
             }
 
-            if (
-                $course->course_material &&
-                file_exists($uploadPath . '/' . $course->course_material)
-            ) {
-                unlink($uploadPath . '/' . $course->course_material);
+            foreach ($course->assignments as $assignment) {
+                if ($assignment->file) {
+                    $this->deleteFile($assignment->file);
+                }
+            }
+
+            foreach ($course->materials as $material) {
+                if ($material->file) {
+                    $this->deleteFile($material->file);
+                }
             }
 
             $course->delete();
 
             return back()->with('success', 'Course deleted successfully');
         } catch (\Exception $e) {
-
-            return back()->withErrors([
-                'error' => $e->getMessage()
-            ]);
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function showCourseAssignments($id)
+    {
+        $course = Course::with(['assignments.submissions.user'])->findOrFail($id);
+        return view('backend.courses.assignments', compact('course'));
+    }
+
+    public function downloadSubmission(CourseAssignmentSubmission $submission)
+    {
+        $filePath = public_path('uploads/submissions/' . $submission->file);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->download($filePath);
     }
 }
