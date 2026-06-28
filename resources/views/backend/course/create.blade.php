@@ -46,20 +46,6 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    {{-- <div class="col-12">
-                                        <div class="mb-3">
-                                            <label for="section" class="form-label fw-semibold">
-                                                Add Course Section <span class="text-danger">*</span>
-                                            </label>
-
-                                            <select name="section" id="section" class="form-select">
-                                                <option value="">Select Section</option>
-                                                <option value="policies">Policies & Procedures</option>
-                                                <option value="assignment">Course Assignment</option>
-                                                <option value="materials">Course Study Materials</option>
-                                            </select>
-                                        </div>
-                                    </div> --}}
 
                                     <div class="col-12">
 
@@ -106,142 +92,84 @@
                                             </div>
                                         </div>
 
-                                        <!-- Assignment -->
-                                        {{-- <div class="card shadow-sm border-0 mb-3">
-                                            <div class="card-header d-flex justify-content-between align-items-center">
-                                                <h6 class="mb-0">Course Assignment</h6>
+                                        <!-- Course Assignment -->
+                                        <div class="card border-0 shadow-sm rounded-4">
+                                            <div
+                                                class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h5 class="mb-0 fw-bold">📚 Course Assignments</h5>
+                                                    <small class="text-muted">Upload assignments for this course</small>
+                                                </div>
 
-                                                <button type="button" class="btn btn-sm btn-primary"
+                                                <button type="button" class="btn btn-primary rounded-pill px-4"
                                                     onclick="addAssignmentRow()">
-                                                    <i class="fas fa-plus"></i> Add More
+                                                    <i class="fas fa-plus me-1"></i> Add Assignment
                                                 </button>
                                             </div>
 
                                             <div class="card-body">
                                                 <div id="assignment-wrapper">
 
-                                                    <div class="assignment-row border rounded p-3 mb-3">
+                                                    <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
+
+                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                            <h6 class="mb-0 fw-semibold">
+                                                                <i class="fas fa-file-alt text-primary me-2"></i>
+                                                                Assignment
+                                                            </h6>
+
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger remove-row">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+
                                                         <div class="row g-3">
 
-                                                            <div class="col-md-3">
-                                                                <label>Assignment Name</label>
+                                                            <div class="col-lg-6">
+                                                                <label class="form-label fw-semibold">
+                                                                    Assignment Name
+                                                                </label>
                                                                 <input type="text" name="assignment_name[]"
-                                                                    class="form-control">
+                                                                    class="form-control"
+                                                                    placeholder="Enter assignment title">
                                                             </div>
 
-                                                            <div class="col-md-3">
-                                                                <label>File</label>
+                                                            <div class="col-lg-6">
+                                                                <label class="form-label fw-semibold">
+                                                                    Upload File
+                                                                </label>
                                                                 <input type="file" name="assignment_file[]"
                                                                     class="form-control">
                                                             </div>
 
-                                                            <div class="col-md-2">
-                                                                <label>Show Submit</label>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">
+                                                                    Allow Student Submission
+                                                                </label>
                                                                 <select name="show_submit[]" class="form-select">
                                                                     <option value="1">Yes</option>
                                                                     <option value="0">No</option>
                                                                 </select>
                                                             </div>
 
-                                                            <div class="col-md-2">
-                                                                <label>Submission Limit</label>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">
+                                                                    Submission Limit
+                                                                </label>
                                                                 <select name="submission_limit[]" class="form-select">
                                                                     <option value="1">One Time</option>
-                                                                    <option value="999">Multiple</option>
+                                                                    <option value="999">Unlimited</option>
                                                                 </select>
                                                             </div>
 
-                                                            <div class="col-md-2 d-flex align-items-end">
-                                                                <button type="button"
-                                                                    class="btn btn-danger w-100 remove-row">
-                                                                    Remove
-                                                                </button>
-                                                            </div>
-
                                                         </div>
+
                                                     </div>
 
                                                 </div>
                                             </div>
-                                        </div> --}}
-                                        <div class="card border-0 shadow-sm rounded-4">
-    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-        <div>
-            <h5 class="mb-0 fw-bold">📚 Course Assignments</h5>
-            <small class="text-muted">Upload assignments for this course</small>
-        </div>
-
-        <button type="button" class="btn btn-primary rounded-pill px-4"
-            onclick="addAssignmentRow()">
-            <i class="fas fa-plus me-1"></i> Add Assignment
-        </button>
-    </div>
-
-    <div class="card-body">
-        <div id="assignment-wrapper">
-
-            <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="fas fa-file-alt text-primary me-2"></i>
-                        Assignment
-                    </h6>
-
-                    <button type="button"
-                        class="btn btn-sm btn-outline-danger remove-row">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-
-                <div class="row g-3">
-
-                    <div class="col-lg-6">
-                        <label class="form-label fw-semibold">
-                            Assignment Name
-                        </label>
-                        <input type="text"
-                            name="assignment_name[]"
-                            class="form-control"
-                            placeholder="Enter assignment title">
-                    </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label fw-semibold">
-                            Upload File
-                        </label>
-                        <input type="file"
-                            name="assignment_file[]"
-                            class="form-control">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            Allow Student Submission
-                        </label>
-                        <select name="show_submit[]" class="form-select">
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            Submission Limit
-                        </label>
-                        <select name="submission_limit[]" class="form-select">
-                            <option value="1">One Time</option>
-                            <option value="999">Unlimited</option>
-                        </select>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-</div>
+                                        </div>
 
                                         <!-- Study Materials -->
                                         <div class="card shadow-sm border-0 mb-3">
@@ -360,9 +288,9 @@
                 .insertAdjacentHTML('beforeend', html);
         }
 
-     function addAssignmentRow() {
+        function addAssignmentRow() {
 
-    let html = `
+            let html = `
     <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -426,10 +354,10 @@
 
     </div>`;
 
-    document
-        .getElementById('assignment-wrapper')
-        .insertAdjacentHTML('beforeend', html);
-}
+            document
+                .getElementById('assignment-wrapper')
+                .insertAdjacentHTML('beforeend', html);
+        }
 
         function addMaterialRow() {
 
