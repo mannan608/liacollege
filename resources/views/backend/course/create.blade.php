@@ -3,6 +3,37 @@
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
+
+            <!-- Success/Error Messages -->
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Please fix the following errors:</strong>
+                    <ul class="mb-0 mt-2">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col-12">
@@ -62,32 +93,53 @@
 
                                             <div class="card-body">
                                                 <div id="policy-wrapper">
-
-                                                    <div class="policy-row border rounded p-3 mb-3">
-                                                        <div class="row g-3">
-
-                                                            <div class="col-md-5">
-                                                                <label class="form-label">Title</label>
-                                                                <input type="text" name="policy_title[]"
-                                                                    class="form-control" placeholder="Enter Title">
+                                                    @if(isset($course) && $course->policies->count() > 0)
+                                                        @foreach($course->policies as $policy)
+                                                            <div class="policy-row border rounded p-3 mb-3">
+                                                                <div class="row g-3">
+                                                                    <div class="col-md-5">
+                                                                        <label class="form-label">Title</label>
+                                                                        <input type="text" name="policy_title[]"
+                                                                            class="form-control" placeholder="Enter Title"
+                                                                            value="{{ old('policy_title.'.$loop->index, $policy->title) }}">
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label class="form-label">URL</label>
+                                                                        <input type="url" name="policy_url[]"
+                                                                            class="form-control" placeholder="https://example.com"
+                                                                            value="{{ old('policy_url.'.$loop->index, $policy->url) }}">
+                                                                    </div>
+                                                                    <div class="col-md-2 d-flex align-items-end">
+                                                                        <button type="button"
+                                                                            class="btn btn-danger w-100 remove-row">
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-
-                                                            <div class="col-md-5">
-                                                                <label class="form-label">URL</label>
-                                                                <input type="url" name="policy_url[]"
-                                                                    class="form-control" placeholder="https://example.com">
+                                                        @endforeach
+                                                    @else
+                                                        <div class="policy-row border rounded p-3 mb-3">
+                                                            <div class="row g-3">
+                                                                <div class="col-md-5">
+                                                                    <label class="form-label">Title</label>
+                                                                    <input type="text" name="policy_title[]"
+                                                                        class="form-control" placeholder="Enter Title">
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label class="form-label">URL</label>
+                                                                    <input type="url" name="policy_url[]"
+                                                                        class="form-control" placeholder="https://example.com">
+                                                                </div>
+                                                                <div class="col-md-2 d-flex align-items-end">
+                                                                    <button type="button"
+                                                                        class="btn btn-danger w-100 remove-row">
+                                                                        Remove
+                                                                    </button>
+                                                                </div>
                                                             </div>
-
-                                                            <div class="col-md-2 d-flex align-items-end">
-                                                                <button type="button"
-                                                                    class="btn btn-danger w-100 remove-row">
-                                                                    Remove
-                                                                </button>
-                                                            </div>
-
                                                         </div>
-                                                    </div>
-
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -109,64 +161,111 @@
 
                                             <div class="card-body">
                                                 <div id="assignment-wrapper">
-
-                                                    <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
-
-                                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                                            <h6 class="mb-0 fw-semibold">
-                                                                <i class="fas fa-file-alt text-primary me-2"></i>
-                                                                Assignment
-                                                            </h6>
-
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-outline-danger remove-row">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
+                                                    @if(isset($course) && $course->assignments->count() > 0)
+                                                        @foreach($course->assignments as $assignment)
+                                                            <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
+                                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                    <h6 class="mb-0 fw-semibold">
+                                                                        <i class="fas fa-file-alt text-primary me-2"></i>
+                                                                        Assignment
+                                                                    </h6>
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger remove-row">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="row g-3">
+                                                                    <div class="col-lg-6">
+                                                                        <label class="form-label fw-semibold">
+                                                                            Assignment Name
+                                                                        </label>
+                                                                        <input type="text" name="assignment_name[]"
+                                                                            class="form-control"
+                                                                            placeholder="Enter assignment title"
+                                                                            value="{{ old('assignment_name.'.$loop->index, $assignment->title) }}">
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <label class="form-label fw-semibold">
+                                                                            Upload File
+                                                                        </label>
+                                                                        <input type="file" name="assignment_file[]"
+                                                                            class="form-control">
+                                                                        @if($assignment->file)
+                                                                            <small class="text-muted d-block mt-1">
+                                                                                Current: {{ basename($assignment->file) }}
+                                                                            </small>
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="form-label fw-semibold">
+                                                                            Allow Student Submission
+                                                                        </label>
+                                                                        <select name="show_submit[]" class="form-select">
+                                                                            <option value="1" {{ old('show_submit.'.$loop->index, $assignment->allow_submission) == 1 ? 'selected' : '' }}>Yes</option>
+                                                                            <option value="0" {{ old('show_submit.'.$loop->index, $assignment->allow_submission) == 0 ? 'selected' : '' }}>No</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="form-label fw-semibold">
+                                                                            Submission Limit
+                                                                        </label>
+                                                                        <select name="submission_limit[]" class="form-select">
+                                                                            <option value="1" {{ old('submission_limit.'.$loop->index, $assignment->submission_limit) == 1 ? 'selected' : '' }}>One Time</option>
+                                                                            <option value="999" {{ old('submission_limit.'.$loop->index, $assignment->submission_limit) == 999 ? 'selected' : '' }}>Unlimited</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @else
+                                                        <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <h6 class="mb-0 fw-semibold">
+                                                                    <i class="fas fa-file-alt text-primary me-2"></i>
+                                                                    Assignment
+                                                                </h6>
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger remove-row">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="row g-3">
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-label fw-semibold">
+                                                                        Assignment Name
+                                                                    </label>
+                                                                    <input type="text" name="assignment_name[]"
+                                                                        class="form-control"
+                                                                        placeholder="Enter assignment title">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-label fw-semibold">
+                                                                        Upload File
+                                                                    </label>
+                                                                    <input type="file" name="assignment_file[]"
+                                                                        class="form-control">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label fw-semibold">
+                                                                        Allow Student Submission
+                                                                    </label>
+                                                                    <select name="show_submit[]" class="form-select">
+                                                                        <option value="1">Yes</option>
+                                                                        <option value="0">No</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label fw-semibold">
+                                                                        Submission Limit
+                                                                    </label>
+                                                                    <select name="submission_limit[]" class="form-select">
+                                                                        <option value="1">One Time</option>
+                                                                        <option value="999">Unlimited</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                         </div>
-
-                                                        <div class="row g-3">
-
-                                                            <div class="col-lg-6">
-                                                                <label class="form-label fw-semibold">
-                                                                    Assignment Name
-                                                                </label>
-                                                                <input type="text" name="assignment_name[]"
-                                                                    class="form-control"
-                                                                    placeholder="Enter assignment title">
-                                                            </div>
-
-                                                            <div class="col-lg-6">
-                                                                <label class="form-label fw-semibold">
-                                                                    Upload File
-                                                                </label>
-                                                                <input type="file" name="assignment_file[]"
-                                                                    class="form-control">
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <label class="form-label fw-semibold">
-                                                                    Allow Student Submission
-                                                                </label>
-                                                                <select name="show_submit[]" class="form-select">
-                                                                    <option value="1">Yes</option>
-                                                                    <option value="0">No</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <label class="form-label fw-semibold">
-                                                                    Submission Limit
-                                                                </label>
-                                                                <select name="submission_limit[]" class="form-select">
-                                                                    <option value="1">One Time</option>
-                                                                    <option value="999">Unlimited</option>
-                                                                </select>
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -184,32 +283,57 @@
 
                                             <div class="card-body">
                                                 <div id="material-wrapper">
-
-                                                    <div class="material-row border rounded p-3 mb-3">
-                                                        <div class="row g-3">
-
-                                                            <div class="col-md-5">
-                                                                <label>Material Name</label>
-                                                                <input type="text" name="material_name[]"
-                                                                    class="form-control">
+                                                    @if(isset($course) && $course->materials->count() > 0)
+                                                        @foreach($course->materials as $material)
+                                                            <div class="material-row border rounded p-3 mb-3">
+                                                                <div class="row g-3">
+                                                                    <div class="col-md-5">
+                                                                        <label>Material Name</label>
+                                                                        <input type="text" name="material_name[]"
+                                                                            class="form-control"
+                                                                            value="{{ old('material_name.'.$loop->index, $material->title) }}">
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label>File</label>
+                                                                        <input type="file" name="material_file[]"
+                                                                            class="form-control">
+                                                                        @if($material->file)
+                                                                            <small class="text-muted d-block mt-1">
+                                                                                Current: {{ basename($material->file) }}
+                                                                            </small>
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="col-md-2 d-flex align-items-end">
+                                                                        <button type="button"
+                                                                            class="btn btn-danger w-100 remove-row">
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-
-                                                            <div class="col-md-5">
-                                                                <label>File</label>
-                                                                <input type="file" name="material_file[]"
-                                                                    class="form-control">
+                                                        @endforeach
+                                                    @else
+                                                        <div class="material-row border rounded p-3 mb-3">
+                                                            <div class="row g-3">
+                                                                <div class="col-md-5">
+                                                                    <label>Material Name</label>
+                                                                    <input type="text" name="material_name[]"
+                                                                        class="form-control">
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label>File</label>
+                                                                    <input type="file" name="material_file[]"
+                                                                        class="form-control">
+                                                                </div>
+                                                                <div class="col-md-2 d-flex align-items-end">
+                                                                    <button type="button"
+                                                                        class="btn btn-danger w-100 remove-row">
+                                                                        Remove
+                                                                    </button>
+                                                                </div>
                                                             </div>
-
-                                                            <div class="col-md-2 d-flex align-items-end">
-                                                                <button type="button"
-                                                                    class="btn btn-danger w-100 remove-row">
-                                                                    Remove
-                                                                </button>
-                                                            </div>
-
                                                         </div>
-                                                    </div>
-
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

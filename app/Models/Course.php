@@ -10,7 +10,9 @@ class Course extends Model
     protected $fillable = [
         'title',
         'description',
-        'banner'
+        'banner',
+        'created_by',
+        'updated_by'
     ];
 
     public function users()
@@ -30,5 +32,15 @@ class Course extends Model
     public function materials()
     {
         return $this->hasMany(CourseMaterial::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }
