@@ -13,7 +13,6 @@ class CourseAssignmentSubmission extends Model
         'user_id',
         'course_assignment_id',
         'file',
-        'notes',
     ];
 
     public function user()

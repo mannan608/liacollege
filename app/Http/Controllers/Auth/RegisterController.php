@@ -105,6 +105,8 @@ class RegisterController extends Controller
 
         return view('backend.students.edit', compact('student', 'courses'));
     }
+
+
     public function update(Request $request, $id)
     {
         $student = User::findOrFail($id);

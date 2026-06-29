@@ -9,6 +9,7 @@ use App\Models\CourseMaterial;
 use App\Models\User;
 use App\Traits\FileUploadTrait;
 use App\Http\Requests\CourseStoreRequest;
+use App\Http\Requests\CourseUpdateRequest;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
@@ -141,99 +142,209 @@ class CourseController extends Controller
         return view('backend.course.show', compact('course'));
     }
 
-    public function update(CourseStoreRequest $request, $id)
-    {
-        try {
-            DB::beginTransaction();
+ public function update(CourseUpdateRequest $request, $id)
+{
+    DB::beginTransaction();
 
-            $course = Course::findOrFail($id);
+    try {
 
-            $bannerPath = $course->banner;
-            if ($request->hasFile('banner')) {
-                $bannerPath = $this->uploadFile($request->file('banner'), 'uploads/courses', $course->banner);
+        $course = Course::with([
+            'policies',
+            'assignments',
+            'materials'
+        ])->findOrFail($id);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Course
+        |--------------------------------------------------------------------------
+        */
+
+        $banner = $course->banner;
+
+        if ($request->hasFile('banner')) {
+
+            $banner = $this->uploadFile(
+                $request->file('banner'),
+                'uploads/courses',
+                $course->banner
+            );
+        }
+
+        $course->update([
+            'title'       => $request->title,
+            'description' => $request->description,
+            'banner'      => $banner,
+            'updated_by'  => auth()->id(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Policies
+        |--------------------------------------------------------------------------
+        */
+
+        $policyIds = [];
+
+        foreach ($request->policy_title ?? [] as $index => $title) {
+
+            $url = $request->policy_url[$index] ?? null;
+            $policyId = $request->policy_id[$index] ?? null;
+
+            if (!$title || !$url) {
+                continue;
             }
 
-            $course->update([
-                'title' => $request->title,
-                'description' => $request->description,
-                'banner' => $bannerPath,
-                'updated_by' => auth()->id(),
+            $policy = CoursePolicy::updateOrCreate(
+                [
+                    'id' => $policyId
+                ],
+                [
+                    'course_id'  => $course->id,
+                    'title'      => $title,
+                    'url'        => $url,
+                    'sort_order' => $index,
+                ]
+            );
+
+            $policyIds[] = $policy->id;
+        }
+
+        CoursePolicy::where('course_id', $course->id)
+            ->whereNotIn('id', $policyIds)
+            ->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Assignments
+        |--------------------------------------------------------------------------
+        */
+
+        $assignmentIds = [];
+
+        foreach ($request->assignment_name ?? [] as $index => $title) {
+
+            if (!$title) {
+                continue;
+            }
+
+            $assignmentId = $request->assignment_id[$index] ?? null;
+
+            $assignment = $assignmentId
+                ? CourseAssignment::find($assignmentId)
+                : new CourseAssignment();
+
+            $file = $assignment?->file;
+
+            if ($request->hasFile("assignment_file.$index")) {
+
+                $file = $this->uploadFile(
+                    $request->file("assignment_file.$index"),
+                    'uploads/assignments',
+                    $assignment?->file
+                );
+            }
+
+            $assignment->fill([
+                'course_id'         => $course->id,
+                'title'             => $title,
+                'file'              => $file,
+                'allow_submission'  => isset($request->show_submit[$index]) ? 1 : 0,
+                'submission_limit'  => $request->submission_limit[$index] ?? 1,
+                'sort_order'        => $index,
             ]);
 
-            $course->policies()->delete();
-            if ($request->has('policy_title')) {
-                foreach ($request->policy_title as $index => $title) {
-                    if (!empty($title) && !empty($request->policy_url[$index])) {
-                        CoursePolicy::create([
-                            'course_id' => $course->id,
-                            'title' => $title,
-                            'url' => $request->policy_url[$index],
-                            'sort_order' => $index,
-                        ]);
-                    }
-                }
-            }
+            $assignment->save();
 
-            foreach ($course->assignments as $assignment) {
-                if ($assignment->file) {
-                    $this->deleteFile($assignment->file);
-                }
-            }
-            $course->assignments()->delete();
-            if ($request->has('assignment_name')) {
-                foreach ($request->assignment_name as $index => $name) {
-                    if (!empty($name)) {
-                        $filePath = null;
-                        if ($request->hasFile("assignment_file.$index")) {
-                            $filePath = $this->uploadFile($request->file("assignment_file.$index"), 'uploads/assignments');
-                        }
-
-                        CourseAssignment::create([
-                            'course_id' => $course->id,
-                            'title' => $name,
-                            'file' => $filePath,
-                            'allow_submission' => $request->show_submit[$index] ?? 1,
-                            'submission_limit' => $request->submission_limit[$index] ?? 1,
-                            'sort_order' => $index,
-                        ]);
-                    }
-                }
-            }
-
-            foreach ($course->materials as $material) {
-                if ($material->file) {
-                    $this->deleteFile($material->file);
-                }
-            }
-            $course->materials()->delete();
-            if ($request->has('material_name')) {
-                foreach ($request->material_name as $index => $name) {
-                    if (!empty($name) && $request->hasFile("material_file.$index")) {
-                        $filePath = $this->uploadFile($request->file("material_file.$index"), 'uploads/materials');
-
-                        CourseMaterial::create([
-                            'course_id' => $course->id,
-                            'title' => $name,
-                            'file' => $filePath,
-                            'sort_order' => $index,
-                        ]);
-                    }
-                }
-            }
-
-            DB::commit();
-
-            return redirect()
-                ->route('course.index')
-                ->with('success', 'Course updated successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return back()
-                ->withInput()
-                ->withErrors(['error' => $e->getMessage()]);
+            $assignmentIds[] = $assignment->id;
         }
+
+        $deletedAssignments = CourseAssignment::where('course_id', $course->id)
+            ->whereNotIn('id', $assignmentIds)
+            ->get();
+
+        foreach ($deletedAssignments as $assignment) {
+
+            if ($assignment->file) {
+                $this->deleteFile($assignment->file);
+            }
+
+            $assignment->delete();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Materials
+        |--------------------------------------------------------------------------
+        */
+
+        $materialIds = [];
+
+        foreach ($request->material_name ?? [] as $index => $title) {
+
+            if (!$title) {
+                continue;
+            }
+
+            $materialId = $request->material_id[$index] ?? null;
+
+            $material = $materialId
+                ? CourseMaterial::find($materialId)
+                : new CourseMaterial();
+
+            $file = $material?->file;
+
+            if ($request->hasFile("material_file.$index")) {
+
+                $file = $this->uploadFile(
+                    $request->file("material_file.$index"),
+                    'uploads/materials',
+                    $material?->file
+                );
+            }
+
+            $material->fill([
+                'course_id'  => $course->id,
+                'title'      => $title,
+                'file'       => $file,
+                'sort_order' => $index,
+            ]);
+
+            $material->save();
+
+            $materialIds[] = $material->id;
+        }
+
+        $deletedMaterials = CourseMaterial::where('course_id', $course->id)
+            ->whereNotIn('id', $materialIds)
+            ->get();
+
+        foreach ($deletedMaterials as $material) {
+
+            if ($material->file) {
+                $this->deleteFile($material->file);
+            }
+
+            $material->delete();
+        }
+
+        DB::commit();
+
+        return redirect()
+            ->route('course.index')
+            ->with('success', 'Course updated successfully.');
+
+    } catch (\Throwable $e) {
+
+        DB::rollBack();
+
+        return back()
+            ->withInput()
+            ->withErrors([
+                'error' => $e->getMessage()
+            ]);
     }
+}
 
     public function destroy($id)
     {

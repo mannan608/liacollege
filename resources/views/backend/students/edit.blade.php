@@ -1,193 +1,237 @@
 @extends('backend.layouts.master')
 @section('content')
-<div class="page-wrapper">
-    <div class="content container-fluid">
-        <div class="page-header">
-            <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <ul class="breadcrumb mb-0">
-                    <li class="breadcrumb-item active">Edit Student</li>
-                </ul>
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="page-sub-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <ul class="breadcrumb mb-0">
+                        <li class="breadcrumb-item active">Edit Student</li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-table">
-                    <div class="card-body">
-                        <form action="{{ route('student.update', $student->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <div class="form-group">
-                                <label>Full Name <span class="login-danger">*</span></label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    name="name" value="{{ $student->name }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Phone <span class="login-danger">*</span></label>
-                                <input type="phone" class="form-control @error('phone') is-invalid @enderror"
-                                    name="phone" value="{{ $student->phone }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Email <span class="login-danger">*</span></label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    name="email" value="{{ $student->email }}" required>
-                            </div>
-                            {{-- insert defaults --}}
-                            <input type="hidden" class="image" name="image" value="photo_defaults.png">
-                    <div class="form-group">
-                        <label class="fw-bold fs-5 text-dark mb-4 d-flex align-items-center gap-2">
-                            Permission Course
-                            <span class="text-danger">*</span>
-                        </label>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card card-table">
+                        <div class="card-body">
+                            <form action="{{ route('student.update', $student->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <div class="form-group">
+                                    <label>Full Name <span class="login-danger">*</span></label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                        name="name" value="{{ $student->name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone <span class="login-danger">*</span></label>
+                                    <input type="phone" class="form-control @error('phone') is-invalid @enderror"
+                                        name="phone" value="{{ $student->phone }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email <span class="login-danger">*</span></label>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                        name="email" value="{{ $student->email }}" required>
+                                </div>
 
-                        @php
-                        $selectedCourses = old('courses', $student->courses->pluck('id')->toArray());
-                        $selectedPolicies = old('course_policies', $student->coursePolicies->pluck('id')->toArray());
-                        $selectedAssignments = old('course_assignments', $student->courseAssignments->pluck('id')->toArray());
-                        $selectedMaterials = old('course_materials', $student->courseMaterials->pluck('id')->toArray());
-                        @endphp
+                                <div class="form-group">
+                                    <label>Select Course <span class="login-danger">*</span></label>
+                                    <select id="courses" name="courses[]" multiple class="form-control" data-placeholder=" ">
+                                        @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}" @selected(in_array($course->id, old('courses', $student->courses->pluck('id')->toArray())))>
+                                                {{ $course->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                {{-- insert defaults --}}
+                                <input type="hidden" class="image" name="image" value="photo_defaults.png">
+                                <div class="form-group">
+                                    <label class="fw-bold fs-5 text-dark mb-4 d-flex align-items-center gap-2">
+                                        Permission Course
+                                        <span class="text-danger">*</span>
+                                    </label>
 
-                        <div class="accordion" id="courseAccordion">
-                            @foreach ($courses as $course)
-                            <div class="accordion-item border-0 shadow-sm rounded-4 overflow-hidden mb-3">
-                                <h2 class="accordion-header" id="heading{{ $course->id }}">
-                                    <button class="accordion-button collapsed px-4 py-4 bg-white border-0 shadow-sm"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapse{{ $course->id }}"
-                                        aria-expanded="false"
-                                        aria-controls="collapse{{ $course->id }}">
+                                    @php
+                                        $selectedCourses = old('courses', $student->courses->pluck('id')->toArray());
+                                        $selectedPolicies = old(
+                                            'course_policies',
+                                            $student->coursePolicies->pluck('id')->toArray(),
+                                        );
+                                        $selectedAssignments = old(
+                                            'course_assignments',
+                                            $student->courseAssignments->pluck('id')->toArray(),
+                                        );
+                                        $selectedMaterials = old(
+                                            'course_materials',
+                                            $student->courseMaterials->pluck('id')->toArray(),
+                                        );
+                                    @endphp
 
-                                        <div class="d-flex justify-content-between align-items-center w-100 pe-3">
-                                            <strong class="">{{ $course->title }}</strong>
+                                    <div class="accordion" id="courseAccordion">
+                                        @foreach ($student->courses as $course)
+                                            <div class="accordion-item border-0 shadow-sm rounded-4 overflow-hidden mb-3">
+                                                <h2 class="accordion-header" id="heading{{ $course->id }}">
+                                                    <button
+                                                        class="accordion-button collapsed px-4 py-4 bg-white border-0 shadow-sm"
+                                                        type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#collapse{{ $course->id }}" aria-expanded="false"
+                                                        aria-controls="collapse{{ $course->id }}">
 
-                                            <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-                                                {{ $course->policies->count() + $course->assignments->count() + $course->materials->count() }}
-                                            </span>
-                                        </div>
-                                    </button>
-                                </h2>
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center w-100 pe-3">
+                                                            <strong class="">{{ $course->title }}</strong>
 
-                                <div id="collapse{{ $course->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $course->id }}" data-bs-parent="#courseAccordion">
-                                    <div class="accordion-body bg-light py-4 px-4">                                  
+                                                            <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+                                                                {{ $course->policies->count() + $course->assignments->count() + $course->materials->count() }}
+                                                            </span>
+                                                        </div>
+                                                    </button>
+                                                </h2>
 
-                                        <!-- Policies -->
-                                        @if ($course->policies->count() > 0)
-                                        <div class="mb-4">
-                                            <div class="d-flex align-items-center justify-content-between mb-3">
-                                                <h6 class="fw-semibold text-primary mb-0">
-                                                    <i class="bi bi-shield-check me-2"></i>Policies
-                                                </h6>
-                                                <label class="d-flex align-items-center gap-2 cursor-pointer user-select-none">
-                                                    <input type="checkbox" class="form-check-input select-all-policies" data-course-id="{{ $course->id }}">
-                                                    <small class="fw-medium text-muted">Select All</small>
-                                                </label>
-                                            </div>
-                                            <div class="row g-3">
-                                                @foreach ($course->policies as $policy)
-                                                <div class="col-md-6">
-                                                    <label class="d-flex align-items-center gap-3 bg-white p-3 rounded-3 border hover-border-primary transition-all cursor-pointer">
-                                                        <input type="checkbox"
-                                                            name="course_policies[]"
-                                                            value="{{ $policy->id }}"
-                                                            class="form-check-input policy-checkbox policy-course-{{ $course->id }}"
-                                                            {{ in_array($policy->id, $selectedPolicies) ? 'checked' : '' }}>
-                                                        <span class="small fw-medium">{{ $policy->title }}</span>
-                                                    </label>
+                                                <div id="collapse{{ $course->id }}" class="accordion-collapse collapse"
+                                                    aria-labelledby="heading{{ $course->id }}"
+                                                    data-bs-parent="#courseAccordion">
+                                                    <div class="accordion-body bg-light py-4 px-4">
+
+                                                        <!-- Policies -->
+                                                        @if ($course->policies->count() > 0)
+                                                            <div class="mb-4">
+                                                                <div
+                                                                    class="d-flex align-items-center justify-content-between mb-3">
+                                                                    <h6 class="fw-semibold text-primary mb-0">
+                                                                        <i class="bi bi-shield-check me-2"></i>Policies
+                                                                    </h6>
+                                                                    <label
+                                                                        class="d-flex align-items-center gap-2 cursor-pointer user-select-none">
+                                                                        <input type="checkbox"
+                                                                            class="form-check-input select-all-policies"
+                                                                            data-course-id="{{ $course->id }}">
+                                                                        <small class="fw-medium text-muted">Select
+                                                                            All</small>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="row g-3">
+                                                                    @foreach ($course->policies as $policy)
+                                                                        <div class="col-md-6">
+                                                                            <label
+                                                                                class="d-flex align-items-center gap-3 bg-white p-3 rounded-3 border hover-border-primary transition-all cursor-pointer">
+                                                                                <input type="checkbox"
+                                                                                    name="course_policies[]"
+                                                                                    value="{{ $policy->id }}"
+                                                                                    class="form-check-input policy-checkbox policy-course-{{ $course->id }}"
+                                                                                    {{ in_array($policy->id, $selectedPolicies) ? 'checked' : '' }}>
+                                                                                <span
+                                                                                    class="small fw-medium">{{ $policy->title }}</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                        <!-- Assignments -->
+                                                        @if ($course->assignments->count() > 0)
+                                                            <div class="mb-4">
+                                                                <div
+                                                                    class="d-flex align-items-center justify-content-between mb-3">
+                                                                    <h6 class="fw-semibold text-success mb-0">
+                                                                        <i
+                                                                            class="bi bi-clipboard-check me-2"></i>Assignments
+                                                                    </h6>
+                                                                    <label
+                                                                        class="d-flex align-items-center gap-2 cursor-pointer user-select-none">
+                                                                        <input type="checkbox"
+                                                                            class="form-check-input select-all-assignments"
+                                                                            data-course-id="{{ $course->id }}">
+                                                                        <small class="fw-medium text-muted">Select
+                                                                            All</small>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="row g-3">
+                                                                    @foreach ($course->assignments as $assignment)
+                                                                        <div class="col-md-6">
+                                                                            <label
+                                                                                class="d-flex align-items-center gap-3 bg-white p-3 rounded-3 border hover-border-success transition-all cursor-pointer">
+                                                                                <input type="checkbox"
+                                                                                    name="course_assignments[]"
+                                                                                    value="{{ $assignment->id }}"
+                                                                                    class="form-check-input assignment-checkbox assignment-course-{{ $course->id }}"
+                                                                                    {{ in_array($assignment->id, $selectedAssignments) ? 'checked' : '' }}>
+                                                                                <span
+                                                                                    class="small fw-medium">{{ $assignment->title }}</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                        <!-- Materials -->
+                                                        @if ($course->materials->count() > 0)
+                                                            <div>
+                                                                <div
+                                                                    class="d-flex align-items-center justify-content-between mb-3">
+                                                                    <h6 class="fw-semibold text-info mb-0">
+                                                                        <i class="bi bi-book me-2"></i>Materials
+                                                                    </h6>
+                                                                    <label
+                                                                        class="d-flex align-items-center gap-2 cursor-pointer user-select-none">
+                                                                        <input type="checkbox"
+                                                                            class="form-check-input select-all-materials"
+                                                                            data-course-id="{{ $course->id }}">
+                                                                        <small class="fw-medium text-muted">Select
+                                                                            All</small>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="row g-3">
+                                                                    @foreach ($course->materials as $material)
+                                                                        <div class="col-md-6">
+                                                                            <label
+                                                                                class="d-flex align-items-center gap-3 bg-white p-3 rounded-3 border hover-border-info transition-all cursor-pointer">
+                                                                                <input type="checkbox"
+                                                                                    name="course_materials[]"
+                                                                                    value="{{ $material->id }}"
+                                                                                    class="form-check-input material-checkbox material-course-{{ $course->id }}"
+                                                                                    {{ in_array($material->id, $selectedMaterials) ? 'checked' : '' }}>
+                                                                                <span
+                                                                                    class="small fw-medium">{{ $material->title }}</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                    </div>
                                                 </div>
-                                                @endforeach
                                             </div>
-                                        </div>
-                                        @endif
-
-                                        <!-- Assignments -->
-                                        @if ($course->assignments->count() > 0)
-                                        <div class="mb-4">
-                                            <div class="d-flex align-items-center justify-content-between mb-3">
-                                                <h6 class="fw-semibold text-success mb-0">
-                                                    <i class="bi bi-clipboard-check me-2"></i>Assignments
-                                                </h6>
-                                                <label class="d-flex align-items-center gap-2 cursor-pointer user-select-none">
-                                                    <input type="checkbox" class="form-check-input select-all-assignments" data-course-id="{{ $course->id }}">
-                                                    <small class="fw-medium text-muted">Select All</small>
-                                                </label>
-                                            </div>
-                                            <div class="row g-3">
-                                                @foreach ($course->assignments as $assignment)
-                                                <div class="col-md-6">
-                                                    <label class="d-flex align-items-center gap-3 bg-white p-3 rounded-3 border hover-border-success transition-all cursor-pointer">
-                                                        <input type="checkbox"
-                                                            name="course_assignments[]"
-                                                            value="{{ $assignment->id }}"
-                                                            class="form-check-input assignment-checkbox assignment-course-{{ $course->id }}"
-                                                            {{ in_array($assignment->id, $selectedAssignments) ? 'checked' : '' }}>
-                                                        <span class="small fw-medium">{{ $assignment->title }}</span>
-                                                    </label>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        @endif
-
-                                        <!-- Materials -->
-                                        @if ($course->materials->count() > 0)
-                                        <div>
-                                            <div class="d-flex align-items-center justify-content-between mb-3">
-                                                <h6 class="fw-semibold text-info mb-0">
-                                                    <i class="bi bi-book me-2"></i>Materials
-                                                </h6>
-                                                <label class="d-flex align-items-center gap-2 cursor-pointer user-select-none">
-                                                    <input type="checkbox" class="form-check-input select-all-materials" data-course-id="{{ $course->id }}">
-                                                    <small class="fw-medium text-muted">Select All</small>
-                                                </label>
-                                            </div>
-                                            <div class="row g-3">
-                                                @foreach ($course->materials as $material)
-                                                <div class="col-md-6">
-                                                    <label class="d-flex align-items-center gap-3 bg-white p-3 rounded-3 border hover-border-info transition-all cursor-pointer">
-                                                        <input type="checkbox"
-                                                            name="course_materials[]"
-                                                            value="{{ $material->id }}"
-                                                            class="form-check-input material-checkbox material-course-{{ $course->id }}"
-                                                            {{ in_array($material->id, $selectedMaterials) ? 'checked' : '' }}>
-                                                        <span class="small fw-medium">{{ $material->title }}</span>
-                                                    </label>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        @endif
-
+                                        @endforeach
                                     </div>
                                 </div>
-                            </div>
-                            @endforeach
+
+                                <div class="form-group local-forms">
+                                    <label>Select Role <span class="login-danger">*</span></label>
+
+                                    <select name="role" class="form-control">
+                                        <option value="">Select Role</option>
+
+                                        <option value="student"
+                                            {{ old('role', $student->role) == 'student' ? 'selected' : '' }}>
+                                            Student
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-primary  w-fit" type="submit">Update Student</button>
+                                </div>
+
+                            </form>
+
                         </div>
                     </div>
-
-                    <div class="form-group local-forms">
-                        <label>Select Role <span class="login-danger">*</span></label>
-
-                        <select name="role" class="form-control">
-                            <option value="">Select Role</option>
-
-                            <option value="student"
-                                {{ old('role', $student->role) == 'student' ? 'selected' : '' }}>
-                                Student
-                            </option>
-                        </select>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-end">
-                        <button class="btn btn-primary  w-fit" type="submit">Update Student</button>
-                    </div>
-
-                    </form>
-
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
 @endsection
 
 <style>

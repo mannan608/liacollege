@@ -93,21 +93,24 @@
 
                                             <div class="card-body">
                                                 <div id="policy-wrapper">
-                                                    @if(isset($course) && $course->policies->count() > 0)
-                                                        @foreach($course->policies as $policy)
+                                                    @if (isset($course) && $course->policies->count() > 0)
+                                                        @foreach ($course->policies as $policy)
                                                             <div class="policy-row border rounded p-3 mb-3">
                                                                 <div class="row g-3">
+                                                                    <input type="hidden" name="policy_id[]"
+                                                                        value="{{ $policy->id }}">
                                                                     <div class="col-md-5">
                                                                         <label class="form-label">Title</label>
                                                                         <input type="text" name="policy_title[]"
                                                                             class="form-control" placeholder="Enter Title"
-                                                                            value="{{ old('policy_title.'.$loop->index, $policy->title) }}">
+                                                                            value="{{ old('policy_title.' . $loop->index, $policy->title) }}">
                                                                     </div>
                                                                     <div class="col-md-5">
                                                                         <label class="form-label">URL</label>
                                                                         <input type="url" name="policy_url[]"
-                                                                            class="form-control" placeholder="https://example.com"
-                                                                            value="{{ old('policy_url.'.$loop->index, $policy->url) }}">
+                                                                            class="form-control"
+                                                                            placeholder="https://example.com"
+                                                                            value="{{ old('policy_url.' . $loop->index, $policy->url) }}">
                                                                     </div>
                                                                     <div class="col-md-2 d-flex align-items-end">
                                                                         <button type="button"
@@ -129,7 +132,8 @@
                                                                 <div class="col-md-5">
                                                                     <label class="form-label">URL</label>
                                                                     <input type="url" name="policy_url[]"
-                                                                        class="form-control" placeholder="https://example.com">
+                                                                        class="form-control"
+                                                                        placeholder="https://example.com">
                                                                 </div>
                                                                 <div class="col-md-2 d-flex align-items-end">
                                                                     <button type="button"
@@ -161,10 +165,13 @@
 
                                             <div class="card-body">
                                                 <div id="assignment-wrapper">
-                                                    @if(isset($course) && $course->assignments->count() > 0)
-                                                        @foreach($course->assignments as $assignment)
+                                                    @if (isset($course) && $course->assignments->count() > 0)
+                                                        @foreach ($course->assignments as $assignment)
                                                             <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
-                                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <input type="hidden" name="assignment_id[]"
+                                                                    value="{{ $assignment->id }}">
+                                                                <div
+                                                                    class="d-flex justify-content-between align-items-center mb-3">
                                                                     <h6 class="mb-0 fw-semibold">
                                                                         <i class="fas fa-file-alt text-primary me-2"></i>
                                                                         Assignment
@@ -182,7 +189,7 @@
                                                                         <input type="text" name="assignment_name[]"
                                                                             class="form-control"
                                                                             placeholder="Enter assignment title"
-                                                                            value="{{ old('assignment_name.'.$loop->index, $assignment->title) }}">
+                                                                            value="{{ old('assignment_name.' . $loop->index, $assignment->title) }}">
                                                                     </div>
                                                                     <div class="col-lg-6">
                                                                         <label class="form-label fw-semibold">
@@ -190,7 +197,7 @@
                                                                         </label>
                                                                         <input type="file" name="assignment_file[]"
                                                                             class="form-control">
-                                                                        @if($assignment->file)
+                                                                        @if ($assignment->file)
                                                                             <small class="text-muted d-block mt-1">
                                                                                 Current: {{ basename($assignment->file) }}
                                                                             </small>
@@ -201,17 +208,26 @@
                                                                             Allow Student Submission
                                                                         </label>
                                                                         <select name="show_submit[]" class="form-select">
-                                                                            <option value="1" {{ old('show_submit.'.$loop->index, $assignment->allow_submission) == 1 ? 'selected' : '' }}>Yes</option>
-                                                                            <option value="0" {{ old('show_submit.'.$loop->index, $assignment->allow_submission) == 0 ? 'selected' : '' }}>No</option>
+                                                                            <option value="1"
+                                                                                {{ old('show_submit.' . $loop->index, $assignment->allow_submission) == 1 ? 'selected' : '' }}>
+                                                                                Yes</option>
+                                                                            <option value="0"
+                                                                                {{ old('show_submit.' . $loop->index, $assignment->allow_submission) == 0 ? 'selected' : '' }}>
+                                                                                No</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label class="form-label fw-semibold">
                                                                             Submission Limit
                                                                         </label>
-                                                                        <select name="submission_limit[]" class="form-select">
-                                                                            <option value="1" {{ old('submission_limit.'.$loop->index, $assignment->submission_limit) == 1 ? 'selected' : '' }}>One Time</option>
-                                                                            <option value="999" {{ old('submission_limit.'.$loop->index, $assignment->submission_limit) == 999 ? 'selected' : '' }}>Unlimited</option>
+                                                                        <select name="submission_limit[]"
+                                                                            class="form-select">
+                                                                            <option value="1"
+                                                                                {{ old('submission_limit.' . $loop->index, $assignment->submission_limit) == 1 ? 'selected' : '' }}>
+                                                                                One Time</option>
+                                                                            <option value="999"
+                                                                                {{ old('submission_limit.' . $loop->index, $assignment->submission_limit) == 999 ? 'selected' : '' }}>
+                                                                                Unlimited</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -219,7 +235,8 @@
                                                         @endforeach
                                                     @else
                                                         <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
-                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-center mb-3">
                                                                 <h6 class="mb-0 fw-semibold">
                                                                     <i class="fas fa-file-alt text-primary me-2"></i>
                                                                     Assignment
@@ -283,21 +300,23 @@
 
                                             <div class="card-body">
                                                 <div id="material-wrapper">
-                                                    @if(isset($course) && $course->materials->count() > 0)
-                                                        @foreach($course->materials as $material)
+                                                    @if (isset($course) && $course->materials->count() > 0)
+                                                        @foreach ($course->materials as $material)
                                                             <div class="material-row border rounded p-3 mb-3">
+                                                                <input type="hidden" name="material_id[]"
+                                                                    value="{{ $material->id }}">
                                                                 <div class="row g-3">
                                                                     <div class="col-md-5">
                                                                         <label>Material Name</label>
                                                                         <input type="text" name="material_name[]"
                                                                             class="form-control"
-                                                                            value="{{ old('material_name.'.$loop->index, $material->title) }}">
+                                                                            value="{{ old('material_name.' . $loop->index, $material->title) }}">
                                                                     </div>
                                                                     <div class="col-md-5">
                                                                         <label>File</label>
                                                                         <input type="file" name="material_file[]"
                                                                             class="form-control">
-                                                                        @if($material->file)
+                                                                        @if ($material->file)
                                                                             <small class="text-muted d-block mt-1">
                                                                                 Current: {{ basename($material->file) }}
                                                                             </small>
@@ -384,6 +403,7 @@
             let html = `
     <div class="policy-row border rounded p-3 mb-3">
         <div class="row g-3">
+        <input type="hidden" name="policy_id[]" value="">
             <div class="col-md-5">
                 <input type="text"
                     name="policy_title[]"
@@ -416,6 +436,7 @@
 
             let html = `
     <div class="assignment-row border rounded-4 p-4 mb-4 bg-light">
+        <input type="hidden" name="assignment_id[]" value="">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="mb-0 fw-semibold">
@@ -487,6 +508,7 @@
 
             let html = `
     <div class="material-row border rounded p-3 mb-3">
+        <input type="hidden" name="material_id[]" value="">
         <div class="row g-3">
 
             <div class="col-md-5">

@@ -22,11 +22,7 @@ return new class extends Migration
 
             $table->string('file')->nullable();
 
-            $table->boolean('allow_submission')->default(true);
-
-            $table->integer('submission_limit')->default(1);
-
-            $table->integer('sort_order')->default(0);
+            $table->boolean('allow_submission')->default(true);          
 
             $table->timestamps();
         });

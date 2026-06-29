@@ -11,9 +11,9 @@ class CourseAssignment extends Model
         'course_id',
         'title',
         'file',
-        'allow_submission',
-        'submission_limit',
-        'sort_order'
+        // 'allow_submission',
+        // 'submission_limit',
+        // 'sort_order'
     ];
 
     public function course()

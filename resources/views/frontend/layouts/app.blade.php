@@ -146,6 +146,7 @@ https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
     <script src="https://beta.leadconnectorhq.com/loader.js"
         data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js"
         data-widget-id="691ff546be8b70bc978e5c9c"></script>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
 <body>
@@ -491,6 +492,7 @@ https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css
 
     <!-- scripts -->
     <!-- jquery js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('frontend/js/vendor/jquery.min.js') }}"></script>
     <!-- bootstrap 5.0.2 -->
     <script src="{{ asset('frontend/js/plugins/bootstrap.min.js') }}"></script>
