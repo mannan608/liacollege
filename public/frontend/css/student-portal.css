@@ -272,12 +272,13 @@ body {
     transition: .3s;
     font-size: 14px;
     white-space: nowrap;
+
 }
 
 /* .download-btn:hover,
 .download-btn:focus {
-    color: white;
-    transform: scale(1.05);
+       border: 1px solid transparent;
+
 } */
 
 .course-document {
@@ -616,7 +617,7 @@ h6,
     background:#f8fafc;
     border:1px solid #e5e7eb;
     border-radius:14px;
-    padding:15px;
+    padding:8px 15px;
     margin-bottom:20px;
 }
 
@@ -632,10 +633,10 @@ h6,
 
 
 .file-icon {
-    width: 55px;
-    height: 55px;
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 6px;
     background: #eef2ff;
     display: flex;
     justify-content: center;
@@ -647,14 +648,14 @@ h6,
 .upload-area{
     border:2px dashed #d1d5db;
     border-radius:16px;
-    padding:40px;
+    padding:14px 40px;
     text-align:center;
     cursor:pointer;
     width:100%;
     transition:.3s;
 }
 
-.upload-area:hover{
+.upload-area:hover,.upload-area:focus{
     border-color:#4f46e5;
     background:#f8faff;
 }
@@ -712,6 +713,15 @@ h6,
     background:#4f46e5;
     color:#fff;
     border-radius:10px;
+    padding: 6px 14px;
+    font-size: 14px;
+}
+.btn-view:hover{
+    background:#4f46e5;
+    color:#fff;
+    border-radius:10px;
+    padding: 6px 14px;
+    font-size: 14px;
 }
 
 .download-btn.submitted-btn {
