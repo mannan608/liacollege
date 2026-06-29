@@ -88,8 +88,12 @@ public function courseMaterials()
     return $this->belongsToMany(CourseMaterial::class, 'user_course_materials');
 }
 
+
 public function assignmentSubmissions()
 {
-    return $this->hasMany(CourseAssignmentSubmission::class);
+    return $this->hasMany(
+        CourseAssignmentSubmission::class,
+        'user_id'
+    );
 }
 }

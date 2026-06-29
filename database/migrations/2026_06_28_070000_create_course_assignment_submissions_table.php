@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('course_assignment_id')->constrained()->cascadeOnDelete();
             $table->string('file')->nullable();
-            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

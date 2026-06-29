@@ -67,6 +67,7 @@ Route::middleware(['auth', 'student'])->prefix('student')->group(function () {
 
     Route::post('/assignments/{assignment}/submit', [FrontendController::class, 'submitAssignment'])
         ->name('student.assignment.submit');
+   
 
     Route::get('/download-document/{course}', [FrontendController::class, 'documentDownload'])
     ->name('document.download');

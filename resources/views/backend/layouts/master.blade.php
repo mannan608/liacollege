@@ -5,6 +5,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,38 +21,41 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-	{{-- message toastr --}}
-	<link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
-	<script src="{{ asset('assets/js/toastr_jquery.min.js') }}"></script>
-	<script src="{{ asset('assets/js/toastr.min.js') }}"></script>
+    {{-- message toastr --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
+    <script src="{{ asset('assets/js/toastr_jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            @if(session('success'))
+            @if (session('success'))
                 toastr.success("{{ session('success') }}");
             @endif
-            @if(session('error'))
+            @if (session('error'))
                 toastr.error("{{ session('error') }}");
             @endif
-        
-            @if(session('info'))
+
+            @if (session('info'))
                 toastr.info("{{ session('info') }}");
             @endif
-        
-            @if(session('warning'))
+
+            @if (session('warning'))
                 toastr.warning("{{ session('warning') }}");
             @endif
         });
     </script>
 </head>
+
 <body>
     <div class="main-wrapper">
         <div class="header">
             <div class="header-left py-3">
                 <a href="{{ route('admin.dashboard') }}" class="logo">
-                    <img src="{{ optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('assets/img/logo.png') }}" alt="Logo">
+                    <img src="{{ optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('assets/img/logo.png') }}"
+                        alt="Logo">
                 </a>
                 <a href="{{ route('admin.dashboard') }}" class="logo logo-small">
-                    <img src="{{ optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('assets/img/logo.png') }}" alt="Logo" width="30" height="30">
+                    <img src="{{ optional($setting)->logo ? asset('uploads/settings/' . $setting->logo) : asset('assets/img/logo.png') }}"
+                        alt="Logo" width="30" height="30">
                 </a>
             </div>
             <div class="menu-toggle">
@@ -176,11 +180,8 @@
                 <li class="nav-item dropdown has-arrow new-user-menus">
                     <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                         <span class="user-img">
-                            <img src="{{ auth()->user()->avatar 
-                                        ? asset('uploads/users/' . auth()->user()->avatar) 
-                                        : asset('assets/img/avatar.png') }}" 
-                                    alt="User Avatar" 
-                                    class="avatar-img rounded-circle">   
+                            <img src="{{ auth()->user()->avatar ? asset('uploads/users/' . auth()->user()->avatar) : asset('assets/img/avatar.png') }}"
+                                alt="User Avatar" class="avatar-img rounded-circle">
                             <div class="user-text">
                                 <h6>{{ Session::get('name') }}</h6>
                                 <p class="text-muted mb-0">{{ auth()->user()->role_name }}</p>
@@ -190,11 +191,8 @@
                     <div class="dropdown-menu">
                         <div class="user-header">
                             <div class="avatar avatar-sm">
-                                <img src="{{ auth()->user()->avatar 
-                                        ? asset('uploads/users/' . auth()->user()->avatar) 
-                                        : asset('assets/img/avatar.png') }}" 
-                                    alt="User Avatar" 
-                                    class="avatar-img rounded-circle">                            
+                                <img src="{{ auth()->user()->avatar ? asset('uploads/users/' . auth()->user()->avatar) : asset('assets/img/avatar.png') }}"
+                                    alt="User Avatar" class="avatar-img rounded-circle">
                             </div>
                             <div class="user-text">
                                 <h6>{{ Session::get('name') }}</h6>
@@ -208,14 +206,14 @@
                 </li>
             </ul>
         </div>
-		{{-- side bar --}}
-		@include('backend.sidebar.sidebar')
-		{{-- content page --}}
+        {{-- side bar --}}
+        @include('backend.sidebar.sidebar')
+        {{-- content page --}}
         @yield('content')
         <footer>
-            <p>Copyright ©  <?php echo date('Y'); ?>  .</p>
+            <p>Copyright © <?php echo date('Y'); ?> .</p>
         </footer>
-    
+
     </div>
 
     <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
@@ -243,12 +241,13 @@
         });
     </script>
     <script>
-    $(document).ready(function () {
-$('#courses').select2({
-placeholder: 'Select courses',
-allowClear: true
-});
-});
-</script>
+        $(document).ready(function() {
+            $('#courses').select2({
+                placeholder: 'Select courses',
+                allowClear: true
+            });
+        });
+    </script>
 </body>
+
 </html>
