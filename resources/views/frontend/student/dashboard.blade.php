@@ -27,7 +27,7 @@
         @if ($courses->isNotEmpty())
             @foreach ($courses as $category => $categoryCourses)
                 <div class="enroll-courses mb-4">
-                    <h6 class="text-muted mb-3">{{ $category }}</h6>
+                    {{-- <h6 class="text-muted mb-3">{{ $category }}</h6> --}}
                     <div class="d-flex flex-wrap gap-3">
                         @foreach ($categoryCourses as $course)
                             <a href="#course-{{ $course->id }}" class="enroll-course">{{ $course->title }}</a>
